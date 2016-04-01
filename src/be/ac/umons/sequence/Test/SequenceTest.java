@@ -1,4 +1,4 @@
-package be.ac.umons.sequence.Test;
+package be.ac.umons.sequence.test;
 
 /**
  * Created by aline on 31/03/16.
@@ -81,6 +81,6 @@ public class SequenceTest
         assertEquals(result.s1.getSize(), result.s2.getSize());
 
         assertEquals(new Sequence("aggagaagaattcaccgctat----------"), result.s1);
-        assertEquals(new Sequence("----------ttcccct-tattcaattctaa"), result.s2);
+        assertEquals(new Sequence("----------ttc-cccttattcaattctaa"), result.s2);
     }
 }

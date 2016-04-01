@@ -4,7 +4,7 @@ package be.ac.umons.sequence;
  * Created by aline on 31/03/16.
  */
 /**
- * Represents the alignment of two DNA sequences.
+ * Represents the alignment of two DNA sequences and the score associated to this alignment.
  */
 public class SequenceAlignment
 {
