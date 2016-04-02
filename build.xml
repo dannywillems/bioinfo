@@ -11,7 +11,7 @@
   <!-- Variables -->
   <!-- Related to the project -->
   <property name="project_name"   location="Algo.Bioinfo" />
-  <property name="authors"         location="Aline.Danny" />
+  <property name="authors"        location="Aline.Danny" />
 
   <!-- directories for source, documentation and test files -->
   <property name="src_dir"        location="src/main" />
@@ -54,7 +54,7 @@
   <!-- ################################################################### -->
   <target name="compile_test" depends="compile">
     <mkdir dir="${bin_test}" />
-    <javac includeantruntime="false" srcdir="${test_dir}" debug="true" destdir="${bin_test}">
+    <javac includeantruntime="false" srcdir="${test_dir}" debug="true" destdir="${bin}">
       <classpath>
         <path refid="classpath.test" />
       </classpath>
@@ -103,16 +103,6 @@
   <!-- ################################################################### -->
 
   <!-- ################################################################### -->
-  <target name="jar">
-    <jar destfile="${bin_src}/jar/${project_name}.jar" basedir="${bin_src}/classes">
-      <manifest>
-        <attribute name="Main-Class" value="${exe}"/>
-      </manifest>
-    </jar>
-  </target>
-  <!-- ################################################################### -->
-
-  <!-- ################################################################### -->
   <target name="doc">
     <mkdir dir="${doc_dir}" />
     <javadoc sourcepath="${src_dir}" destdir="${doc_dir}">
@@ -124,7 +114,7 @@
   <!-- ################################################################### -->
 
   <!-- ################################################################### -->
-  <target name="zip">
+  <target name="zip" depends="fclean">
     <zip destfile="${zip_name}"
       excludes="${zip_name},
         .git/,
