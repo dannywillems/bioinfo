@@ -12,6 +12,8 @@ src           // dossier contenant les fichiers sources
 bin           // dossier contenant les .class. Généré par ant cmpile.
 
 lib           // dossier contenant les librairies externes comme junit.
+
+doc           // dossier contenant les fichiers de documentations. *ant doc*
 ```
 
 Chaque package source commence par *be.ac.umons.bioinfo* et les tests également.
