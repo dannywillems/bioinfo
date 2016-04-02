@@ -1,16 +1,15 @@
-package be.ac.umons.sequence.test;
+package be.ac.umons.bioinfo.sequence;
 
 /**
  * Created by aline on 31/03/16.
  */
-import be.ac.umons.sequence.Sequence;
-import be.ac.umons.sequence.SequenceAlignment;
+import be.ac.umons.bioinfo.sequence.Sequence;
+import be.ac.umons.bioinfo.sequence.SequenceAlignment;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static groovy.util.GroovyTestCase.assertEquals;
 import static junit.framework.TestCase.assertEquals;
 
 public class SequenceTest
