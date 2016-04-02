@@ -30,5 +30,6 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 * **ant run_test**: lance les tests.
 * **ant run**: lance le main après avoir lancé run_test.
 * **ant zip**: crée une archive zip avec les fichiers sources, le build.xml et le README. Sont exclus les dossiers et fichiers .git, bin, .project, .classpath, .settings/ et todo.
+* **ant doc**: construit la documentation grâce à javadoc.
 * **ant clean**: supprime le dossier bin généré lors de la compilation.
 * **ant fclean**: lance la dépendance *clean* et supprime l'archive *zip* si créée.
