@@ -350,6 +350,7 @@ public class Sequence
             y = jPos;
         }
 
+
         for(int i = 0; i <= m ; i++)
         {
             for(int j = 0; j <= n ; j++)
@@ -361,6 +362,7 @@ public class Sequence
         }
 
         System.out.println("Max in " + x + " " + y + " with score " + similarity);
+
 
         List<Byte> aligned_s = new ArrayList<Byte>();
         List<Byte> aligned_t = new ArrayList<Byte>();
@@ -412,9 +414,9 @@ public class Sequence
                 }
             }
 
-            System.out.println(aligned_s);
-            System.out.println(aligned_t);
-            System.out.println("*******");
+            //System.out.println(aligned_s);
+            //System.out.println(aligned_t);
+            //System.out.println("*******");
         }
 
         if (x > 0)
