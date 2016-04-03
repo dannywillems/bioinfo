@@ -1,5 +1,7 @@
 # Projet de bio-informatique
 
+[![Build Status](https://travis-ci.org/dannywillems/bioinfo.svg?branch=master)](https://travis-ci.org/dannywillems/bioinfo)
+
 ## Structure du projet
 
 ```
