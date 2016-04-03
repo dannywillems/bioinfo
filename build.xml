@@ -1,0 +1,130 @@
+<project name="bioinfo" default="compile">
+  <!-- ################################################################### -->
+  <description>
+    Build.xml pour le projet de bio informatique. Réalisé par
+    - Aline Goeminne. Master 1 mathématiques.
+    - Danny Willems. Master 1 mathématiques.
+  </description>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <!-- Variables -->
+  <!-- Related to the project -->
+  <property name="project_name"   location="Algo.Bioinfo" />
+  <property name="authors"        location="Aline.Danny" />
+
+  <!-- directories for source, documentation and test files -->
+  <property name="src_dir"        location="src/main" />
+  <property name="test_dir"       location="src/test" />
+  <property name="doc_dir"        location="doc/" />
+
+  <!-- directories for class files -->
+  <property name="bin_dir"        location="bin/" />
+  <property name="bin_test"       location="${bin_dir}/test" />
+  <property name="bin_src"        location="${bin_dir}/classes" />
+
+  <!-- executable name -->
+  <property name="exe"            value="be.ac.umons.bioinfo.Main" />
+
+  <!-- zip name if you want to create an archive -->
+  <property name="zip_name"       value="${project_name}.zip" />
+
+  <!-- external libraries -->
+  <path id="classpath.src">
+    <pathelement location="${bin_src}" />
+  </path>
+
+  <path id="classpath.test">
+    <pathelement location="lib/junit.jar" />
+    <pathelement location="lib/hamcrest.jar" />
+    <path refid="classpath.src" />
+  </path>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <!--- Targets -->
+  <target name="compile">
+    <mkdir dir="${bin_dir}" />
+    <mkdir dir="${bin_src}" />
+    <javac includeantruntime="false" srcdir="${src_dir}" debug="on" destdir="${bin_src}">
+    </javac>
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="compile_test" depends="compile">
+    <mkdir dir="${bin_test}" />
+    <javac includeantruntime="false" srcdir="${test_dir}" debug="true" destdir="${bin_test}">
+      <classpath>
+        <path refid="classpath.test" />
+      </classpath>
+    </javac>
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="run_test" depends="compile_test">
+    <junit printsummary="yes" haltonfailure="yes" fork="yes">
+      <classpath>
+        <path refid="classpath.test" />
+        <pathelement location="${bin_test}" />
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <batchtest>
+        <fileset dir="${test_dir}" includes="**/*.java" />
+      </batchtest>
+    </junit>
+
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="run" depends="run_test">
+    <java dir="${bin_src}" classname="${exe}" fork="true" />
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="clean">
+    <delete dir="${bin_dir}" />
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="fclean" depends="clean">
+    <delete dir="${doc_dir}" />
+    <delete file="${zip_name}" />
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="re" depends="fclean,compile">
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="doc">
+    <mkdir dir="${doc_dir}" />
+    <javadoc sourcepath="${src_dir}" destdir="${doc_dir}">
+      <fileset dir="${src_dir}" defaultexcludes="yes">
+        <include name="**/*.java"/>
+      </fileset>
+    </javadoc>
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="zip" depends="fclean">
+    <zip destfile="${zip_name}"
+      excludes="${zip_name},
+        .git/,
+        bin/
+        todo,
+        .project,
+        .classpath,
+        .settings/"
+        basedir="."
+      />
+  </target>
+  <!-- ################################################################### -->
+</project>

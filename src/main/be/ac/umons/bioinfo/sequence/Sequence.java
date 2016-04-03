@@ -1,4 +1,4 @@
-package be.ac.umons.sequence;
+package be.ac.umons.bioinfo.sequence;
 
 /**
  * Created by aline on 31/03/16.
