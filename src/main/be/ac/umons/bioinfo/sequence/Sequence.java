@@ -355,13 +355,13 @@ public class Sequence
         {
             for(int j = 0; j <= n ; j++)
             {
-                System.out.print(a[i][j] + " \t");
+                //System.out.print(a[i][j] + " \t");
             }
 
-            System.out.printf("\n");
+            //System.out.printf("\n");
         }
 
-        System.out.println("Max in " + x + " " + y + " with score " + similarity);
+        //System.out.println("Max in " + x + " " + y + " with score " + similarity);
 
 
         List<Byte> aligned_s = new ArrayList<Byte>();
