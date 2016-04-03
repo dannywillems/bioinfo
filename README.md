@@ -2,6 +2,12 @@
 
 [![Build Status](https://travis-ci.org/dannywillems/bioinfo.svg?branch=master)](https://travis-ci.org/dannywillems/bioinfo)
 
+Testé avec:
+* Open JDK 6
+* Open JDK 7
+* Oracle JDK 7
+* Oracle JDK 8
+
 ## Structure du projet
 
 ```
