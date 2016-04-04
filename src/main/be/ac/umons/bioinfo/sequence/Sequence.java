@@ -154,18 +154,27 @@ public class Sequence
         int minLength = Math.min(this.getSize(), that.getSize());
         int maxLength = Math.max(this.getSize(), that.getSize());
 
+        // We fill with gap if sequences don't have the same size.
         int score = (maxLength - minLength) * gap;
 
         for(int i = 0; i<minLength ; i++)
         {
-            if(this.content[i] == GAP || that.content[i] == GAP) score += gap;
-            else if(this.content[i] == that.content[i]) score += match;
-            else score += mismatch;
+            if (this.content[i] == GAP || that.content[i] == GAP)
+                score += gap;
+            else if (this.content[i] == that.content[i])
+                score += match;
+            else
+                score += mismatch;
         }
 
         return score;
     }
 
+    /**
+     * Two sequences are equals if they
+     * - have the same size
+     * - contains the same nucleotides.
+     */
     @Override
     public boolean equals(Object that)
     {
@@ -174,7 +183,7 @@ public class Sequence
             Sequence s = (Sequence) that;
             if(this.getSize() != s.getSize()) return false;
 
-            for(int i = C; i<this.getSize() ; i++)
+            for(int i = 0; i<this.getSize() ; i++)
                 if(this.content[i] != s.content[i]) return false;
 
             return true;
@@ -197,7 +206,7 @@ public class Sequence
     }
 
     /**
-     * Computes the semi-global aligment of this sequence and an other one, considering
+     * Computes the global aligment of this sequence and an other one, considering
      * specific costs for a match, a mismatch, and a gap.
      * @param that an other sequence
      * @param match the cost of a match
