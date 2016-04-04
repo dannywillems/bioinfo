@@ -122,6 +122,9 @@
         todo,
         .project,
         .classpath,
+        .travis.yml,
+        bioinfo.iml,
+        .idea/,
         .settings/"
         basedir="."
       />
