@@ -49,8 +49,8 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 
 ## To-do
 
-[ ] Tests unitaires sur lecture/écriture de fichier fasta.
-[x] Lectures et écritures de fichier fasta
+- [ ] Tests unitaires sur lecture/écriture de fichier fasta.
+- [x] Lectures et écritures de fichier fasta
 
-[x] Implémentation de l'alignement semi-global
-[x] Tests unitaires de l'alignement semi-global
+- [x] Implémentation de l'alignement semi-global
+- [x] Tests unitaires de l'alignement semi-global
