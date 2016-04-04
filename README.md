@@ -11,17 +11,20 @@ Testé avec:
 ## Structure du projet
 
 ```
-README.md     // ce fichier
-build.xml     // fichier pour ant
-src           // dossier contenant les fichiers sources
-|-->  main    // sources exceptés les tests.
-|-->  test    // sources des tests.
+README.md             // ce fichier
+build.xml             // fichier pour ant
+src                   // dossier contenant les fichiers sources
+|-->  main            // sources exceptés les tests.
+|-->  test            // sources des tests.
 
-bin           // dossier contenant les .class. Généré par ant cmpile.
+bin                   // dossier contenant les .class. Généré par ant cmpile.
 
-lib           // dossier contenant les librairies externes comme junit.
+lib                   // dossier contenant les librairies externes comme junit.
 
-doc           // dossier contenant les fichiers de documentations. *ant doc*
+doc                   // dossier contenant les fichiers de documentations. *ant doc*
+
+res                   // ressources du projet
+|--> collections      // collections de fichiers fasta
 ```
 
 Chaque package source commence par *be.ac.umons.bioinfo* et les tests également.
@@ -43,3 +46,11 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 * **ant doc**: construit la documentation grâce à javadoc.
 * **ant clean**: supprime le dossier bin généré lors de la compilation.
 * **ant fclean**: lance la dépendance *clean* et supprime l'archive *zip* si créée.
+
+## To-do
+
+[ ] Tests unitaires sur lecture/écriture de fichier fasta.
+[x] Lectures et écritures de fichier fasta
+
+[x] Implémentation de l'alignement semi-global
+[x] Tests unitaires de l'alignement semi-global
