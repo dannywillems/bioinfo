@@ -305,6 +305,15 @@ public class Sequence
                 a[i][j] = Math.max(Math.max(x, y), z);
             }
         }
+        for(int i = 0; i <= m ; i++)
+        {
+            for(int j = 0; j <= n ; j++)
+            {
+                System.out.print(a[i][j] + " \t");
+            }
+
+            System.out.printf("\n");
+        }
 
         Optional<SequenceAlignment> sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
         Optional<SequenceAlignment> tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
@@ -467,7 +476,7 @@ public class Sequence
             if(x == 0) // s2 is included s1
                 return Optional.empty();
             else
-                return Optional.of(new SequenceAlignment(alignedS, alignedT, score));
+                return Optional.of(new SequenceAlignment(alignedT, alignedS, score));
         }
     }
 }
