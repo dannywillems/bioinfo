@@ -18,7 +18,7 @@ public class Greedy
      * @param gap the cost of a gap
      * @return A sequence of aligned sequences.
      */
-    public List<Sequence> computePath(List<Sequence> sequences, int match, int mismatch, int gap)
+    public List<SequenceAlignment> computePath(List<Sequence> sequences, int match, int mismatch, int gap)
     {
         LinkedList<Arc> arcs = new LinkedList<>();
         UnionFind<Sequence> groups = new UnionFind<>(sequences);
@@ -26,6 +26,7 @@ public class Greedy
         Set<Sequence> exited = new HashSet<>();
         Set<Arc> accepted = new HashSet<>();
 
+        //first computes all the arc of the graph
         for(int i=0 ; i < sequences.size()-1 ; i++)
         {
             for(int j=i+1 ; j < sequences.size() ; j++)
@@ -37,8 +38,10 @@ public class Greedy
             }
         }
 
+        //orders the arcs by their score
         Collections.sort(arcs, new ArcComparator());
 
+        //computes the greedy algorithm
         while(groups.size() > 1)
         {
             Arc candidate = arcs.pop();
@@ -86,12 +89,13 @@ public class Greedy
             current = previous.s1;
         }
 
-        List<Sequence> ret = new ArrayList<>(path.size()+1);
+        List<SequenceAlignment> ret = new ArrayList<>(path.size()+1);
 
-        for(Arc a : path)
-            ret.add(a.s1Aligned);
+        for(Arc a : path) {
+            SequenceAlignment seq = new SequenceAlignment(a.s1Aligned, a.s2Aligned, a.score);
+            ret.add(seq);
+        }
 
-        ret.add(path.getLast().s2Aligned);
 
         return ret;
     }
