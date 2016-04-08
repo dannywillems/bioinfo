@@ -10,13 +10,13 @@ import java.util.*;
 public class Greedy
 {
     /**
-     * Determine a list of aligned sequences, that corresponds to the succession of sequences that
+     * Determine a list of aligment, that corresponds to the succession of alignements that
      * have been ordered aligned in order to optimize the alignment.
      * @param sequences The primary sequences to work on.
      * @param match the cost of a match
      * @param mismatch the cost of a mismatch
      * @param gap the cost of a gap
-     * @return A sequence of aligned sequences.
+     * @return A sequence of alignement.
      */
     public List<SequenceAlignment> computePath(List<Sequence> sequences, int match, int mismatch, int gap)
     {
