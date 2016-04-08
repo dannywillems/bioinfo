@@ -34,9 +34,11 @@ public class Greedy
                 Sequence s1 = sequences.get(i);
                 Sequence s2 = sequences.get(j);
 
-                arcs.addAll(s1.arcGenerator(s2, match, mismatch, gap));
+                List<Arc> result = s1.arcGenerator(s2, match, mismatch, gap);
+                arcs.addAll(result);
             }
         }
+
 
         //orders the arcs by their score
         Collections.sort(arcs, new ArcComparator());
