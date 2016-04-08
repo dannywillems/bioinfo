@@ -35,5 +35,7 @@ public class Main
             System.out.println(alignment.s2);
             System.out.println("----------------");
         }
+
+
     }
 }

@@ -234,7 +234,9 @@ public class Sequence
             arcs.add(new Arc(this, false, that, false, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = FG.get(1);
-            arcs.add(new Arc(that, false, this, false, a2.s2, a2.s1, a2.score));
+            //arcs.add(new Arc(that, false, this, false, a2.s2, a2.s1, a2.score));
+            arcs.add(new Arc(that, false, this, false, a2.s1, a2.s2, a2.score));
+
         }
 
         if(!CompFG.isEmpty())
@@ -243,7 +245,9 @@ public class Sequence
             arcs.add(new Arc(this, true, that, false, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = CompFG.get(1);
-            arcs.add(new Arc(that, false, this, true, a2.s2, a2.s1, a2.score));
+            //arcs.add(new Arc(that, false, this, true, a2.s2, a2.s1, a2.score));
+            arcs.add(new Arc(that, false, this, true, a2.s1, a2.s2, a2.score));
+
         }
 
         if(!FCompG.isEmpty())
@@ -252,7 +256,9 @@ public class Sequence
             arcs.add(new Arc(this, false, that, true, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = FCompG.get(1);
-            arcs.add(new Arc(that, true, this, false, a2.s2, a2.s1, a2.score));
+            //arcs.add(new Arc(that, true, this, false, a2.s2, a2.s1, a2.score));
+            arcs.add(new Arc(that, true, this, false, a2.s1, a2.s2, a2.score));
+
         }
 
         if(!CompFCompG.isEmpty())
@@ -261,7 +267,9 @@ public class Sequence
             arcs.add(new Arc(this, true, that, true, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = CompFCompG.get(1);
-            arcs.add(new Arc(that, true, this, true, a2.s2, a1.s1, a2.score));
+            //arcs.add(new Arc(that, true, this, true, a2.s2, a1.s1, a2.score));
+            arcs.add(new Arc(that, true, this, true, a2.s1, a1.s2, a2.score));
+
         }
 
         return arcs;
@@ -279,6 +287,7 @@ public class Sequence
      */
     public static List<SequenceAlignment> semiGlobalAlignment(Sequence s1, Sequence s2, int match, int mismatch, int gap)
     {
+
         final int m = s1.getSize();
         final int n = s2.getSize();
 
@@ -305,6 +314,7 @@ public class Sequence
                 a[i][j] = Math.max(Math.max(x, y), z);
             }
         }
+
         for(int i = 0; i <= m ; i++)
         {
             for(int j = 0; j <= n ; j++)
@@ -314,6 +324,7 @@ public class Sequence
 
             System.out.printf("\n");
         }
+        System.out.println("");
 
         Optional<SequenceAlignment> sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
         Optional<SequenceAlignment> tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
@@ -321,7 +332,8 @@ public class Sequence
         List<SequenceAlignment> ret = new ArrayList<>();
         if(sBefore.isPresent() && tBefore.isPresent()){
             ret.add(sBefore.get());
-            ret.add(tBefore.get());}
+            ret.add(tBefore.get());
+        }
 
 
         return ret;
