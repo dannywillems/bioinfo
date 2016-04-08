@@ -156,4 +156,27 @@ public class SequenceTest
 
     }
     */
+
+    @Test
+    public void reverseAlignementTest()
+    {
+        Sequence g = new Sequence("taactat");
+        Sequence h = new Sequence("agactatcc");
+
+        List<SequenceAlignment> correct = Sequence.semiGlobalAlignment(g,  h, 1, -1, -2);
+        List<SequenceAlignment> reverse = Sequence.semiGlobalAlignment(h, g, 1, -1, -2);
+
+        SequenceAlignment correctPrem = correct.get(0);
+        SequenceAlignment correctSec = correct.get(1);
+
+        SequenceAlignment reversePrem = reverse.get(0);
+        SequenceAlignment reverseSec = reverse.get(1);
+
+        assertEquals(correctPrem.s1, reverseSec.s1);
+        assertEquals(correctPrem.s2, reverseSec.s2);
+        assertEquals(correctSec.s1, reversePrem.s1);
+        assertEquals(correctSec.s2, reversePrem.s2);
+
+
+    }
 }
