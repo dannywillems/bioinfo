@@ -49,7 +49,7 @@ public class SequenceTest
         Sequence t = new Sequence("cagcgtgg");
 
         List<SequenceAlignment> result = Sequence.semiGlobalAlignment(s,t, 1, -1, -2);
-    
+
 
         //SequenceAlignment first = result.get(0); //(s,t)
         //SequenceAlignment second = result.get(1);//(t,s)
@@ -92,10 +92,16 @@ public class SequenceTest
         SequenceAlignment first = result.get(0); //(s,t)
         SequenceAlignment second = result.get(1);//(t,s)
 
+
         assertEquals(first.s1.getSize(), first.s2.getSize());
 
         assertEquals(new Sequence("aggagaagaattcaccgctat----------"), first.s1);
         assertEquals(new Sequence("----------ttc-cccttattcaattctaa"), first.s2);
+        assertEquals(11, first.score);
+
+        assertEquals(new Sequence("ttccccttattcaattctaa--------------------"), second.s1);
+        assertEquals(new Sequence("-------------------aggagaagaattcaccgctat"), second.s2);
+        assertEquals(1, second.score);
     }
 
 
@@ -116,6 +122,11 @@ public class SequenceTest
 
         assertEquals(new Sequence("attagaccatgcggc-------"), first.s1);
         assertEquals(new Sequence("--------at-cggcattcagt"), first.s2);
+        assertEquals(7, first.score);
+
+        assertEquals(new Sequence("atcggcattcagt---------"), second.s1);
+        assertEquals(new Sequence("------att-agaccatgcggc"), second.s2);
+        assertEquals(7, second.score);
 
     }
 
