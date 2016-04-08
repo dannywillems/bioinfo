@@ -3,9 +3,11 @@ package be.ac.umons.bioinfo.sequence;
 /**
  * Created by aline on 31/03/16.
  */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents a DNA sequence
@@ -206,94 +208,80 @@ public class Sequence
     }
 
     /**
-     * Computes the global aligment of this sequence and an other one, considering
-     * specific costs for a match, a mismatch, and a gap.
-     * @param that an other sequence
+     * Generates a list of arcs associated to a pair of sequences.
+     * @param that an other sequence.
      * @param match the cost of a match
      * @param mismatch the cost of a mismatch
      * @param gap the cost of a gap
-     * @param h the cost of a first gap
-     * @return the similarity score of the sequences alignment
+     * @return the arcs associated to a pair of sequences.
      */
-    public int globalAlignment(Sequence that, int match, int mismatch, int gap, int h)
+    public List<Arc> arcGenerator(Sequence that, int match, int mismatch, int gap)
     {
-        final int m = this.getSize();
-        final int n = that.getSize();
+        Sequence compF = this.complement();
+        Sequence compG = that.complement();
 
-        int[][] a = new int[m +1][n +1];
-        int[][] b = new int[m +1][n +1];
-        int[][] c = new int[m +1][n +1];
+        List<SequenceAlignment> FG = semiGlobalAlignment(this, that, match, mismatch, gap);
+        List<SequenceAlignment> CompFG = semiGlobalAlignment(compF, that, match, mismatch, gap);
+        List<SequenceAlignment> FCompG = semiGlobalAlignment(this, compG, match, mismatch, gap);
+        List<SequenceAlignment> CompFCompG = semiGlobalAlignment(compF, compG, match, mismatch, gap);
 
+        List<Arc> arcs = new ArrayList<>();
 
-        // Initialisation
-
-        a[0][0] = 0;
-
-        for(int i = 1; i<= m; i++)
-            a[i][0] = Integer.MIN_VALUE;
-
-        for(int j = 1; j<= n; j++)
-            a[0][j] = Integer.MIN_VALUE;
-
-        for(int i = 1; i<= m; i++)
-            b[i][0] = Integer.MIN_VALUE;
-
-        for(int j = 1; j<= n; j++)
-            b[0][j] = -(h+(gap*j));
-
-        for(int i=1 ; i<= m ; i++)
-            c[i][0] = -(h+(gap*i));
-
-        for(int j=1 ; j<= n ; j++)
-            c[0][j] = Integer.MIN_VALUE;
-
-
-        // Filling
-
-        for(int i=1 ; i<=m ; i++)
+        if(!FG.isEmpty())
         {
-            for(int j=i ; j<=n ; j++)
-            {
-                final int xa = a[i-1][j-1];
-                final int ya = b[i-1][j-1];
-                final int za = c[i-1][j-1];
+            SequenceAlignment a1 = FG.get(0);
+            arcs.add(new Arc(this, false, that, false, a1.s1, a1.s2, a1.score));
 
-                a[i][j] = p(this.content[i-1], that.content[j-1], match, mismatch) + Math.max(Math.max(xa,ya),za);
-
-                final int xb = - (h+gap) + a[i][j-1];
-                final int yb = - gap + b[i][j-1];
-                final int zb = - (h + gap) + c[i][j-1];
-
-                b[i][j] = Math.max(Math.max(xb, yb), zb);
-
-                final int xc = - (h + gap) + a[i-1][j];
-                final int yc = - (h + gap) + b[i-1][j];
-                final int zc = - gap + c[i-1][j];
-
-                c[i][j] = Math.max(Math.max(xc, yc), zc);
-            }
+            SequenceAlignment a2 = FG.get(1);
+            arcs.add(new Arc(that, false, this, false, a2.s2, a2.s1, a2.score));
         }
 
-        int similarity = Math.max(Math.max(a[m][n], b[m][n]), c[m][n]);
+        if(!CompFG.isEmpty())
+        {
+            SequenceAlignment a1 = CompFG.get(0);
+            arcs.add(new Arc(this, true, that, false, a1.s1, a1.s2, a1.score));
 
-        return similarity;
+            SequenceAlignment a2 = CompFG.get(1);
+            arcs.add(new Arc(that, false, this, true, a2.s2, a2.s1, a2.score));
+        }
+
+        if(!FCompG.isEmpty())
+        {
+            SequenceAlignment a1 = FCompG.get(0);
+            arcs.add(new Arc(this, false, that, true, a1.s1, a1.s2, a1.score));
+
+            SequenceAlignment a2 = FCompG.get(1);
+            arcs.add(new Arc(that, true, this, false, a2.s2, a2.s1, a2.score));
+        }
+
+        if(!CompFCompG.isEmpty())
+        {
+            SequenceAlignment a1 = CompFCompG.get(0);
+            arcs.add(new Arc(this, true, that, true, a1.s1, a1.s2, a1.score));
+
+            SequenceAlignment a2 = CompFCompG.get(1);
+            arcs.add(new Arc(that, true, this, true, a2.s2, a1.s1, a2.score));
+        }
+
+        return arcs;
     }
 
     /**
      * Computes the semi-global aligment of this sequence and an other one, considering
      * specific costs for a match, a mismatch, and a gap.
-     * @param that an other sequence
+     * @param s1 a sequence
+     * @param s2 an other sequence
      * @param match the cost of a match
      * @param mismatch the cost of a mismatch
      * @param gap the cost of a gap
      * @return the result of the alignment of this sequence with the other one.
      */
-    public SequenceAlignment semiGlobalAlignment(Sequence that, int match, int mismatch, int gap)
+    public static List<SequenceAlignment> semiGlobalAlignment(Sequence s1, Sequence s2, int match, int mismatch, int gap)
     {
-        final int m = this.getSize();
-        final int n = that.getSize();
+        final int m = s1.getSize();
+        final int n = s2.getSize();
 
-        int[][] a = new int[this.getSize()+1][that.getSize()+1];
+        int[][] a = new int[m+1][n+1];
 
         // Initialisation
 
@@ -310,78 +298,90 @@ public class Sequence
             for(int j=1 ; j<= n ; j++)
             {
                 final int x = a[i-1][j] + gap;
-                final int y = a[i-1][j-1] + p(this.content[i-1], that.content[j-1], match, mismatch);
+                final int y = a[i-1][j-1] + p(s1.content[i-1], s2.content[j-1], match, mismatch);
                 final int z = a[i][j-1] + gap;
 
                 a[i][j] = Math.max(Math.max(x, y), z);
             }
         }
 
-        int iMax = 0;
-        int jMax = 0;
+        Optional<SequenceAlignment> sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
+        Optional<SequenceAlignment> tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
 
-        int iPos = Integer.MIN_VALUE;
-        int jPos = Integer.MIN_VALUE;
+        List<SequenceAlignment> ret = new ArrayList<>();
+            ret.add(sBefore.get());
+            ret.add(tBefore.get());
 
-        for(int i = 0; i<=m ; i++)
+        return ret;
+    }
+
+    /**
+     * Creates a sequence alignment by bactracking the similarity matrix from its bottom.
+     * @param a the similarity matrix.
+     * @param s1 a sequence.
+     * @param s2 an other sequence.
+     *
+     * @param match the cost of a match
+     * @param mismatch the cost of a mismatch
+     * @param gap the cost of a gap
+     * @return If the two considered sequence are not included in each other, the alignment of these sequences.
+     * Otherwise, returns nothing.
+     */
+    private static Optional<SequenceAlignment> backtrack(int[][] a,
+                                                         Sequence s1,
+                                                         Sequence s2,
+                                                         boolean bottom,
+                                                         int match,
+                                                         int mismatch,
+                                                         int gap)
+    {
+        int m = a.length - 1;
+        int n = a[0].length - 1;
+
+        int iPos = m;
+        int iMax = Integer.MIN_VALUE;
+
+        int jPos = n;
+        int jMax = Integer.MIN_VALUE;
+
+        if(bottom)
         {
-            if(a[i][n] > jMax)
+            for(int j = n; j >= 0 ; j--)
             {
-                jMax = a[i][n];
-                jPos = i;
+                if(a[m][j] > jMax)
+                {
+                    jMax = a[m][j];
+                    jPos = j;
+                }
             }
-        }
-
-        for(int j = 0; j<=n ; j++)
-        {
-            if(a[m][j] > iMax)
-            {
-                iMax = a[m][j];
-                iPos = j;
-            }
-        }
-
-
-
-        int similarity = 0;
-        int x, y;
-
-        if(iMax > jMax)
-        {
-            similarity = iMax;
-            x = iPos;
-            y = m;
         }
         else
         {
-            similarity = jMax;
-            x = n;
-            y = jPos;
-        }
-
-
-        for(int i = 0; i <= m ; i++)
-        {
-            for(int j = 0; j <= n ; j++)
+            for(int i = m; i >= 0 ; i--)
             {
-                //System.out.print(a[i][j] + " \t");
+                if(a[i][n] > iMax)
+                {
+                    iMax = a[i][n];
+                    iPos = i;
+                }
             }
-
-            //System.out.printf("\n");
         }
 
-        //System.out.println("Max in " + x + " " + y + " with score " + similarity);
+        int x = jPos;
+        int y = iPos;
 
+        int score = 0;
 
         List<Byte> aligned_s = new ArrayList<Byte>();
         List<Byte> aligned_t = new ArrayList<Byte>();
+
 
         if(x == n)  // Right border
         {
             for(int i=m ; i>y ; i--)
             {
                 aligned_t.add((byte) GAP);
-                aligned_s.add(this.content[i-1]);
+                aligned_s.add(s1.content[i-1]);
             }
         }
         else
@@ -389,20 +389,19 @@ public class Sequence
             for(int j=n ; j>x ; j--)
             {
                 aligned_s.add((byte) GAP);
-                aligned_t.add(that.content[j-1]);
+                aligned_t.add(s2.content[j-1]);
             }
         }
 
         while(x > 0 && y > 0)
         {
             final int b = a[y][x - 1] + gap;
-            final int c = a[y - 1][x - 1] + p(this.content[y - 1], that.content[x - 1], match, mismatch);
-            // final int d = a[y-1][x] + gap;
+            final int c = a[y - 1][x - 1] + p(s1.content[y - 1], s2.content[x - 1], match, mismatch);
 
             if (c == a[y][x])
             {
-                aligned_s.add((byte) this.content[y - 1]);
-                aligned_t.add((byte) that.content[x - 1]);
+                aligned_s.add((byte) s1.content[y - 1]);
+                aligned_t.add((byte) s2.content[x - 1]);
 
                 x -= 1;
                 y -= 1;
@@ -411,21 +410,19 @@ public class Sequence
                 if (b == a[y][x])
                 {
                     aligned_s.add((byte) GAP);
-                    aligned_t.add((byte) that.content[x - 1]);
+                    aligned_t.add((byte) s2.content[x - 1]);
 
                     x -= 1;
                 } else
                 {
-                    aligned_s.add((byte) this.content[y - 1]);
+                    aligned_s.add((byte) s1.content[y - 1]);
                     aligned_t.add((byte) GAP);
 
                     y -= 1;
                 }
             }
 
-            //System.out.println(aligned_s);
-            //System.out.println(aligned_t);
-            //System.out.println("*******");
+            score++;
         }
 
         if (x > 0)
@@ -433,14 +430,14 @@ public class Sequence
             for(int j=x ; j>0 ; j--)
             {
                 aligned_s.add((byte) GAP);
-                aligned_t.add(that.content[j-1]);
+                aligned_t.add(s2.content[j-1]);
             }
         } else
         {
             for(int i=y ; i>0 ; i--)
             {
                 aligned_t.add((byte) GAP);
-                aligned_s.add(this.content[i-1]);
+                aligned_s.add(s1.content[i-1]);
             }
         }
 
@@ -455,6 +452,19 @@ public class Sequence
         aligned_t.toArray(tArray);
         Sequence alignedT = new Sequence(tArray);
 
-        return new SequenceAlignment(alignedS, alignedT, similarity);
+        if(bottom)
+        {
+            if(y == 0) // s1 is included in s2
+                return Optional.empty();
+            else
+                return Optional.of(new SequenceAlignment(alignedS, alignedT, score));
+        }
+        else
+        {
+            if(x == 0) // s2 is included s1
+                return Optional.empty();
+            else
+                return Optional.of(new SequenceAlignment(alignedS, alignedT, score));
+        }
     }
 }
