@@ -48,12 +48,17 @@ public class SequenceTest
         Sequence s = new Sequence("cagcacttggattctcgg");
         Sequence t = new Sequence("cagcgtgg");
 
-        SequenceAlignment result = s.semiGlobalAlignment(t, 1, -1, -2);
+        List<SequenceAlignment> result = Sequence.semiGlobalAlignment(s,t, 1, -1, -2);
+    
 
-        assertEquals(result.s1.getSize(), result.s2.getSize());
+        //SequenceAlignment first = result.get(0); //(s,t)
+        //SequenceAlignment second = result.get(1);//(t,s)
 
-        assertEquals(new Sequence("cagca-cttggattctcgg"), result.s1);
-        assertEquals(new Sequence("---cagcgtgg--------"), result.s2);
+
+        assertEquals(result.size(), 0);
+
+        //assertEquals(new Sequence("cagca-cttggattctcgg"), first.s1);
+        //assertEquals(new Sequence("---cagcgtgg--------"), first.s2);
     }
 
     @Test
@@ -62,11 +67,15 @@ public class SequenceTest
         Sequence s = new Sequence("cagcacttggattctcgg");
         Sequence t = new Sequence("cagcgtgg");
 
-        SequenceAlignment result = t.semiGlobalAlignment(s, 1, -1, -2);
-        assertEquals(result.s1.getSize(), result.s2.getSize());
+        List<SequenceAlignment> result = Sequence.semiGlobalAlignment(t, s, 1, -1, -2);
 
-        assertEquals(new Sequence("cagca-cttggattctcgg"), result.s2);
-        assertEquals(new Sequence("---cagcgtgg--------"), result.s1);
+        //SequenceAlignment first = result.get(0); //(s,t)
+        //SequenceAlignment second = result.get(1);//(t,s)
+
+        assertEquals(0, result.size());
+
+        //assertEquals(new Sequence("cagca-cttggattctcgg"), first.s2);
+        //assertEquals(new Sequence("---cagcgtgg--------"), first.s1);
 
 
     }
@@ -77,27 +86,18 @@ public class SequenceTest
         Sequence s = new Sequence("aggagaagaattcaccgctat");
         Sequence t = new Sequence("ttccccttattcaattctaa");
 
-        SequenceAlignment result = s.semiGlobalAlignment(t, 1, -1, -2);
+        List<SequenceAlignment> result = Sequence.semiGlobalAlignment(s, t, 1, -1, -2);
 
-        assertEquals(result.s1.getSize(), result.s2.getSize());
 
-        assertEquals(new Sequence("aggagaagaattcaccgctat----------"), result.s1);
-        assertEquals(new Sequence("----------ttc-cccttattcaattctaa"), result.s2);
+        SequenceAlignment first = result.get(0); //(s,t)
+        SequenceAlignment second = result.get(1);//(t,s)
+
+        assertEquals(first.s1.getSize(), first.s2.getSize());
+
+        assertEquals(new Sequence("aggagaagaattcaccgctat----------"), first.s1);
+        assertEquals(new Sequence("----------ttc-cccttattcaattctaa"), first.s2);
     }
-    @Test
-    public void semiGlobalAlignmentReverseTest2()
-    {
-        Sequence s = new Sequence("aggagaagaattcaccgctat");
-        Sequence t = new Sequence("ttccccttattcaattctaa");
 
-        SequenceAlignment result = t.semiGlobalAlignment(s, 1, -1, -2);
-        assertEquals(result.s1.getSize(), result.s2.getSize());
-
-        assertEquals(new Sequence("aggagaagaattcaccgctat----------"), result.s2);
-        assertEquals(new Sequence("----------ttc-cccttattcaattctaa"), result.s1);
-
-
-    }
 
     @Test
 
@@ -106,42 +106,34 @@ public class SequenceTest
         Sequence s = new Sequence("attagaccatgcggc");
         Sequence t = new Sequence("atcggcattcagt");
 
-        SequenceAlignment result = s.semiGlobalAlignment(t, 1, -1, -2);
+        List<SequenceAlignment> result = Sequence.semiGlobalAlignment(s, t, 1, -1, -2);
 
-        assertEquals(result.s1.getSize(), result.s2.getSize());
 
-        assertEquals(new Sequence("attagaccatgcggc-------"), result.s1);
-        assertEquals(new Sequence("--------at-cggcattcagt"), result.s2);
+        SequenceAlignment first = result.get(0); //(s,t)
+        SequenceAlignment second = result.get(1);//(t,s)
 
-    }
+        assertEquals(first.s1.getSize(),first.s2.getSize());
 
-    @Test
-    public void semiGlobalAlignmentReverseTest3()
-    {
-        Sequence s = new Sequence("attagaccatgcggc");
-        Sequence t = new Sequence("atcggcattcagt");
-
-        SequenceAlignment result = t.semiGlobalAlignment(s, 1, -1, -2);
-        assertEquals(result.s1.getSize(), result.s2.getSize());
-
-        assertEquals(new Sequence("attagaccatgcggc-------"), result.s2);
-        assertEquals(new Sequence("--------at-cggcattcagt"), result.s1);
-
+        assertEquals(new Sequence("attagaccatgcggc-------"), first.s1);
+        assertEquals(new Sequence("--------at-cggcattcagt"), first.s2);
 
     }
 
+    /*
     @Test
     public void containedSemiGlobalAlignmentTest()
     {
         Sequence s = new Sequence("attagaccatgcggc");
         Sequence t = new Sequence("tagacca");
 
-        SequenceAlignment result = s.semiGlobalAlignment(t, 1, -1, -2);
-        assertEquals(result.s1.getSize(), result.s2.getSize());
+        List<SequenceAlignment> result = Sequence.semiGlobalAlignment(s,t, 1, -1, -2);
 
-        assertEquals(new Sequence("attagaccatgcggc"), result.s1);
-        assertEquals(new Sequence("--tagacca------"), result.s2);
+        assertEquals(result.size(),0);
+
+        //assertEquals(new Sequence("attagaccatgcggc"), result.s1);
+        //assertEquals(new Sequence("--tagacca------"), result.s2);
 
 
     }
+    */
 }
