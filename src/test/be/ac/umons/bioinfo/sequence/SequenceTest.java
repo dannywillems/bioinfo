@@ -15,6 +15,15 @@ import static junit.framework.TestCase.assertEquals;
 public class SequenceTest
 {
     @Test
+    public void complementTest()
+    {
+        Sequence t = new Sequence("cagcgtgg");
+        Sequence res = t.complement();
+        Sequence wanted = new Sequence("ccacgctg");
+
+        assertEquals(wanted, res);
+    }
+    @Test
     public void complementOfComplementMustBeIdentity()
     {
         List<Sequence> sequences = new ArrayList<Sequence>();
