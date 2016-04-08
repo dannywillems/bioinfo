@@ -26,6 +26,7 @@ public class Sequence
     /**
      * @param seq A DNA sequence to encode
      */
+
     public Sequence(String seq)
     {
         this.content = letter2Base(seq);
@@ -309,8 +310,10 @@ public class Sequence
         Optional<SequenceAlignment> tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
 
         List<SequenceAlignment> ret = new ArrayList<>();
+        if(sBefore.isPresent() && tBefore.isPresent()){
             ret.add(sBefore.get());
-            ret.add(tBefore.get());
+            ret.add(tBefore.get());}
+
 
         return ret;
     }
