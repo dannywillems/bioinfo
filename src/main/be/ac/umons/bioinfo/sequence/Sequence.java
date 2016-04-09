@@ -230,6 +230,7 @@ public class Sequence
 
         if(!FG.isEmpty())
         {
+            //System.out.println("prout1");
             SequenceAlignment a1 = FG.get(0);
             arcs.add(new Arc(this, false, that, false, a1.s1, a1.s2, a1.score));
 
@@ -241,6 +242,8 @@ public class Sequence
 
         if(!CompFG.isEmpty())
         {
+            //System.out.println("prout2");
+
             SequenceAlignment a1 = CompFG.get(0);
             arcs.add(new Arc(this, true, that, false, a1.s1, a1.s2, a1.score));
 
@@ -252,6 +255,8 @@ public class Sequence
 
         if(!FCompG.isEmpty())
         {
+            //System.out.println("prout3");
+
             SequenceAlignment a1 = FCompG.get(0);
             arcs.add(new Arc(this, false, that, true, a1.s1, a1.s2, a1.score));
 
@@ -263,12 +268,14 @@ public class Sequence
 
         if(!CompFCompG.isEmpty())
         {
+            //System.out.println("prout4");
+
             SequenceAlignment a1 = CompFCompG.get(0);
             arcs.add(new Arc(this, true, that, true, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = CompFCompG.get(1);
             //arcs.add(new Arc(that, true, this, true, a2.s2, a1.s1, a2.score));
-            arcs.add(new Arc(that, true, this, true, a2.s1, a1.s2, a2.score));
+            arcs.add(new Arc(that, true, this, true, a2.s1, a2.s2, a2.score));
 
         }
 
@@ -314,7 +321,7 @@ public class Sequence
                 a[i][j] = Math.max(Math.max(x, y), z);
             }
         }
-
+        /*
         for(int i = 0; i <= m ; i++)
         {
             for(int j = 0; j <= n ; j++)
@@ -325,15 +332,17 @@ public class Sequence
             System.out.printf("\n");
         }
         System.out.println("");
+        */
 
         Optional<SequenceAlignment> sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
         Optional<SequenceAlignment> tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
 
         List<SequenceAlignment> ret = new ArrayList<>();
-        if(sBefore.isPresent() && tBefore.isPresent()){
+        if(sBefore.isPresent())
             ret.add(sBefore.get());
+        if (tBefore.isPresent())
             ret.add(tBefore.get());
-        }
+
 
 
         return ret;
@@ -476,17 +485,21 @@ public class Sequence
         aligned_t.toArray(tArray);
         Sequence alignedT = new Sequence(tArray);
 
+
+        // TODO: verifier que c est bien le comportement souhaite dans le cas des sequences inclues l une dans l autre
         if(bottom)
         {
             if(y == 0) // s1 is included in s2
-                return Optional.empty();
+                //return Optional.empty();
+                return Optional.of(new SequenceAlignment(alignedS, alignedT, Integer.MIN_VALUE));
             else
                 return Optional.of(new SequenceAlignment(alignedS, alignedT, score));
         }
         else
         {
             if(x == 0) // s2 is included s1
-                return Optional.empty();
+                //return Optional.empty();
+                return Optional.of(new SequenceAlignment(alignedT, alignedS, Integer.MIN_VALUE));
             else
                 return Optional.of(new SequenceAlignment(alignedT, alignedS, score));
         }
