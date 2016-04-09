@@ -43,28 +43,46 @@ public class Greedy
         //orders the arcs by their score
         Collections.sort(arcs, new ArcComparator());
 
+
+        Map<Sequence, Arc> right = new HashMap<>(); // Arcs at the right of a sequence
+        Map<Sequence, Arc> left = new HashMap<>(); // Arcs at the left of a sequence
+        Map<Sequence, Boolean> comp = new HashMap<>();
+
         //computes the greedy algorithm
-        while(groups.size() > 1)
+        while(groups.size() > 1 )
         {
             Arc candidate = arcs.pop();
 
-            if(isAcceptable(candidate, entered, exited, groups))
+
+            Boolean bool = isAcceptable(candidate, entered, exited, groups,comp);
+
+            if(bool)
             {
                 accepted.add(candidate);
                 exited.add(candidate.s1);
                 entered.add(candidate.s2);
                 groups.union(candidate.s1, candidate.s2);
+                right.put(candidate.s1, candidate);
+                left.put(candidate.s2, candidate);
+                comp.put(candidate.s1, candidate.s1Comp);
+                comp.put(candidate.s2, candidate.s2Comp);
+
             }
         }
 
-        Map<Sequence, Arc> right = new HashMap<>(); // Arcs at the right of a sequence
-        Map<Sequence, Arc> left = new HashMap<>(); // Arcs at the left of a sequence
-
+        //Map<Sequence, Arc> right = new HashMap<>(); // Arcs at the right of a sequence
+        //Map<Sequence, Arc> left = new HashMap<>(); // Arcs at the left of a sequence
+        /*
         for(Arc a : accepted)
         {
-            right.put(a.s1, a);
-            left.put(a.s2, a);
+            //right.put(a.s1, a);
+            //left.put(a.s2, a);
+
+
         }
+       */
+
+
 
         // Select a pivot arc, and look for all the arcs at the right of the pivot
         LinkedList<Arc> path = new LinkedList<>();
@@ -110,8 +128,26 @@ public class Greedy
      * @param groups the sequences are stand together
      * @return true if a is acceptable, false otherwise
      */
-    public static boolean isAcceptable(Arc a, Set<Sequence> entered, Set<Sequence> exited, UnionFind<Sequence> groups)
+    public static boolean isAcceptable(Arc a,
+                                       Set<Sequence> entered,
+                                       Set<Sequence> exited,
+                                       UnionFind<Sequence> groups,
+                                       Map<Sequence,Boolean> comp)
     {
-        return !exited.contains(a.s1) && !entered.contains(a.s2) && !groups.sameSet(a.s1, a.s2);
+
+        Boolean _s1Comp = a.s1Comp;
+        Sequence s = a.s1;
+
+        Boolean _s2Comp = a.s2Comp;
+        Sequence t = a.s2;
+
+        Boolean test1 = !comp.containsKey(s)||comp.get(s) == _s1Comp;
+        Boolean test2 = !comp.containsKey(t)||comp.get(t) == _s2Comp;
+
+        return !exited.contains(a.s1)
+                && !entered.contains(a.s2)
+                && !groups.sameSet(a.s1, a.s2)
+                && test1
+                && test2;
     }
 }
