@@ -22,7 +22,6 @@ public class Sequence
     private byte[] content;
 
 
-
     /**
      * @param seq A DNA sequence to encode
      */
@@ -106,6 +105,7 @@ public class Sequence
     }
 
     /**
+     * Get the size of the sequence which is the number of bases.
      * @return The number of bases in this DNA sequence.
      */
     public int getSize()
@@ -230,53 +230,38 @@ public class Sequence
 
         if(!FG.isEmpty())
         {
-            //System.out.println("prout1");
             SequenceAlignment a1 = FG.get(0);
             arcs.add(new Arc(this, false, that, false, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = FG.get(1);
-            //arcs.add(new Arc(that, false, this, false, a2.s2, a2.s1, a2.score));
             arcs.add(new Arc(that, false, this, false, a2.s1, a2.s2, a2.score));
-
         }
 
         if(!CompFG.isEmpty())
         {
-            //System.out.println("prout2");
-
             SequenceAlignment a1 = CompFG.get(0);
             arcs.add(new Arc(this, true, that, false, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = CompFG.get(1);
-            //arcs.add(new Arc(that, false, this, true, a2.s2, a2.s1, a2.score));
             arcs.add(new Arc(that, false, this, true, a2.s1, a2.s2, a2.score));
-
         }
 
         if(!FCompG.isEmpty())
         {
-            //System.out.println("prout3");
-
             SequenceAlignment a1 = FCompG.get(0);
             arcs.add(new Arc(this, false, that, true, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = FCompG.get(1);
-            //arcs.add(new Arc(that, true, this, false, a2.s2, a2.s1, a2.score));
             arcs.add(new Arc(that, true, this, false, a2.s1, a2.s2, a2.score));
-
         }
 
         if(!CompFCompG.isEmpty())
         {
-            //System.out.println("prout4");
-
             SequenceAlignment a1 = CompFCompG.get(0);
             arcs.add(new Arc(this, true, that, true, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = CompFCompG.get(1);
-            //arcs.add(new Arc(that, true, this, true, a2.s2, a1.s1, a2.score));
             arcs.add(new Arc(that, true, this, true, a2.s1, a2.s2, a2.score));
-
         }
 
         return arcs;
@@ -321,18 +306,6 @@ public class Sequence
                 a[i][j] = Math.max(Math.max(x, y), z);
             }
         }
-        /*
-        for(int i = 0; i <= m ; i++)
-        {
-            for(int j = 0; j <= n ; j++)
-            {
-                System.out.print(a[i][j] + " \t");
-            }
-
-            System.out.printf("\n");
-        }
-        System.out.println("");
-        */
 
         Optional<SequenceAlignment> sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
         Optional<SequenceAlignment> tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
