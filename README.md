@@ -68,3 +68,11 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 #### MISC
 - [ ] Suppression des tests *inutiles*.
 - [ ] Suppression des commentaires *inutiles*.
+
+## Plus d'informations
+
+* Introduction to computational molecular biology - Carlos Setubal, Joao Meidanis. Chapitres 3 et 4.
+
+#### Alignement de séquences
+
+* Wikipedia: https://en.wikipedia.org/wiki/Sequence_alignment
