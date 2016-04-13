@@ -3,39 +3,14 @@ package be.ac.umons.bioinfo.sequence;
 
 public class Arc
 {
-    /**
-     * The initial source sequence
-     */
-    public final Sequence s1;
-    /**
-     * True if we need to use the complementary of s1
-     */
-    public final boolean s1Comp;
 
-    /**
-     * The initial target sequence
-     */
-    public final Sequence s2;
-    /**
-     * True if we need to use the complementary of s2
-     */
-    public final boolean s2Comp;
-
-    /**
-     * The s1 sequence when aligned with s2. Can be the complementary depending
-     * on the value of s1Comp
-     */
-    public final Sequence s1Aligned;
-    /**
-     * The s2 sequence when aligned with s1. Can be the complementary depending
-     * on the value of s2Comp
-     */
-    public final Sequence s2Aligned;
-
-    /**
-     * The alignment score
-     */
-    public final int score;
+    public final Sequence s1; // The initial source sequence
+    public final boolean s1Comp; //True if we need to use the complementary of s1
+    public final Sequence s2; // The initial target sequence
+    public final boolean s2Comp; //True if we need to use the complementary of s2
+    public final Sequence s1Aligned; // The s1 sequence when aligned with s2. Can be the complementary.
+    public final Sequence s2Aligned; //he s2 sequence when aligned with s1. Can be the complementary
+    public final int score; //The alignment score
 
     public Arc(Sequence s1,
                boolean s1Comp,
