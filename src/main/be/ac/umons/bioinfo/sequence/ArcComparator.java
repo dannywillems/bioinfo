@@ -11,6 +11,18 @@ public class ArcComparator implements Comparator<Arc>
     @Override
     public int compare(Arc a1, Arc a2)
     {
-        return a2.score - a1.score;
+        if (a1.score < a2.score)
+            return -1;
+        else{
+            if (a1.score > a2.score)
+            return 1;
+
+            else
+                return 0;
+
+        }
+
+
+        //return a2.score - a1.score;
     }
 }
