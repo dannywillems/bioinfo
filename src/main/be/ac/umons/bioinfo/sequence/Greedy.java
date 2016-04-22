@@ -1,7 +1,7 @@
 package be.ac.umons.bioinfo.sequence;
 
+import be.ac.umons.bioinfo.Pair;
 import be.ac.umons.bioinfo.UnionFind;
-import be.ac.umons.bioinfo.parallel.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
