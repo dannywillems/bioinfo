@@ -4,8 +4,6 @@
 
 Testé avec:
 * Open JDK 6
-
-Sera testé avec:
 * Open JDK 7
 * Oracle JDK 7
 * Oracle JDK 8
