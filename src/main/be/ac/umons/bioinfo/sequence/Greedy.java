@@ -145,12 +145,9 @@ public class Greedy
             current = previous.start;
         }
 
-        List<SequenceAlignment> ret = new ArrayList<>(path.size()+1);
-
-        for(Arc a : path)
-            ret.add(a.getAlignment(match, mismatch, gap));
-
-        return ret;
+        return path.parallelStream()
+                   .map(arc -> arc.getAlignment(match, mismatch, gap))
+                   .collect(Collectors.toList());
     }
 
     /**
