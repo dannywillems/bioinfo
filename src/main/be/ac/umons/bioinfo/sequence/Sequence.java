@@ -7,7 +7,6 @@ package be.ac.umons.bioinfo.sequence;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Represents a DNA sequence
@@ -234,6 +233,7 @@ public class Sequence
             arcs.add(new Arc(this, false, that, false, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = FG.get(1);
+            //arcs.add(new Arc(that, false, this, false, a2.end, a2.start, a2.score));
             arcs.add(new Arc(that, false, this, false, a2.s1, a2.s2, a2.score));
         }
 
@@ -243,6 +243,7 @@ public class Sequence
             arcs.add(new Arc(this, true, that, false, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = CompFG.get(1);
+            //arcs.add(new Arc(that, false, this, true, a2.end, a2.start, a2.score));
             arcs.add(new Arc(that, false, this, true, a2.s1, a2.s2, a2.score));
         }
 
@@ -252,6 +253,7 @@ public class Sequence
             arcs.add(new Arc(this, false, that, true, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = FCompG.get(1);
+            //arcs.add(new Arc(that, true, this, false, a2.end, a2.start, a2.score));
             arcs.add(new Arc(that, true, this, false, a2.s1, a2.s2, a2.score));
         }
 
@@ -261,6 +263,7 @@ public class Sequence
             arcs.add(new Arc(this, true, that, true, a1.s1, a1.s2, a1.score));
 
             SequenceAlignment a2 = CompFCompG.get(1);
+            //arcs.add(new Arc(that, true, this, true, a2.end, a1.start, a2.score));
             arcs.add(new Arc(that, true, this, true, a2.s1, a2.s2, a2.score));
         }
 
@@ -306,17 +309,24 @@ public class Sequence
                 a[i][j] = Math.max(Math.max(x, y), z);
             }
         }
+        /*
+        for(int i=1 ; i<= m ; i++)
+        {
+            for(int j=1 ; j<= n ; j++)
+            {
+                System.out.print(" "+ a[i][j] + " ");
 
-        Optional<SequenceAlignment> sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
-        Optional<SequenceAlignment> tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
+            }
+            System.out.println("");
+        }*/
+
+        SequenceAlignment sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
+        SequenceAlignment tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
 
         List<SequenceAlignment> ret = new ArrayList<>();
-        if(sBefore.isPresent())
-            ret.add(sBefore.get());
-        if (tBefore.isPresent())
-            ret.add(tBefore.get());
 
-
+        ret.add(sBefore);
+        ret.add(tBefore);
 
         return ret;
     }
@@ -333,13 +343,13 @@ public class Sequence
      * @return If the two considered sequence are not included in each other, the alignment of these sequences.
      * Otherwise, returns nothing.
      */
-    private static Optional<SequenceAlignment> backtrack(int[][] a,
-                                                         Sequence s1,
-                                                         Sequence s2,
-                                                         boolean bottom,
-                                                         int match,
-                                                         int mismatch,
-                                                         int gap)
+    private static SequenceAlignment backtrack(int[][] a,
+                                               Sequence s1,
+                                               Sequence s2,
+                                               boolean bottom,
+                                               int match,
+                                               int mismatch,
+                                               int gap)
     {
         int m = a.length - 1;
         int n = a[0].length - 1;
@@ -406,8 +416,8 @@ public class Sequence
 
             if (c == a[y][x])
             {
-                aligned_s.add((byte) s1.content[y - 1]);
-                aligned_t.add((byte) s2.content[x - 1]);
+                aligned_s.add(s1.content[y - 1]);
+                aligned_t.add(s2.content[x - 1]);
 
                 x -= 1;
                 y -= 1;
@@ -462,19 +472,11 @@ public class Sequence
         // TODO: verifier que c est bien le comportement souhaite dans le cas des sequences inclues l une dans l autre
         if(bottom)
         {
-            if(y == 0) // s1 is included in s2
-                //return Optional.empty();
-                return Optional.of(new SequenceAlignment(alignedS, alignedT, Integer.MIN_VALUE));
-            else
-                return Optional.of(new SequenceAlignment(alignedS, alignedT, score));
+            return new SequenceAlignment(alignedS, alignedT, score);
         }
         else
         {
-            if(x == 0) // s2 is included s1
-                //return Optional.empty();
-                return Optional.of(new SequenceAlignment(alignedT, alignedS, Integer.MIN_VALUE));
-            else
-                return Optional.of(new SequenceAlignment(alignedT, alignedS, score));
+             return new SequenceAlignment(alignedT, alignedS, score);
         }
     }
 }
