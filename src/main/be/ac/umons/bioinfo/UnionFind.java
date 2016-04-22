@@ -12,7 +12,7 @@ public class UnionFind<T>
 {
     /** Maps an element to his parent which is the representative. */
     private Map<T, T> parent;
-    /** Maps an element to his rank which is the height in the tree */
+    /** Maps an element to his rank which is the number of times the element has been merged and added within another */
     private Map<T, Integer> rank;
     /** Number of equivalence classes */
     private int nbSets;
@@ -55,15 +55,9 @@ public class UnionFind<T>
             }
             else
             {
-                if(xRank > yRank)
-                {
-                    this.parent.put(yRoot, xRoot);
-                }
-                else
-                {
-                    this.parent.put(yRoot, xRoot);
+                this.parent.put(yRoot, xRoot);
+                if(xRank.equals(yRank))
                     this.rank.put(xRoot, xRank + 1);
-                }
             }
 
             this.nbSets--;
