@@ -96,11 +96,8 @@ public class Greedy
 
         List<SequenceAlignment> ret = new ArrayList<>(path.size()+1);
 
-        for(Arc a : path) {
-            SequenceAlignment seq = new SequenceAlignment(a.alignedStart, a.alignedEnd, a.score);
-            ret.add(seq);
-        }
-
+        for(Arc a : path)
+            ret.add(a.getAlignment());
 
         return ret;
     }

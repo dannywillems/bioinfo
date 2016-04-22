@@ -7,8 +7,8 @@ public class Arc {
     public final boolean startComp; //True if we need to use the complementary of start
     public final Sequence end; // The initial target sequence
     public final boolean endComp; //True if we need to use the complementary of end
-    public final Sequence alignedStart; // The start sequence when aligned with end. Can be the complementary.
-    public final Sequence alignedEnd; //he end sequence when aligned with start. Can be the complementary
+    private final Sequence alignedStart; // The start sequence when aligned with end. Can be the complementary.
+    private final Sequence alignedEnd; //he end sequence when aligned with start. Can be the complementary
     public final int score; //The alignment score
 
     /**
@@ -28,7 +28,8 @@ public class Arc {
                boolean endComp,
                Sequence alignedStart,
                Sequence alignedEnd,
-               int score) {
+               int score)
+    {
         this.start = start;
         this.startComp = startComp;
         this.end = end;
@@ -38,4 +39,8 @@ public class Arc {
         this.score = score;
     }
 
+    public SequenceAlignment getAlignment()
+    {
+        return new SequenceAlignment(alignedStart, alignedEnd, score);
+    }
 }
