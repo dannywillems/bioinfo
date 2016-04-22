@@ -3,7 +3,9 @@ package be.ac.umons.bioinfo;
 /**
  * Created by aline on 31/03/16.
  */
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,14 +16,34 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
+
         Greedy greed = new Greedy();
 
+        /*
+        Sequence f = new Sequence("catagtc");
+        Sequence g = new Sequence("taactat");
+        Sequence h = new Sequence("agactatcc");
+
+        List<Sequence> list = new ArrayList<Sequence>();
+
+        list.add(f);
+        list.add(g);
+        list.add(h);*/
+/*
         Sequence f = new Sequence("cacgt");
         Sequence g = new Sequence("acgt");
         Sequence h = new Sequence("actacg");
         Sequence i = new Sequence("gtact");
         Sequence j = new Sequence("actga");
         Sequence k = new Sequence("ctga");
+*/
+
+        Sequence f = new Sequence("actttacg");
+        Sequence g = new Sequence("ttgcacgat");
+        Sequence h = new Sequence("ttgcg");
+        Sequence i = new Sequence("ggaatctgcgagtta");
+        Sequence j = new Sequence("tact");
+        Sequence k = new Sequence("gaccgat");
 
         List<Sequence> list = new ArrayList<Sequence>();
 
@@ -46,8 +68,8 @@ public class Main
         list.add(_g);*/
 
 
+
         List<SequenceAlignment> result = greed.computePath(list, 1, -1, -2);
-        Iterator<SequenceAlignment> iterator = result.iterator();
 
         /*
         System.out.println("Je veux aligner :");
@@ -57,11 +79,11 @@ public class Main
         System.out.println("------->");
         */
 
-        while(iterator.hasNext())
+        for(SequenceAlignment sa : result)
         {
-            SequenceAlignment alignment = iterator.next();
-            System.out.println(alignment.s1);
-            System.out.println(alignment.s2);
+            System.out.println(sa.s1);
+            System.out.println(sa.s2);
+            System.out.println(sa.score);
 
             System.out.println("----------------");
         }

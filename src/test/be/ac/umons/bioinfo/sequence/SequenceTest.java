@@ -63,11 +63,11 @@ public class SequenceTest
         SequenceAlignment first = result.get(0); //(s,t)
         SequenceAlignment second = result.get(1);//(t,s)
 
-        //System.out.println(first.s1);
-        //System.out.println(first.s2);
+        //System.out.println(first.start);
+        //System.out.println(first.end);
 
-        //System.out.println(second.s1);
-        //System.out.println(second.s2);
+        //System.out.println(second.start);
+        //System.out.println(second.end);
 
         assertEquals(new Sequence("cagca-cttggattctcgg"), second.s2);
         assertEquals(new Sequence("---cagcgtgg--------"), second.s1);
@@ -152,8 +152,8 @@ public class SequenceTest
 
         assertEquals(result.size(),0);
 
-        //assertEquals(new Sequence("attagaccatgcggc"), result.s1);
-        //assertEquals(new Sequence("--tagacca------"), result.s2);
+        //assertEquals(new Sequence("attagaccatgcggc"), result.start);
+        //assertEquals(new Sequence("--tagacca------"), result.end);
 
 
     }
@@ -181,6 +181,5 @@ public class SequenceTest
 
 
     }
-
 
 }

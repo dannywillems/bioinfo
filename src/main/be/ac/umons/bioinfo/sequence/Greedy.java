@@ -1,8 +1,11 @@
 package be.ac.umons.bioinfo.sequence;
 
+import be.ac.umons.bioinfo.Pair;
 import be.ac.umons.bioinfo.UnionFind;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * An algorithm that proposes a list of sequence alignments that forms an Hamiltonian path.
@@ -10,23 +13,16 @@ import java.util.*;
 public class Greedy
 {
     /**
-     * Determine a list of aligment, that corresponds to the succession of alignements that
-     * have been ordered aligned in order to optimize the alignment.
-     * @param sequences The primary sequences to work on.
-     * @param match the cost of a match
-     * @param mismatch the cost of a mismatch
-     * @param gap the cost of a gap
-     * @return A sequence of alignement.
+     * @param sequences the sequences for which the arcs must be generated.
+     * @param match match cost
+     * @param mismatch mismatch cost
+     * @param gap gap cost
+     * @return a list of sequence arcs.
      */
-    public List<SequenceAlignment> computePath(List<Sequence> sequences, int match, int mismatch, int gap)
+    private List<Arc> generateArcs(List<Sequence> sequences, int match, int mismatch, int gap)
     {
-        LinkedList<Arc> arcs = new LinkedList<>();
-        UnionFind<Sequence> groups = new UnionFind<>(sequences);
-        Set<Sequence> entered = new HashSet<>();
-        Set<Sequence> exited = new HashSet<>();
-        Set<Arc> accepted = new HashSet<>();
+        List<Arc> arcs = new ArrayList<>();
 
-        //first computes all the arc of the graph
         for(int i=0 ; i < sequences.size()-1 ; i++)
         {
             for(int j=i+1 ; j < sequences.size() ; j++)
@@ -40,19 +36,75 @@ public class Greedy
             }
         }
 
+        return arcs;
+    }
 
-        //orders the arcs by their score
+    /**
+     * @param sequences the sequences for which the arcs must be generated.
+     * @param match match cost
+     * @param mismatch mismatch cost
+     * @param gap gap cost
+     * @return a list of sequence arcs.
+     */
+    private List<Arc> parallelGenerateArcs(List<Sequence> sequences,
+                                           int match, int mismatch, int gap)
+    {
+        List<Pair<Sequence>> pairs = new ArrayList<Pair<Sequence>>();
+
+        for(int i=0 ; i<sequences.size()-1 ; i++)
+            for( int j=i+1 ; j<sequences.size() ; j++)
+                pairs.add(new Pair<Sequence>(sequences.get(i), sequences.get(j)));
+
+        return pairs.parallelStream()
+                    .map(p -> p.a.arcGenerator(p.b, match, mismatch, gap))
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+    }
+
+
+
+
+    /**
+     * Determine a list of aligment, that corresponds to the succession of alignements that
+     * have been ordered aligned in order to optimize the alignment.
+     * @param sequences The primary sequences to work on.
+     * @param match the cost of a match
+     * @param mismatch the cost of a mismatch
+     * @param gap the cost of a gap
+     * @return A sequence of alignement.
+     */
+    public List<SequenceAlignment> computePath(List<Sequence> sequences, int match, int mismatch, int gap)
+    {
+        //List<Arc> arcs = generateArcs(sequences, match, mismatch, gap);
+        List<Arc> arcs = parallelGenerateArcs(sequences, match, mismatch, gap);
+
         Collections.sort(arcs, new ArcComparator());
 
+        return greedy(sequences, arcs, match, mismatch, gap);
+    }
+
+    private List<SequenceAlignment> greedy(List<Sequence> sequences,
+                                           List<Arc> arcs,
+                                           int match,
+                                           int mismatch,
+                                           int gap)
+    {
+        LinkedList<Arc> lArcs = new LinkedList<Arc>();
+        lArcs.addAll(arcs);
+
+        UnionFind<Sequence> groups = new UnionFind<>(sequences);
+        Set<Sequence> entered = new HashSet<>();
+        Set<Sequence> exited = new HashSet<>();
+        Set<Arc> accepted = new HashSet<>();
 
         Map<Sequence, Arc> right = new HashMap<>(); // Arcs at the right of a sequence
         Map<Sequence, Arc> left = new HashMap<>(); // Arcs at the left of a sequence
         Map<Sequence, Boolean> comp = new HashMap<>();
 
         //computes the greedy algorithm
-        while(groups.size() > 1 )
+        while(groups.size() > 1)
         {
-            Arc candidate = arcs.pop();
+            Arc candidate = lArcs.pop();
 
 
             if(isAcceptable(candidate, entered, exited, groups,comp))
@@ -65,7 +117,6 @@ public class Greedy
                 left.put(candidate.end, candidate);
                 comp.put(candidate.start, candidate.startComp);
                 comp.put(candidate.end, candidate.endComp);
-
             }
         }
 
@@ -94,12 +145,9 @@ public class Greedy
             current = previous.start;
         }
 
-        List<SequenceAlignment> ret = new ArrayList<>(path.size()+1);
-
-        for(Arc a : path)
-            ret.add(a.getAlignment(match, mismatch, gap));
-
-        return ret;
+        return path.parallelStream()
+                   .map(arc -> arc.getAlignment(match, mismatch, gap))
+                   .collect(Collectors.toList());
     }
 
     /**
