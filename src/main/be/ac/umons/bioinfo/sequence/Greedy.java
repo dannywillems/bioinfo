@@ -35,6 +35,7 @@ public class Greedy
                 Sequence s2 = sequences.get(j);
 
                 List<Arc> result = s1.arcGenerator(s2, match, mismatch, gap);
+
                 arcs.addAll(result);
             }
         }
@@ -54,35 +55,19 @@ public class Greedy
             Arc candidate = arcs.pop();
 
 
-            Boolean bool = isAcceptable(candidate, entered, exited, groups,comp);
-
-            if(bool)
+            if(isAcceptable(candidate, entered, exited, groups,comp))
             {
                 accepted.add(candidate);
-                exited.add(candidate.s1);
-                entered.add(candidate.s2);
-                groups.union(candidate.s1, candidate.s2);
-                right.put(candidate.s1, candidate);
-                left.put(candidate.s2, candidate);
-                comp.put(candidate.s1, candidate.s1Comp);
-                comp.put(candidate.s2, candidate.s2Comp);
+                exited.add(candidate.start);
+                entered.add(candidate.end);
+                groups.union(candidate.start, candidate.end);
+                right.put(candidate.start, candidate);
+                left.put(candidate.end, candidate);
+                comp.put(candidate.start, candidate.startComp);
+                comp.put(candidate.end, candidate.endComp);
 
             }
         }
-
-        //Map<Sequence, Arc> right = new HashMap<>(); // Arcs at the right of a sequence
-        //Map<Sequence, Arc> left = new HashMap<>(); // Arcs at the left of a sequence
-        /*
-        for(Arc a : accepted)
-        {
-            //right.put(a.s1, a);
-            //left.put(a.s2, a);
-
-
-        }
-       */
-
-
 
         // Select a pivot arc, and look for all the arcs at the right of the pivot
         LinkedList<Arc> path = new LinkedList<>();
@@ -90,29 +75,29 @@ public class Greedy
         Arc pivot = accepted.iterator().next();
         path.add(pivot);
 
-        Sequence current = pivot.s2;
+        Sequence current = pivot.end;
 
         while(right.containsKey(current))
         {
             Arc next = right.get(current);
             path.addLast(next);
-            current = next.s2;
+            current = next.end;
         }
 
         // Now, let's have a look at the left of the pivot
-        current = pivot.s1;
+        current = pivot.start;
 
         while(left.containsKey(current))
         {
             Arc previous = left.get(current);
             path.addFirst(previous);
-            current = previous.s1;
+            current = previous.start;
         }
 
         List<SequenceAlignment> ret = new ArrayList<>(path.size()+1);
 
         for(Arc a : path) {
-            SequenceAlignment seq = new SequenceAlignment(a.s1Aligned, a.s2Aligned, a.score);
+            SequenceAlignment seq = new SequenceAlignment(a.alignedStart, a.alignedEnd, a.score);
             ret.add(seq);
         }
 
@@ -135,18 +120,18 @@ public class Greedy
                                        Map<Sequence,Boolean> comp)
     {
 
-        Boolean _s1Comp = a.s1Comp;
-        Sequence s = a.s1;
+        Boolean _s1Comp = a.startComp;
+        Sequence s = a.start;
 
-        Boolean _s2Comp = a.s2Comp;
-        Sequence t = a.s2;
+        Boolean _s2Comp = a.endComp;
+        Sequence t = a.end;
 
         Boolean test1 = !comp.containsKey(s)||comp.get(s) == _s1Comp;
         Boolean test2 = !comp.containsKey(t)||comp.get(t) == _s2Comp;
 
-        return !exited.contains(a.s1)
-                && !entered.contains(a.s2)
-                && !groups.sameSet(a.s1, a.s2)
+        return !exited.contains(a.start)
+                && !entered.contains(a.end)
+                && !groups.sameSet(a.start, a.end)
                 && test1
                 && test2;
     }
