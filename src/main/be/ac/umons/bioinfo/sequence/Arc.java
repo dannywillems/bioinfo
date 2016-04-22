@@ -3,13 +3,18 @@ package be.ac.umons.bioinfo.sequence;
 
 import java.util.List;
 
-public class Arc {
-
-    public final Sequence start; // The initial source sequence
-    public final boolean startComp; //True if we need to use the complementary of start
-    public final Sequence end; // The initial target sequence
-    public final boolean endComp; //True if we need to use the complementary of end
-    public final int score; //The alignment score
+public class Arc
+{
+    /** The initial source sequence */
+    public final Sequence start;
+    /** True if we need to use the complementary of start */
+    public final boolean startComp;
+    /** The initial target sequence */
+    public final Sequence end;
+    /** True if we need to use the complementary of end */
+    public final boolean endComp;
+    /** The alignment score */
+    public final int score;
     private final boolean startBefore;
 
     /**
