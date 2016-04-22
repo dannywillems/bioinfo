@@ -230,41 +230,37 @@ public class Sequence
         if(!FG.isEmpty())
         {
             SequenceAlignment a1 = FG.get(0);
-            arcs.add(new Arc(this, false, that, false, a1.s1, a1.s2, a1.score));
+            arcs.add(new Arc(this, false, that, false, a1.score, true));
 
             SequenceAlignment a2 = FG.get(1);
-            //arcs.add(new Arc(that, false, this, false, a2.end, a2.start, a2.score));
-            arcs.add(new Arc(that, false, this, false, a2.s1, a2.s2, a2.score));
+            arcs.add(new Arc(that, false, this, false, a2.score, false));
         }
 
         if(!CompFG.isEmpty())
         {
             SequenceAlignment a1 = CompFG.get(0);
-            arcs.add(new Arc(this, true, that, false, a1.s1, a1.s2, a1.score));
+            arcs.add(new Arc(this, true, that, false, a1.score, true));
 
             SequenceAlignment a2 = CompFG.get(1);
-            //arcs.add(new Arc(that, false, this, true, a2.end, a2.start, a2.score));
-            arcs.add(new Arc(that, false, this, true, a2.s1, a2.s2, a2.score));
+            arcs.add(new Arc(that, false, this, true, a2.score, false));
         }
 
         if(!FCompG.isEmpty())
         {
             SequenceAlignment a1 = FCompG.get(0);
-            arcs.add(new Arc(this, false, that, true, a1.s1, a1.s2, a1.score));
+            arcs.add(new Arc(this, false, that, true, a1.score, true));
 
             SequenceAlignment a2 = FCompG.get(1);
-            //arcs.add(new Arc(that, true, this, false, a2.end, a2.start, a2.score));
-            arcs.add(new Arc(that, true, this, false, a2.s1, a2.s2, a2.score));
+            arcs.add(new Arc(that, true, this, false, a2.score, false));
         }
 
         if(!CompFCompG.isEmpty())
         {
             SequenceAlignment a1 = CompFCompG.get(0);
-            arcs.add(new Arc(this, true, that, true, a1.s1, a1.s2, a1.score));
+            arcs.add(new Arc(this, true, that, true, a1.score, true));
 
             SequenceAlignment a2 = CompFCompG.get(1);
-            //arcs.add(new Arc(that, true, this, true, a2.end, a1.start, a2.score));
-            arcs.add(new Arc(that, true, this, true, a2.s1, a2.s2, a2.score));
+            arcs.add(new Arc(that, true, this, true, a2.score, false));
         }
 
         return arcs;
