@@ -97,7 +97,7 @@ public class Greedy
         List<SequenceAlignment> ret = new ArrayList<>(path.size()+1);
 
         for(Arc a : path)
-            ret.add(a.getAlignment());
+            ret.add(a.getAlignment(match, mismatch, gap));
 
         return ret;
     }

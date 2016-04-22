@@ -1,15 +1,16 @@
 package be.ac.umons.bioinfo.sequence;
 
 
+import java.util.List;
+
 public class Arc {
 
     public final Sequence start; // The initial source sequence
     public final boolean startComp; //True if we need to use the complementary of start
     public final Sequence end; // The initial target sequence
     public final boolean endComp; //True if we need to use the complementary of end
-    private final Sequence alignedStart; // The start sequence when aligned with end. Can be the complementary.
-    private final Sequence alignedEnd; //he end sequence when aligned with start. Can be the complementary
     public final int score; //The alignment score
+    private final boolean startBefore;
 
     /**
      * A representation of a transition between two sequences.
@@ -18,29 +19,46 @@ public class Arc {
      * @param startComp    true if the complement of start is used instead of the sequence itself; false otherwise.
      * @param end          The canonical representation of the sequence at the end of the arc.
      * @param endComp      true if the complement of end is used instead of the sequence itself; false otherwise.
-     * @param alignedStart the actually used start sequence after its alignment with the actual end.
-     * @param alignedEnd   the actually used end sequence after its alignement with the actual start.
      * @param score        length of the longest suffix-prefix or prefix-suffix.
+     * @param startBefore
      */
     public Arc(Sequence start,
                boolean startComp,
                Sequence end,
                boolean endComp,
-               Sequence alignedStart,
-               Sequence alignedEnd,
-               int score)
+               int score,
+               boolean startBefore)
     {
         this.start = start;
         this.startComp = startComp;
         this.end = end;
         this.endComp = endComp;
-        this.alignedStart = alignedStart;
-        this.alignedEnd = alignedEnd;
         this.score = score;
+        this.startBefore = startBefore;
     }
 
-    public SequenceAlignment getAlignment()
+    /**
+     *
+     * @param match
+     * @param mismatch
+     * @param gap
+     * @return
+     */
+    public SequenceAlignment getAlignment(int match, int mismatch, int gap)
     {
-        return new SequenceAlignment(alignedStart, alignedEnd, score);
+        Sequence a, b;
+
+        if(startComp) a = start.complement();
+        else a = start;
+
+        if(endComp) b = end.complement();
+        else b = end;
+
+        List<SequenceAlignment> candidates = Sequence.semiGlobalAlignment(a, b, match, mismatch, gap);
+
+        if(startBefore) return candidates.get(0);
+        else return new SequenceAlignment(  candidates.get(1).s2,
+                                            candidates.get(1).s1,
+                                            candidates.get(1).score);
     }
 }
