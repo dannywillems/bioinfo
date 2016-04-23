@@ -200,6 +200,12 @@ public class SequenceTest
         List<Sequence> fhg = Arrays.asList(f, h, g);
         List<SequenceAlignment> result_fhg = greedy.greedy(fhg, 1, -1, -2);
 
+
+        System.out.println(result_fgh);
+        System.out.println(result_gfh);
+        System.out.println(result_ghf);
+        System.out.println(result_fhg);
+
         // First, we test the path length. We only change the first argument for the test because of equality transivity.
         assertEquals(result_fgh.size(), result_fhg.size()); // fgh VS fhg
         assertEquals(result_gfh.size(), result_fhg.size()); // gfh VS fhg

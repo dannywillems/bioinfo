@@ -11,57 +11,17 @@ import java.util.stream.Collectors;
  */
 public class Greedy
 {
-    /**
-     * @param sequences the sequences for which the arcs must be generated.
-     * @param match match cost
-     * @param mismatch mismatch cost
-     * @param gap gap cost
-     * @return a list of sequence arcs.
-     */
-    public static List<Arc> generateArcs(List<Sequence> sequences, int match, int mismatch, int gap)
+
+    public static List<Pair<Sequence>> generateAllPairs(List<Sequence> sequences)
     {
-        List<Arc> arcs = new ArrayList<>();
-
-        for(int i=0 ; i < sequences.size()-1 ; i++)
-        {
-            for(int j=i+1 ; j < sequences.size() ; j++)
-            {
-                Sequence s1 = sequences.get(i);
-                Sequence s2 = sequences.get(j);
-
-                List<Arc> result = s1.arcGenerator(s2, match, mismatch, gap);
-
-                arcs.addAll(result);
-            }
-        }
-
-        return arcs;
-    }
-
-    /**
-     * @param sequences the sequences for which the arcs must be generated.
-     * @param match match cost
-     * @param mismatch mismatch cost
-     * @param gap gap cost
-     * @return a list of sequence arcs.
-     */
-    private static List<Arc> parallelGenerateArcs(List<Sequence> sequences,
-                                           int match, int mismatch, int gap)
-    {
-        List<Pair<Sequence>> pairs = new ArrayList<Pair<Sequence>>();
+        List<Pair<Sequence>> ret = new ArrayList<>(sequences.size()*sequences.size()/2);
 
         for(int i=0 ; i<sequences.size()-1 ; i++)
-            for( int j=i+1 ; j<sequences.size() ; j++)
-                pairs.add(new Pair<Sequence>(sequences.get(i), sequences.get(j)));
+            for(int j=i+1 ; j<sequences.size() ; j++)
+                ret.add(new Pair<Sequence>(sequences.get(i), sequences.get(j)));
 
-        return pairs.parallelStream()
-                    .map(p -> p.a.arcGenerator(p.b, match, mismatch, gap))
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList());
+        return ret;
     }
-
-
-
 
     /**
      * Determine a list of aligment, that corresponds to the succession of alignements that
@@ -74,34 +34,26 @@ public class Greedy
      */
     public static List<SequenceAlignment> greedy(List<Sequence> sequences, int match, int mismatch, int gap)
     {
-        List<Arc> arcs = generateArcs(sequences, match, mismatch, gap);
-        //List<Arc> arcs = parallelGenerateArcs(sequences, match, mismatch, gap);
+        List<Pair<Sequence>> pairs = generateAllPairs(sequences);
+
+        List<Arc> arcs = pairs.parallelStream()
+                                    .map(pair -> pair.a.arcGenerator(pair.b, match, mismatch, gap))
+                                    .flatMap(Collection::stream)
+                                    .collect(Collectors.toList());
 
         Collections.sort(arcs, new ArcComparator());
 
-        return hamiltonianPath(filterArcs(arcs, sequences));
+        List<Arc> path = hamiltonianPath(filterArcs(arcs, sequences));
+
+        System.out.println(path);
+        return path.parallelStream().map(arc -> arc.getAlignment()).collect(Collectors.toList());
     }
-
-    /**
-     * Determines the Hamiltonian path made of the specified arcs.
-     * @param arcs the arcs constituting an hamiltonian path.
-     * @return The Hamiltonian path mode of the arcs.
-     */
-    public static List<SequenceAlignment> hamiltonianPath(Set<Arc> arcs)
-    {
-        List<Arc> path = arcs2Path(arcs);
-
-        return path.parallelStream()
-                   .map(arc -> arc.getAlignment())
-                   .collect(Collectors.toList());
-    }
-
 
     /**
      * @param arcs Candidates arcs that can form an hamiltonian path.
      * @return The hamiltonian path made of these arcs.
      */
-    public static List<Arc> arcs2Path(Set<Arc> arcs)
+    public static List<Arc> hamiltonianPath(Set<Arc> arcs)
     {
         Map<Sequence, Arc> right = right(arcs);
         Map<Sequence, Arc> left = left(arcs);
@@ -155,7 +107,6 @@ public class Greedy
         while(groups.size() > 1)
         {
             Arc candidate = lArcs.pop();
-
 
             if(isAcceptable(candidate, entered, exited, groups,comp))
             {

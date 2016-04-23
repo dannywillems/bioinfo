@@ -74,7 +74,7 @@ public class Main
         System.out.println(h);
         System.out.println(g);
         System.out.println("------->");
-        */
+*/
 
         for(SequenceAlignment sa : result)
         {
