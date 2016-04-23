@@ -19,7 +19,7 @@ public class Greedy
      * @param gap gap cost
      * @return a list of sequence arcs.
      */
-    private List<Arc> generateArcs(List<Sequence> sequences, int match, int mismatch, int gap)
+    public static List<Arc> generateArcs(List<Sequence> sequences, int match, int mismatch, int gap)
     {
         List<Arc> arcs = new ArrayList<>();
 
@@ -46,7 +46,7 @@ public class Greedy
      * @param gap gap cost
      * @return a list of sequence arcs.
      */
-    private List<Arc> parallelGenerateArcs(List<Sequence> sequences,
+    private static List<Arc> parallelGenerateArcs(List<Sequence> sequences,
                                            int match, int mismatch, int gap)
     {
         List<Pair<Sequence>> pairs = new ArrayList<Pair<Sequence>>();
@@ -73,52 +73,22 @@ public class Greedy
      * @param gap the cost of a gap
      * @return A sequence of alignement.
      */
-    public List<SequenceAlignment> computePath(List<Sequence> sequences, int match, int mismatch, int gap)
+    public static List<SequenceAlignment> computePath(List<Sequence> sequences, int match, int mismatch, int gap)
     {
-        //List<Arc> arcs = generateArcs(sequences, match, mismatch, gap);
-        List<Arc> arcs = parallelGenerateArcs(sequences, match, mismatch, gap);
+        List<Arc> arcs = generateArcs(sequences, match, mismatch, gap);
+        //List<Arc> arcs = parallelGenerateArcs(sequences, match, mismatch, gap);
 
         Collections.sort(arcs, new ArcComparator());
 
-        return greedy(sequences, arcs, match, mismatch, gap);
+        return greedy(sequences, arcs);
     }
 
-    private List<SequenceAlignment> greedy(List<Sequence> sequences,
-                                           List<Arc> arcs,
-                                           int match,
-                                           int mismatch,
-                                           int gap)
+    public static List<SequenceAlignment> greedy(List<Sequence> sequences, List<Arc> arcs)
     {
-        LinkedList<Arc> lArcs = new LinkedList<Arc>();
-        lArcs.addAll(arcs);
 
-        UnionFind<Sequence> groups = new UnionFind<>(sequences);
-        Set<Sequence> entered = new HashSet<>();
-        Set<Sequence> exited = new HashSet<>();
-        Set<Arc> accepted = new HashSet<>();
-
-        Map<Sequence, Arc> right = new HashMap<>(); // Arcs at the right of a sequence
-        Map<Sequence, Arc> left = new HashMap<>(); // Arcs at the left of a sequence
-        Map<Sequence, Boolean> comp = new HashMap<>();
-
-        //computes the greedy algorithm
-        while(groups.size() > 1)
-        {
-            Arc candidate = lArcs.pop();
-
-
-            if(isAcceptable(candidate, entered, exited, groups,comp))
-            {
-                accepted.add(candidate);
-                exited.add(candidate.start);
-                entered.add(candidate.end);
-                groups.union(candidate.start, candidate.end);
-                right.put(candidate.start, candidate);
-                left.put(candidate.end, candidate);
-                comp.put(candidate.start, candidate.startComp);
-                comp.put(candidate.end, candidate.endComp);
-            }
-        }
+        Set<Arc> accepted = filterArcs(arcs, sequences);
+        Map<Sequence, Arc> right = right(accepted);
+        Map<Sequence, Arc> left = left(accepted);
 
         // Select a pivot arc, and look for all the arcs at the right of the pivot
         LinkedList<Arc> path = new LinkedList<>();
@@ -151,32 +121,94 @@ public class Greedy
     }
 
     /**
-     * Determines if an arc is acceptable for building an Hamiltonien path.
-     * @param a an arc
-     * @param entered the sequences that have been entered
-     * @param exited the exited that have been exited
-     * @param groups the sequences are stand together
-     * @return true if a is acceptable, false otherwise
+     * Filters the arcs that must be retained for the Hamiltonian path.
+     * @param arcs  the candidate arcs
+     * @param sequences the canonical representation of the sequences contained in the arc.
+     * @return the candidate arcs that must belong to the hamiltonian path
      */
-    public static boolean isAcceptable(Arc a,
+    public static Set<Arc> filterArcs(List<Arc> arcs, List<Sequence> sequences)
+    {
+        LinkedList<Arc> lArcs = new LinkedList<Arc>();
+        lArcs.addAll(arcs);
+
+        UnionFind<Sequence> groups = new UnionFind<>(sequences);
+        Set<Sequence> entered = new HashSet<>();
+        Set<Sequence> exited = new HashSet<>();
+        Set<Arc> accepted = new HashSet<>();
+
+        Map<Sequence, Boolean> comp = new HashMap<>();
+
+        //computes the greedy algorithm
+        while(groups.size() > 1)
+        {
+            Arc candidate = lArcs.pop();
+
+
+            if(isAcceptable(candidate, entered, exited, groups,comp))
+            {
+                accepted.add(candidate);
+                exited.add(candidate.start);
+                entered.add(candidate.end);
+                groups.union(candidate.start, candidate.end);
+                comp.put(candidate.start, candidate.startComp);
+                comp.put(candidate.end, candidate.endComp);
+            }
+        }
+
+        return accepted;
+    }
+
+    /**
+     * Computes the arc at the right of each sequence (expect the extremum)
+     * @param arcs the arcs in the hamiltonian path
+     * @return the arc at the right of each
+     */
+    public static Map<Sequence, Arc> right(Set<Arc> arcs)
+    {
+        Map<Sequence, Arc> ret = new HashMap<Sequence, Arc>(arcs.size());
+
+        for(Arc arc : arcs)
+            ret.put(arc.start, arc);
+
+        return ret;
+    }
+
+    /**
+     * Computes the arc at the left of each sequence (expect the extremum)
+     * @param arcs the arcs in the hamiltonian path
+     * @return the arc at the left of each
+     */
+    public static Map<Sequence, Arc> left(Set<Arc> arcs)
+    {
+        Map<Sequence, Arc> ret = new HashMap<Sequence, Arc>(arcs.size());
+
+        for(Arc arc : arcs)
+            ret.put(arc.end, arc);
+
+        return ret;
+    }
+
+    /**
+     * Determines if an arc is acceptable for building an Hamiltonien path.
+     * @param arc an arc
+     * @param entered the canonical sequences that have been entered
+     * @param exited the canonical sequences that have been exited
+     * @param groups the sequences that stand together
+     * @param comp The complementary with which sequences are used in the hamiltonian path
+     * @return true if arc is acceptable, false otherwise
+     */
+    public static boolean isAcceptable(Arc arc,
                                        Set<Sequence> entered,
                                        Set<Sequence> exited,
                                        UnionFind<Sequence> groups,
                                        Map<Sequence,Boolean> comp)
     {
+        Boolean test1 = (!comp.containsKey(arc.start)) || comp.get(arc.start) == (Boolean) arc.startComp;
+        Boolean test2 = (!comp.containsKey(arc.end))   || comp.get(arc.end) == (Boolean) arc.endComp;
 
-        Boolean _s1Comp = a.startComp;
-        Sequence s = a.start;
-
-        Boolean _s2Comp = a.endComp;
-        Sequence t = a.end;
-
-        Boolean test1 = !comp.containsKey(s)||comp.get(s) == _s1Comp;
-        Boolean test2 = !comp.containsKey(t)||comp.get(t) == _s2Comp;
-
-        return !exited.contains(a.start)
-                && !entered.contains(a.end)
-                && !groups.sameSet(a.start, a.end)
+        return     !exited.contains(arc.start)
+                && !entered.contains(arc.end)
+                && !groups.sameSet(arc.start, arc.end)
                 && test1
                 && test2;
     }
