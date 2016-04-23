@@ -242,7 +242,13 @@ public class Sequence
         arcs.add(new Arc(
                 this,
                 false,
-                that, false, FG.get(0).score, true, match, mismatch, gap));
+                that,
+                false,
+                FG.get(0).score,
+                true,
+                match,
+                mismatch,
+                gap));
         arcs.add(new Arc(
                 that,
                 false,
@@ -289,7 +295,7 @@ public class Sequence
                 true,
                 this,
                 false,
-                FCompG.get(0).score,
+                FCompG.get(1).score,
                 false,
                 match,
                 mismatch,
