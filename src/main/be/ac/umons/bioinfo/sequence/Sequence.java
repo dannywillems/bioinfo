@@ -370,7 +370,7 @@ public class Sequence
         int x = jPos;
         int y = iPos;
 
-        int lengthAlignment = 0;
+        int lengthCommonAlignment = 0;
 
         List<Byte> aligned_s = new ArrayList<Byte>();
         List<Byte> aligned_t = new ArrayList<Byte>();
@@ -422,7 +422,7 @@ public class Sequence
                 }
             }
 
-            lengthAlignment++;
+            lengthCommonAlignment++;
         }
 
         if (x > 0)
@@ -456,11 +456,11 @@ public class Sequence
         // TODO: verifier que c est bien le comportement souhaite dans le cas des sequences inclues l une dans l autre
         if(bottom)
         {
-            return new SequenceAlignment(alignedS, alignedT, lengthAlignment);
+            return new SequenceAlignment(alignedS, alignedT, lengthCommonAlignment);
         }
         else
         {
-             return new SequenceAlignment(alignedT, alignedS, lengthAlignment);
+             return new SequenceAlignment(alignedT, alignedS, lengthCommonAlignment);
         }
     }
 }
