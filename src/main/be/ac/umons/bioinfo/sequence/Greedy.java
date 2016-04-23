@@ -146,7 +146,7 @@ public class Greedy
         }
 
         return path.parallelStream()
-                   .map(arc -> arc.getAlignment(match, mismatch, gap))
+                   .map(arc -> arc.getAlignment())
                    .collect(Collectors.toList());
     }
 

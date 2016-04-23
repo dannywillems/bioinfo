@@ -22,4 +22,26 @@ public class SequenceAlignment
         this.s2 = s2;
         this.score = score;
     }
+
+    @Override
+    public String toString()
+    {
+        return "SequenceAlignment(" + s1 + " , " + s2 + " , " + score + ")";
+    }
+
+    @Override
+    public boolean equals(Object other)
+    {
+        if(! (other instanceof SequenceAlignment)) return false;
+
+        SequenceAlignment that = (SequenceAlignment)other;
+
+        return (this.s1.equals(that.s1) && this.s2.equals(that.s2) && (this.score == that.score));
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return ((this.s1.hashCode() + this.s2.hashCode()) % Integer.MAX_VALUE) + this.score;
+    }
 }

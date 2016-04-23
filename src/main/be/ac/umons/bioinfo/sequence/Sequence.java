@@ -5,6 +5,7 @@ package be.ac.umons.bioinfo.sequence;
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -193,6 +194,12 @@ public class Sequence
         else return false;
     }
 
+    @Override
+    public int hashCode()
+    {
+        return Arrays.hashCode(content);
+    }
+
     /**
      * Cost function for a match or a mismatch between two bases.
      * @param a a base
@@ -232,17 +239,17 @@ public class Sequence
         assert (FCompG.size() == 2);
         assert (CompFCompG.size() == 2);
 
-        arcs.add(new Arc(this, false, that, false, FG.get(0).score, true));
-        arcs.add(new Arc(that, false, this, false, FG.get(1).score, false));
+        arcs.add(new Arc(this, false, that, false, FG.get(0).score, true, match, mismatch, gap));
+        arcs.add(new Arc(that, false, this, false, FG.get(1).score, false, match, mismatch, gap));
 
-        arcs.add(new Arc(this, true, that, false, CompFG.get(0).score, true));
-        arcs.add(new Arc(that, false, this, true, CompFG.get(1).score, false));
+        arcs.add(new Arc(this, true, that, false, CompFG.get(0).score, true, match, mismatch, gap));
+        arcs.add(new Arc(that, false, this, true, CompFG.get(1).score, false, match, mismatch, gap));
 
-        arcs.add(new Arc(this, false, that, true, FCompG.get(0).score, true));
-        arcs.add(new Arc(that, true, this, false, FCompG.get(0).score, false));
+        arcs.add(new Arc(this, false, that, true, FCompG.get(0).score, true, match, mismatch, gap));
+        arcs.add(new Arc(that, true, this, false, FCompG.get(0).score, false, match, mismatch, gap));
 
-        arcs.add(new Arc(this, true, that, true, CompFCompG.get(0).score, true));
-        arcs.add(new Arc(that, true, this, true, CompFCompG.get(1).score, false));
+        arcs.add(new Arc(this, true, that, true, CompFCompG.get(0).score, true, match, mismatch, gap));
+        arcs.add(new Arc(that, true, this, true, CompFCompG.get(1).score, false, match, mismatch, gap));
 
         return arcs;
     }

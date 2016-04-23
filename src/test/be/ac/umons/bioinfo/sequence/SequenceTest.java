@@ -7,10 +7,10 @@ import be.ac.umons.bioinfo.sequence.Sequence;
 import be.ac.umons.bioinfo.sequence.SequenceAlignment;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SequenceTest
 {
@@ -182,4 +182,64 @@ public class SequenceTest
 
     }
 
+    @Test
+    public void insertionOrderDoesntChangeTheResultNoOverlap()
+    {
+        Greedy greedy = new Greedy();
+
+        Sequence f = new Sequence("catagtc");
+        Sequence g = new Sequence("taactat");
+        Sequence h = new Sequence("agactatcc");
+
+        List<Sequence> fgh = Arrays.asList(f, g, h);
+        List<SequenceAlignment> result_fgh = greedy.computePath(fgh, 1, -1, -2);
+
+        List<Sequence> gfh = Arrays.asList(g, f, h);
+        List<SequenceAlignment> result_gfh = greedy.computePath(gfh, 1, -1, -2);
+
+        List<Sequence> ghf = Arrays.asList(g, h, f);
+        List<SequenceAlignment> result_ghf = greedy.computePath(ghf, 1, -1, -2);
+
+        List<Sequence> fhg = Arrays.asList(f, h, g);
+        List<SequenceAlignment> result_fhg = greedy.computePath(fhg, 1, -1, -2);
+
+        // First, we test the path length. We only change the first argument for the test because of equality transivity.
+        assertEquals(result_fgh.size(), result_fhg.size()); // fgh VS fhg
+        assertEquals(result_gfh.size(), result_fhg.size()); // gfh VS fhg
+        assertEquals(result_ghf.size(), result_fhg.size()); // ghf VS fhg
+
+        // Now, check the path
+        for (int i = 0; i < result_fgh.size(); i++)
+        {
+            SequenceAlignment ref = result_fhg.get(i);
+
+            assertEquals(result_fgh.get(i).s1, ref.s1);
+            assertEquals(result_fgh.get(i).s2, ref.s2);
+            assertEquals(result_gfh.get(i).s1, ref.s1);
+            assertEquals(result_gfh.get(i).s2, ref.s2);
+        }
+    }
+
+    @Test
+    public void orderDoesNotAffectSemiGlobalAlignment()
+    {
+        Sequence a = new Sequence("tact");
+        Sequence b = new Sequence("cgtaaagt");
+        Sequence c = new Sequence("catagtc");
+        Sequence d = new Sequence("taactat");
+        Sequence e = new Sequence("agactatcc");
+
+        List<Sequence> sequences = Arrays.asList(a,b,c,d,e);
+
+        for(Sequence s1 : sequences)
+        {
+            for(Sequence s2 : sequences)
+            {
+                Set<SequenceAlignment> x = new HashSet<SequenceAlignment>(Sequence.semiGlobalAlignment(s1, s2, 1, -1, -2));
+                Set<SequenceAlignment> y = new HashSet<SequenceAlignment>(Sequence.semiGlobalAlignment(s1, s2, 1, -1, -2));
+
+                assertTrue(x.equals(y));
+            }
+        }
+    }
 }
