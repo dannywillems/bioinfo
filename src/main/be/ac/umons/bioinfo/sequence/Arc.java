@@ -57,6 +57,7 @@ public class Arc
      */
     public SequenceAlignment getAlignment()
     {
+
         Sequence a, b;
 
         if(startComp) a = start.complement();

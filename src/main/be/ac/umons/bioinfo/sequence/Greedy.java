@@ -85,15 +85,37 @@ public class Greedy
 
     public static List<SequenceAlignment> greedy(List<Sequence> sequences, List<Arc> arcs)
     {
+        return hamiltonianPath(filterArcs(arcs, sequences));
+    }
 
-        Set<Arc> accepted = filterArcs(arcs, sequences);
-        Map<Sequence, Arc> right = right(accepted);
-        Map<Sequence, Arc> left = left(accepted);
+    /**
+     * Determines the Hamiltonian path made of the specified arcs.
+     * @param arcs the arcs constituting an hamiltonian path.
+     * @return The Hamiltonian path mode of the arcs.
+     */
+    public static List<SequenceAlignment> hamiltonianPath(Set<Arc> arcs)
+    {
+        List<Arc> path = arcs2Path(arcs);
+
+        return path.parallelStream()
+                   .map(arc -> arc.getAlignment())
+                   .collect(Collectors.toList());
+    }
+
+
+    /**
+     * @param arcs Candidates arcs that can form an hamiltonian path.
+     * @return The hamiltonian path made of these arcs.
+     */
+    public static List<Arc> arcs2Path(Set<Arc> arcs)
+    {
+        Map<Sequence, Arc> right = right(arcs);
+        Map<Sequence, Arc> left = left(arcs);
 
         // Select a pivot arc, and look for all the arcs at the right of the pivot
         LinkedList<Arc> path = new LinkedList<>();
 
-        Arc pivot = accepted.iterator().next();
+        Arc pivot = arcs.iterator().next();
         path.add(pivot);
 
         Sequence current = pivot.end;
@@ -115,11 +137,8 @@ public class Greedy
             current = previous.start;
         }
 
-        return path.parallelStream()
-                   .map(arc -> arc.getAlignment())
-                   .collect(Collectors.toList());
+        return path;
     }
-
     /**
      * Filters the arcs that must be retained for the Hamiltonian path.
      * @param arcs  the candidate arcs
