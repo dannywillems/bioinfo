@@ -5,7 +5,6 @@ import be.ac.umons.bioinfo.UnionFind;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * An algorithm that proposes a list of sequence alignments that forms an Hamiltonian path.
@@ -73,18 +72,13 @@ public class Greedy
      * @param gap the cost of a gap
      * @return A sequence of alignement.
      */
-    public static List<SequenceAlignment> computePath(List<Sequence> sequences, int match, int mismatch, int gap)
+    public static List<SequenceAlignment> greedy(List<Sequence> sequences, int match, int mismatch, int gap)
     {
         List<Arc> arcs = generateArcs(sequences, match, mismatch, gap);
         //List<Arc> arcs = parallelGenerateArcs(sequences, match, mismatch, gap);
 
         Collections.sort(arcs, new ArcComparator());
 
-        return greedy(sequences, arcs);
-    }
-
-    public static List<SequenceAlignment> greedy(List<Sequence> sequences, List<Arc> arcs)
-    {
         return hamiltonianPath(filterArcs(arcs, sequences));
     }
 

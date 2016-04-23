@@ -3,11 +3,8 @@ package be.ac.umons.bioinfo;
 /**
  * Created by aline on 31/03/16.
  */
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import be.ac.umons.bioinfo.sequence.*;
@@ -69,7 +66,7 @@ public class Main
 
 
 
-        List<SequenceAlignment> result = greed.computePath(list, 1, -1, -2);
+        List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
 
         /*
         System.out.println("Je veux aligner :");

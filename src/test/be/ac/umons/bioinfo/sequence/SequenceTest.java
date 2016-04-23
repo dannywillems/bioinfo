@@ -3,8 +3,6 @@ package be.ac.umons.bioinfo.sequence;
 /**
  * Created by aline on 31/03/16.
  */
-import be.ac.umons.bioinfo.sequence.Sequence;
-import be.ac.umons.bioinfo.sequence.SequenceAlignment;
 import org.junit.Test;
 
 import java.util.*;
@@ -191,16 +189,16 @@ public class SequenceTest
         Sequence h = new Sequence("agactatcc");
 
         List<Sequence> fgh = Arrays.asList(f, g, h);
-        List<SequenceAlignment> result_fgh = greedy.computePath(fgh, 1, -1, -2);
+        List<SequenceAlignment> result_fgh = greedy.greedy(fgh, 1, -1, -2);
 
         List<Sequence> gfh = Arrays.asList(g, f, h);
-        List<SequenceAlignment> result_gfh = greedy.computePath(gfh, 1, -1, -2);
+        List<SequenceAlignment> result_gfh = greedy.greedy(gfh, 1, -1, -2);
 
         List<Sequence> ghf = Arrays.asList(g, h, f);
-        List<SequenceAlignment> result_ghf = greedy.computePath(ghf, 1, -1, -2);
+        List<SequenceAlignment> result_ghf = greedy.greedy(ghf, 1, -1, -2);
 
         List<Sequence> fhg = Arrays.asList(f, h, g);
-        List<SequenceAlignment> result_fhg = greedy.computePath(fhg, 1, -1, -2);
+        List<SequenceAlignment> result_fhg = greedy.greedy(fhg, 1, -1, -2);
 
         // First, we test the path length. We only change the first argument for the test because of equality transivity.
         assertEquals(result_fgh.size(), result_fhg.size()); // fgh VS fhg

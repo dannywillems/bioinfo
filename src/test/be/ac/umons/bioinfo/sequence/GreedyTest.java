@@ -1,7 +1,5 @@
 package be.ac.umons.bioinfo.sequence;
 
-import be.ac.umons.bioinfo.sequence.SequenceAlignment;
-
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,7 +30,7 @@ public class GreedyTest {
         try
         {
             List<Sequence> list = fasta.readFromFile(file);
-            List<SequenceAlignment> result = greed.computePath(list, 1, -1, -2);
+            List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
             Iterator<SequenceAlignment> iterator = result.iterator();
 
             while (iterator.hasNext()) {
