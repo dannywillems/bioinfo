@@ -45,7 +45,6 @@ public class Greedy
 
         List<Arc> path = hamiltonianPath(filterArcs(arcs, sequences));
 
-        System.out.println(path);
         return path.parallelStream().map(arc -> arc.getAlignment()).collect(Collectors.toList());
     }
 

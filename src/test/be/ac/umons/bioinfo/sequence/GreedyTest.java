@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 
 
 /**
