@@ -17,6 +17,10 @@ public class Arc
     public final int score;
     private final boolean startBefore;
 
+    public final int match;
+    public final int mismatch;
+    public final int gap;
+
     /**
      * A representation of a transition between two sequences.
      *
@@ -32,7 +36,10 @@ public class Arc
                Sequence end,
                boolean endComp,
                int score,
-               boolean startBefore)
+               boolean startBefore,
+               int match,
+               int mismatch,
+               int gap)
     {
         this.start = start;
         this.startComp = startComp;
@@ -40,16 +47,15 @@ public class Arc
         this.endComp = endComp;
         this.score = score;
         this.startBefore = startBefore;
+        this.match = match;
+        this.mismatch = mismatch;
+        this.gap = gap;
     }
 
     /**
-     *
-     * @param match
-     * @param mismatch
-     * @param gap
      * @return
      */
-    public SequenceAlignment getAlignment(int match, int mismatch, int gap)
+    public SequenceAlignment getAlignment()
     {
         Sequence a, b;
 
@@ -65,5 +71,11 @@ public class Arc
         else return new SequenceAlignment(  candidates.get(1).s2,
                                             candidates.get(1).s1,
                                             candidates.get(1).score);
+    }
+
+    public String toString()
+    {
+        SequenceAlignment alignment = getAlignment();
+        return "Arc(" + alignment.s1 + " , " + alignment.s2 + " , " + alignment.score + ")";
     }
 }
