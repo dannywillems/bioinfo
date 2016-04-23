@@ -141,7 +141,7 @@ public class SequenceTest
 
     }
 
-    /*
+
     @Test
     public void containedSemiGlobalAlignmentTest()
     {
@@ -150,14 +150,13 @@ public class SequenceTest
 
         List<SequenceAlignment> result = Sequence.semiGlobalAlignment(s,t, 1, -1, -2);
 
-        assertEquals(result.size(),0);
+        assertEquals(result.size(),2);
 
-        //assertEquals(new Sequence("attagaccatgcggc"), result.start);
-        //assertEquals(new Sequence("--tagacca------"), result.end);
+        SequenceAlignment sa = result.get(1);
 
-
+        assertEquals(new Sequence("--tagacca------"), sa.s1);
+        assertEquals(new Sequence("attagaccatgcggc"), sa.s2);
     }
-    */
 
     @Test
     public void reverseAlignementTest()
