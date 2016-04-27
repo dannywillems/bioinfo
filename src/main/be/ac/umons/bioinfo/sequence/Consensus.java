@@ -73,4 +73,9 @@ public class Consensus
         }
         return (c_max);
     }
+
+    public void setAlignment(List<Sequence> a)
+    {
+        this.alignment = a;
+    }
 }
