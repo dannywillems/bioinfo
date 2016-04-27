@@ -57,6 +57,7 @@ public class Arc
      */
     public SequenceAlignment getAlignment()
     {
+
         Sequence a, b;
 
         if(startComp) a = start.complement();
@@ -76,6 +77,12 @@ public class Arc
     public String toString()
     {
         SequenceAlignment alignment = getAlignment();
-        return "Arc(" + alignment.s1 + " , " + alignment.s2 + " , " + alignment.score + ")";
+        return "Arc(" +
+                start + ", " +
+                startComp + ", " +
+                end + " , " +
+                endComp + ", " +
+                startBefore + ", " +
+                alignment.score + ")";
     }
 }
