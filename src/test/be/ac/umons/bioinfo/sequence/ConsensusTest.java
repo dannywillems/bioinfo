@@ -118,4 +118,22 @@ public class ConsensusTest
 
         assertEquals(c.build().toString(), "acttg");
     }
+
+    @Test
+    public void buildLargerTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("-------------------ttgcg"));
+        l.add(new Sequence("--------------atcggtc---"));
+        l.add(new Sequence("--------------atcgtgcaa-"));
+        l.add(new Sequence("----taaccgcagattcc------"));
+        l.add(new Sequence("--------------atcgtgcaa-"));
+        l.add(new Sequence("actttacg----------------"));
+        l.add(new Sequence("tact--------------------"));
+
+        Consensus c = new Consensus(null);
+        c.setAlignment(l);
+
+        assertEquals(c.build().toString(), "aacttaaccgcagaatcgttcaag");
+    }
 }

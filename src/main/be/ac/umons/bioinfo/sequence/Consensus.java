@@ -53,7 +53,7 @@ public class Consensus
     /**
      * Return the more occured character at a position.
      * If equality, it takes the first. If a gap is more occured than others, it
-     * takes in alphabetic ordre (due to HashMap, not a feature).
+     * takes in an undefined ordre (due to HashMap, not a feature). FIXME
      * It supposes that there is another character than the gap.
      */
     public char getBase(HashMap<Character, Integer> o)
