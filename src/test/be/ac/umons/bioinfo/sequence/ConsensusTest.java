@@ -35,4 +35,30 @@ public class ConsensusTest
         s.put(new Character('-'), 1);
         assertEquals(c.getBase(s), 'c');
     }
+
+    @Test
+    public void getBaseNoGapMultipleTest()
+    {
+        Consensus c = new Consensus(null);
+
+        HashMap<Character, Integer> s = new HashMap<Character, Integer>();
+        s.put(new Character('c'), 5);
+        s.put(new Character('g'), 5);
+        s.put(new Character('t'), 4);
+        s.put(new Character('-'), 6);
+        assertEquals(c.getBase(s), 'c');
+    }
+
+    @Test
+    public void getBaseNoGapTest()
+    {
+        Consensus c = new Consensus(null);
+
+        HashMap<Character, Integer> s = new HashMap<Character, Integer>();
+        s.put(new Character('c'), 5);
+        s.put(new Character('g'), 2);
+        s.put(new Character('t'), 4);
+        s.put(new Character('-'), 6);
+        assertEquals(c.getBase(s), 'c');
+    }
 }

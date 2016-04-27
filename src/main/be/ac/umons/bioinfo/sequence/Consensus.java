@@ -51,18 +51,21 @@ public class Consensus
 
     /**
      * Return the more occured character at a position.
-     * If equality, it takes the first.
+     * If equality, it takes the first. If a gap is more occured than others, it
+     * takes the first next more occured character.
+     * It supposes that there is another character than the gap.
      */
     public char getBase(HashMap<Character, Integer> o)
     {
         int max = Integer.MIN_VALUE;
-        char c_max = '-';
+        char gap = Sequence.base2letter((byte) Sequence.GAP);
+        char c_max = gap;
 
         Iterator<Character> iterator_o = o.keySet().iterator();
         while (iterator_o.hasNext())
         {
             Character c = iterator_o.next();
-            if (o.get(c).intValue() > max)
+            if (o.get(c).intValue() > max && c.charValue() != gap)
             {
                 max = o.get(c).intValue();
                 c_max = c.charValue();
