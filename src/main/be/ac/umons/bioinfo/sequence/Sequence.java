@@ -93,6 +93,11 @@ public class Sequence
         return builder.toString();
     }
 
+    public char getLetter(int i)
+    {
+        return (base2letter(this.content[i]));
+    }
+
     @Override
     public String toString()
     {
