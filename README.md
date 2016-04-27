@@ -1,12 +1,11 @@
 # Projet de bio-informatique
 
-[![Build Status](https://travis-ci.org/dannywillems/bioinfo.svg?branch=master)](https://travis-ci.org/dannywillems/bioinfo)
+[![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=master)](https://travis-ci.com/dannywillems/bioinfo)
 
 Testé avec:
-* Open JDK 6
-* Open JDK 7
-* Oracle JDK 7
 * Oracle JDK 8
+
+**Nécessite JDK >= 8.**
 
 ## Structure du projet
 
