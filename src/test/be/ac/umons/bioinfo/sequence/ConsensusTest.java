@@ -5,6 +5,7 @@ import static junit.framework.TestCase.assertEquals;
 
 import org.junit.Test;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.lang.Character;
 import java.lang.Integer;
 
@@ -60,5 +61,61 @@ public class ConsensusTest
         s.put(new Character('t'), 4);
         s.put(new Character('-'), 6);
         assertEquals(c.getBase(s), 'c');
+    }
+
+    @Test
+    public void buildSimpleTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("acttt"));
+        l.add(new Sequence("tcttg"));
+        l.add(new Sequence("atgag"));
+
+        Consensus c = new Consensus(null);
+        c.setAlignment(l);
+
+        assertEquals(c.build().toString(), "acttg");
+    }
+
+    @Test
+    public void buildNoGapMultipleTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("acttt"));
+        l.add(new Sequence("tattg"));
+        l.add(new Sequence("atgag"));
+
+        Consensus c = new Consensus(null);
+        c.setAlignment(l);
+
+        assertEquals(c.build().toString(), "aattg");
+    }
+
+    @Test
+    public void buildGapMultipleTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("a-ttt"));
+        l.add(new Sequence("t-ttg"));
+        l.add(new Sequence("atgag"));
+
+        Consensus c = new Consensus(null);
+        c.setAlignment(l);
+
+        assertEquals(c.build().toString(), "atttg");
+    }
+
+    @Test
+    public void buildGapSimpleTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("a-ttt"));
+        l.add(new Sequence("tcttg"));
+        l.add(new Sequence("acgag"));
+
+        Consensus c = new Consensus(null);
+        c.setAlignment(l);
+
+        assertEquals(c.build().toString(), "acttg");
     }
 }

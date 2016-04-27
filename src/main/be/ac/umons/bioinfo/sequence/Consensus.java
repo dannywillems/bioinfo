@@ -1,6 +1,7 @@
 package be.ac.umons.bioinfo.sequence;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.lang.Integer;
 import java.lang.Character;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.Iterator;
 public class Consensus
 {
     private List<SequenceAlignment> hamiltonian_path;
-    private List<Sequence> alignment;
+    private ArrayList<Sequence> alignment;
 
     public Consensus(List<SequenceAlignment> hamiltonian_path)
     {
@@ -19,12 +20,12 @@ public class Consensus
     /**
      * Do the alignment and save it in alignment attribute.
      */
-    public void alignment()
+    public void computeAlignment()
     {
     }
 
     /**
-     * Build the consensus based on the alignment done in the alignment method.
+     * Build the consensus based on the alignment done in the computeAlignment method.
      * Use the alignment attribute.
      * @return the consensus as a Sequence object
      */
@@ -39,7 +40,7 @@ public class Consensus
             {
                 Character c = new Character(alignment.get(j).getLetter(i));
                 Integer c_occurence = occurences.get(c);
-                if (c_occurence.equals(new Integer(0)))
+                if (c_occurence == null)
                     occurences.put(c, new Integer(0));
                 else
                     occurences.put(c, new Integer(c_occurence.intValue() + Integer.valueOf(1)));
@@ -52,7 +53,7 @@ public class Consensus
     /**
      * Return the more occured character at a position.
      * If equality, it takes the first. If a gap is more occured than others, it
-     * takes the first next more occured character.
+     * takes in alphabetic ordre (due to HashMap, not a feature).
      * It supposes that there is another character than the gap.
      */
     public char getBase(HashMap<Character, Integer> o)
@@ -74,7 +75,7 @@ public class Consensus
         return (c_max);
     }
 
-    public void setAlignment(List<Sequence> a)
+    public void setAlignment(ArrayList<Sequence> a)
     {
         this.alignment = a;
     }
