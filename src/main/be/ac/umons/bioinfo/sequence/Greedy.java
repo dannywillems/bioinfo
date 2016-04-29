@@ -43,7 +43,13 @@ public class Greedy
 
         Collections.sort(arcs, new ArcComparator());
 
-        List<Arc> path = hamiltonianPath(filterArcs(arcs));
+        List<Arc> path = hamiltonianPath(filterArcs(arcs.stream()
+                                                        .filter(a -> true).collect(Collectors.toList())));
+
+        /* Filters out arcs having an inside aligned sequence
+        List<Arc> path = hamiltonianPath(filterArcs(arcs.stream()
+                                                        .filter(a -> !a.inside).collect(Collectors.toList())));
+        */
 
         return path.parallelStream().map(arc -> arc.getAlignment()).collect(Collectors.toList());
     }
@@ -94,9 +100,10 @@ public class Greedy
         LinkedList<Arc> lArcs = new LinkedList<Arc>();
         lArcs.addAll(arcs);
 
-        Set<Sequence> sequences = arcs.stream().map(a -> Arrays.asList(a.start, a.end))
-                                       .flatMap(Collection::stream)
-                                       .collect(Collectors.toSet());
+        Set<Sequence> sequences = arcs.stream()
+                                      .map(a -> Arrays.asList(a.start, a.end))
+                                      .flatMap(Collection::stream)
+                                      .collect(Collectors.toSet());
 
 
         UnionFind<Sequence> groups = new UnionFind<>(sequences);
@@ -124,6 +131,8 @@ public class Greedy
 
         return accepted;
     }
+
+
 
     /**
      * Computes the arc at the right of each sequence (expect the extremum)
