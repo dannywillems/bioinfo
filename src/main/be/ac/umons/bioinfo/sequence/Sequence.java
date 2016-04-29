@@ -539,4 +539,58 @@ public class Sequence
              return new SequenceAlignment(alignedT, alignedS, lengthCommonAlignment);
         }
     }
+
+    /**
+     * Get the indice of the last nucleotide in the sequence. For example, if
+     * the sequence is
+     * --acg--
+     * the function will return 4.
+     * Useful for the alignment.
+     * @return the indice of the last nucleotide in the sequence
+     */
+    public int getPosLastNucleotide()
+    {
+        int s = this.getSize() - 1;
+        int current = s;
+        for(int i = s;i >= 0;i--)
+        {
+            if (this.content[i] == (byte) this.GAP)
+                current--;
+            else
+                return (current);
+        }
+        return (current);
+    }
+
+    /**
+     * Get the indice of the first nucleotide in the sequence. For example, if
+     * the sequence is
+     * --acg--
+     * the function will return 2.
+     * Useful for the alignment.
+     * @return the indice of the first nucleotide in the sequence
+     */
+
+    public int getPosFirstNucleotide()
+    {
+        int current = 0;
+        for(int i = 0;i < this.getSize();i++)
+        {
+            if (this.content[i] == (byte) this.GAP)
+                current++;
+            else
+                return (current);
+        }
+        return (current);
+    }
+
+    public int nbGapEnd()
+    {
+        return (this.getSize() - 1 - this.getPosLastNucleotide());
+    }
+
+    public int nbGapBegin()
+    {
+        return (this.getPosFirstNucleotide());
+    }
 }
