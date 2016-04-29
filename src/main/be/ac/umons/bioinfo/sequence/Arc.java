@@ -21,6 +21,8 @@ public class Arc
     public final int mismatch;
     public final int gap;
 
+    public final boolean inside;
+
     /**
      * A representation of a transition between two sequences.
      *
@@ -39,7 +41,8 @@ public class Arc
                boolean startBefore,
                int match,
                int mismatch,
-               int gap)
+               int gap,
+               boolean inside)
     {
         this.start = start;
         this.startComp = startComp;
@@ -50,6 +53,8 @@ public class Arc
         this.match = match;
         this.mismatch = mismatch;
         this.gap = gap;
+
+        this.inside = inside;
     }
 
     /**
