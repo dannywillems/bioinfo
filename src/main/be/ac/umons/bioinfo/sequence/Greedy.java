@@ -43,7 +43,7 @@ public class Greedy
 
         Collections.sort(arcs, new ArcComparator());
 
-        List<Arc> path = hamiltonianPath(filterArcs(arcs, sequences));
+        List<Arc> path = hamiltonianPath(filterArcs(arcs));
 
         return path.parallelStream().map(arc -> arc.getAlignment()).collect(Collectors.toList());
     }
@@ -87,13 +87,17 @@ public class Greedy
     /**
      * Filters the arcs that must be retained for the Hamiltonian path.
      * @param arcs  the candidate arcs
-     * @param sequences the canonical representation of the sequences contained in the arc.
      * @return the candidate arcs that must belong to the hamiltonian path
      */
-    public static Set<Arc> filterArcs(List<Arc> arcs, List<Sequence> sequences)
+    public static Set<Arc> filterArcs(List<Arc> arcs)
     {
         LinkedList<Arc> lArcs = new LinkedList<Arc>();
         lArcs.addAll(arcs);
+
+        Set<Sequence> sequences = arcs.stream().map(a -> Arrays.asList(a.start, a.end))
+                                       .flatMap(Collection::stream)
+                                       .collect(Collectors.toSet());
+
 
         UnionFind<Sequence> groups = new UnionFind<>(sequences);
         Set<Sequence> entered = new HashSet<>();

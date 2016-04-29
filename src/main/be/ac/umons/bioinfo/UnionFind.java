@@ -1,5 +1,6 @@
 package be.ac.umons.bioinfo;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class UnionFind<T>
     /**
      * @param elements the elements that can potentially be merged.
      */
-    public UnionFind(List<T> elements)
+    public UnionFind(Collection<T> elements)
     {
         this.parent = new HashMap<>();
         this.rank = new HashMap<>();

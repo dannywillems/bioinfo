@@ -26,14 +26,17 @@ public class Main
         list.add(f);
         list.add(g);
         list.add(h);*/
-/*
+
+        /*
         Sequence f = new Sequence("cacgt");
         Sequence g = new Sequence("acgt");
         Sequence h = new Sequence("actacg");
         Sequence i = new Sequence("gtact");
         Sequence j = new Sequence("actga");
-        Sequence k = new Sequence("ctga");
-*/
+        Sequence k = new Sequence("ctga");*/
+
+
+
 
         Sequence f = new Sequence("actttacg");
         Sequence g = new Sequence("ttgcacgat");
@@ -82,7 +85,7 @@ public class Main
             System.out.println(sa.s2);
             System.out.println(sa.score);
 
-            System.out.println("----------------");
+            System.out.println("****************");
         }
 
 
