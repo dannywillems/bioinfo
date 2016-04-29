@@ -253,7 +253,8 @@ public class Sequence
                 true,
                 match,
                 mismatch,
-                gap));
+                gap, FG.get(0).inside()));
+
         arcs.add(new Arc(
                 that,
                 false,
@@ -263,7 +264,8 @@ public class Sequence
                 false,
                 match,
                 mismatch,
-                gap));
+                gap,
+                FG.get(1).inside()));
 
         arcs.add(new Arc(this,
                 true,
@@ -273,7 +275,9 @@ public class Sequence
                 true,
                 match,
                 mismatch,
-                gap));
+                gap,
+                CompFG.get(0).inside()));
+
         arcs.add(new Arc(
                 that,
                 false,
@@ -283,7 +287,8 @@ public class Sequence
                 false,
                 match,
                 mismatch,
-                gap));
+                gap,
+                CompFG.get(1).inside()));
 
         arcs.add(new Arc(
                 this,
@@ -294,7 +299,9 @@ public class Sequence
                 true,
                 match,
                 mismatch,
-                gap));
+                gap,
+                FCompG.get(0).inside()));
+
         arcs.add(new Arc(
                 that,
                 true,
@@ -304,7 +311,8 @@ public class Sequence
                 false,
                 match,
                 mismatch,
-                gap));
+                gap,
+                FCompG.get(1).inside()));
 
         arcs.add(new Arc(
                 this,
@@ -315,7 +323,9 @@ public class Sequence
                 true,
                 match,
                 mismatch,
-                gap));
+                gap,
+                CompFCompG.get(0).inside()));
+
         arcs.add(new Arc(
                 that,
                 true,
@@ -325,7 +335,8 @@ public class Sequence
                 false,
                 match,
                 mismatch,
-                gap));
+                gap,
+                CompFCompG.get(1).inside()));
 
         return arcs;
     }
@@ -588,5 +599,13 @@ public class Sequence
     public int nbGapBegin()
     {
         return (this.getPosFirstNucleotide());
+    }
+
+    /**
+     * @return true if this sequence is bounded by gaps; false otherwise.
+     */
+    public boolean isGapBounded()
+    {
+        return this.content[0] == GAP && this.content[this.content.length-1] == GAP;
     }
 }
