@@ -47,4 +47,13 @@ public class SequenceAlignment
     {
         return ((this.s1.hashCode() + this.s2.hashCode()) % Integer.MAX_VALUE) + this.score;
     }
+
+    /**
+     * @return true if one of the aligned sequence is a subsequence of the other aligned sequence,
+     * false otherwise.
+     */
+    public boolean inside()
+    {
+        return this.s1.isGapBounded() || this.s2.isGapBounded();
+    }
 }
