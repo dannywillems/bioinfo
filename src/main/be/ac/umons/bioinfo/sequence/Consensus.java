@@ -41,9 +41,9 @@ public class Consensus
                 Character c = new Character(alignment.get(j).getLetter(i));
                 Integer c_occurence = occurences.get(c);
                 if (c_occurence == null)
-                    occurences.put(c, new Integer(0));
+                    occurences.put(c, 0);
                 else
-                    occurences.put(c, new Integer(c_occurence.intValue() + Integer.valueOf(1)));
+                    occurences.put(c, c_occurence + 1);
             }
             consensus.append(this.getBase(occurences));
         }
