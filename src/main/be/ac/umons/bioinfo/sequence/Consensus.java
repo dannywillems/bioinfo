@@ -73,8 +73,7 @@ public class Consensus
             }
         }
 
-        // There must never been a gap in the final consensus
-        assert(c_max != gap);
+        assert c_max != gap : "There must never been a gap in the final consensus";
         return (c_max);
     }
 

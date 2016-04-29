@@ -531,9 +531,9 @@ public class Sequence
 
         // TODO: verifier que c est bien le comportement souhaite dans le cas des sequences inclues l une dans l autre
         if(bottom)
-            return new SequenceAlignment(alignedS, alignedT, jMax);
+            return new SequenceAlignment(alignedS, alignedT, jMax, lengthCommonAlignment);
         else
-             return new SequenceAlignment(alignedT, alignedS, iMax);
+             return new SequenceAlignment(alignedT, alignedS, iMax, lengthCommonAlignment);
     }
 
     /**
