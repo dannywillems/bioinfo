@@ -22,7 +22,6 @@ public class ArcComparator implements Comparator<Arc>
         if(a1.end.hashCode() > a2.end.hashCode()) return -1;
         if(a1.end.hashCode() < a2.end.hashCode()) return 1;
 
-        if(a1.start.toString().hashCode() > a2.start.toString().hashCode()) return -1;
-        return 1; // Their can not be two identical sequences in the dataset
+        return (a2.start.toString().hashCode() - a1.start.toString().hashCode());
     }
 }

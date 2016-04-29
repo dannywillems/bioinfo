@@ -106,7 +106,7 @@ public class SequenceTest
 
         assertEquals(new Sequence("aggagaagaattcaccgctat----------"), first.s1);
         assertEquals(new Sequence("----------ttc-cccttattcaattctaa"), first.s2);
-        assertEquals(11, first.score);
+        assertEquals(4, first.score);
 
         assertEquals(new Sequence("ttccccttattcaattctaa--------------------"), second.s1);
         assertEquals(new Sequence("-------------------aggagaagaattcaccgctat"), second.s2);
@@ -131,12 +131,11 @@ public class SequenceTest
 
         assertEquals(new Sequence("attagaccatgcggc-------"), first.s1);
         assertEquals(new Sequence("--------at-cggcattcagt"), first.s2);
-        assertEquals(7, first.score);
+        assertEquals(4, first.score);
 
         assertEquals(new Sequence("atcggcattcagt---------"), second.s1);
         assertEquals(new Sequence("------att-agaccatgcggc"), second.s2);
-        assertEquals(7, second.score);
-
+        assertEquals(2, second.score);
     }
 
 
