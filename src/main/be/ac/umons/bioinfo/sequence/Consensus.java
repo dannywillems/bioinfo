@@ -72,6 +72,9 @@ public class Consensus
                 c_max = c.charValue();
             }
         }
+
+        // There must never been a gap in the final consensus
+        assert(c_max != gap);
         return (c_max);
     }
 
