@@ -25,7 +25,8 @@ public class Main
 
         list.add(f);
         list.add(g);
-        list.add(h);*/
+        list.add(h);
+        */
 
         /*
         Sequence f = new Sequence("cacgt");
@@ -33,10 +34,8 @@ public class Main
         Sequence h = new Sequence("actacg");
         Sequence i = new Sequence("gtact");
         Sequence j = new Sequence("actga");
-        Sequence k = new Sequence("ctga");*/
-
-
-
+        Sequence k = new Sequence("ctga");
+        */
 
         Sequence f = new Sequence("actttacg");
         Sequence g = new Sequence("ttgcacgat");
@@ -50,10 +49,9 @@ public class Main
         list.add(j);
         list.add(f);
         list.add(k);
-        list.add(i);
         list.add(h);
+        list.add(i);
         list.add(g);
-
 
         /*
         Sequence f = new Sequence("catagtc");
@@ -65,9 +63,8 @@ public class Main
         List<Sequence> list = new ArrayList<>();
         list.add(f);
         list.add(_h);
-        list.add(_g);*/
-
-
+        list.add(_g);
+        */
 
         List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
 
@@ -77,23 +74,19 @@ public class Main
         System.out.println(h);
         System.out.println(g);
         System.out.println("------->");
-*/
+        */
+
         Consensus c = new Consensus(result);
         c.computeAlignment();
+        Sequence consensus_final = c.build();
 
+        System.out.println("Les séquences alignées:\n");
         ArrayList<Sequence> alignment = c.getAlignment();
         for(int counter = 0;counter < alignment.size();counter++)
             System.out.println(alignment.get(counter));
-        System.out.println("#########################################");
+        System.out.println("#########################################\n");
 
-        for(SequenceAlignment sa : result)
-        {
-            System.out.println(sa.s1);
-            System.out.println(sa.s2);
-            System.out.println(sa.longestCommonSubstringLength);
-            System.out.println("##");
-        }
-
-
+        System.out.println("Le consensus final:\n");
+        System.out.println(consensus_final);
     }
 }
