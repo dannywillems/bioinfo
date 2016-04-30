@@ -76,6 +76,8 @@ public class Arc
         if(startBefore) return candidates.get(0);
         else return new SequenceAlignment(  candidates.get(1).s2,
                                             candidates.get(1).s1,
+                                            candidates.get(1).initial_s2,
+                                            candidates.get(1).initial_s1,
                                             candidates.get(1).score,
                                             candidates.get(1).longestCommonSubstringLength);
     }
