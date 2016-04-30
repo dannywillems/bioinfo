@@ -60,11 +60,14 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 - [x] Implémenter l'algorithme.
 - [ ] Multi threader l'algorithme.
 - [ ] Fonctionne quand on a une séquence qui est dans l'autre ?
-- [ ] Unit test pour l'algorithme greedy.
+- [x] Unit test pour l'algorithme greedy.
 
 #### MISC
 - [ ] Suppression des tests *inutiles*.
 - [ ] Suppression des commentaires *inutiles*.
+- [ ] Suppression des fonctions *inutiles*.
+  - [x] Récupérer positions gaps finaux et du début.
+- [ ] Fix les FIXME/IMPROVEME.
 
 ## Plus d'informations
 
