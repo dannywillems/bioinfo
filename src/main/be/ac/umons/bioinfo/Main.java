@@ -4,6 +4,7 @@ package be.ac.umons.bioinfo;
  * Created by aline on 31/03/16.
  */
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,12 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
+        //test();
+        cible(1);
+    }
 
+    public static void test()
+    {
         Greedy greed = new Greedy();
 
         /*
@@ -88,5 +94,33 @@ public class Main
 
         System.out.println("Le consensus final:\n");
         System.out.println(consensus_final);
+    }
+
+    public static void cible(int num)
+    {
+        try
+        {
+            List<Sequence> list = FastaReader.readFromFile(new File("../../res/collections/Collection" + num + "-Simplifiee.FASTA"));
+
+            Greedy g = new Greedy();
+            List<SequenceAlignment> result = g.greedy(list, 1, -1, -2);
+
+            Consensus c = new Consensus(result);
+            c.computeAlignment();
+            Sequence consensus_final = c.build();
+
+            System.out.println("Les séquences alignées:\n");
+            ArrayList<Sequence> alignment = c.getAlignment();
+            for(int counter = 0;counter < alignment.size();counter++)
+                System.out.println(alignment.get(counter));
+            System.out.println("#########################################\n");
+
+            System.out.println("Le consensus final:\n");
+            System.out.println(consensus_final);
+        }
+        catch (IOException e)
+        {
+            System.out.println(e.toString());
+        }
     }
 }
