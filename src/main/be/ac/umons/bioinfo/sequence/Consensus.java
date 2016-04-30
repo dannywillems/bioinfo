@@ -15,6 +15,7 @@ public class Consensus
     public Consensus(List<SequenceAlignment> hamiltonian_path)
     {
         this.hamiltonian_path = hamiltonian_path;
+        this.alignment = new ArrayList<Sequence>();
     }
 
     /**
@@ -22,6 +23,41 @@ public class Consensus
      */
     public void computeAlignment()
     {
+        int[] gaps = new int[2 * this.hamiltonian_path.size()];
+
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            if (i == 0)
+                this.alignment.add(this.hamiltonian_path.get(i).s1);
+            this.alignment.add(this.hamiltonian_path.get(i).s2);
+        }
+
+        //this.alignment = this.addGap(gaps);
+    }
+
+    /**
+     * Add gaps to the initial alignments.
+     * @param gaps int array containing at the position 2i the number of gaps to
+     * add at the beginning of the ith sequence and at position 2i + 1 the
+     * numbers of gaps to add at the end of the ith sequence.
+     * @return the alignment with gaps
+     */
+    private ArrayList<Sequence> addGap(int[] gaps)
+    {
+        ArrayList<Sequence> final_alignment = new ArrayList<Sequence>();
+        for(int i = 0;i < this.alignment.size();i++)
+        {
+            Sequence current = this.alignment.get(i);
+            StringBuilder s = new StringBuilder();
+            for(int j = 0;j < gaps[2 * i];j++)
+                s.append(Sequence.base2letter((byte) Sequence.GAP));
+            for(int j = 0;j < current.getSize();j++)
+                s.append(current.getLetter(j));
+            for(int j = 0;j < gaps[2 * i + 1];j++)
+                s.append(Sequence.base2letter((byte) Sequence.GAP));
+            final_alignment.add(new Sequence(s.toString()));
+        }
+        return (final_alignment);
     }
 
     /**
@@ -80,5 +116,10 @@ public class Consensus
     public void setAlignment(ArrayList<Sequence> a)
     {
         this.alignment = a;
+    }
+
+    public ArrayList<Sequence> getAlignment()
+    {
+        return (this.alignment);
     }
 }

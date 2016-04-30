@@ -48,11 +48,11 @@ public class Main
         List<Sequence> list = new ArrayList<Sequence>();
 
         list.add(j);
-        list.add(k);
         list.add(f);
+        list.add(k);
         list.add(i);
-        list.add(g);
         list.add(h);
+        list.add(g);
 
 
         /*
@@ -78,14 +78,20 @@ public class Main
         System.out.println(g);
         System.out.println("------->");
 */
+        Consensus c = new Consensus(result);
+        c.computeAlignment();
+
+        ArrayList<Sequence> alignment = c.getAlignment();
+        for(int counter = 0;counter < alignment.size();counter++)
+            System.out.println(alignment.get(counter));
+        System.out.println("#########################################");
 
         for(SequenceAlignment sa : result)
         {
             System.out.println(sa.s1);
             System.out.println(sa.s2);
-            System.out.println(sa.score);
-
-            System.out.println("****************");
+            System.out.println(sa.longestCommonSubstringLength);
+            System.out.println("##");
         }
 
 
