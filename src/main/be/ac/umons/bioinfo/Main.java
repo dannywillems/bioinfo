@@ -15,9 +15,9 @@ public class Main
     public static void main(String[] args) throws IOException
     {
         //test();
-        cible(1, true);
-        cible(2, true);
-        cible(3, true); // A exécuter en dernier, car long
+        cible(1, true, false, false);
+        cible(2, true, false, false);
+        cible(3, true, false, false); // A exécuter en dernier, car long
     }
 
     public static void test()
@@ -98,7 +98,7 @@ public class Main
         System.out.println(consensus_final);
     }
 
-    public static void cible(int num, boolean show_result)
+    public static void cible(int num, boolean show_consensus, boolean show_alignment, boolean save)
     {
         try
         {
@@ -118,24 +118,29 @@ public class Main
             Sequence consensus_final = c.build();
             System.out.println("Done");
 
-            if (show_result)
+            if (show_alignment)
             {
                 System.out.println("Les séquences alignées:\n");
                 ArrayList<Sequence> alignment = c.getAlignment();
                 for(int counter = 0;counter < alignment.size();counter++)
                     System.out.println(alignment.get(counter));
                 System.out.println("#########################################\n");
-
+            }
+            if (show_consensus)
+            {
                 System.out.println("Le consensus final:\n");
                 System.out.println(consensus_final);
                 System.out.println("#########################################\n");
             }
 
-            String file_name = "Cible_calcul" + num + ".fasta";
-            String directory = "../../res/results/";
-            System.out.print("Ecriture du consensus dans le fichier " + file_name + "... ");
-            FastaWriter.write("Cible1", consensus_final, new File(directory + file_name), 80);
-            System.out.println("Done");
+            if (save)
+            {
+                String file_name = "Cible_calcul" + num + ".fasta";
+                String directory = "../../res/results/";
+                System.out.print("Ecriture du consensus dans le fichier " + file_name + "... ");
+                FastaWriter.write("Cible1", consensus_final, new File(directory + file_name), 80);
+                System.out.println("Done");
+            }
         }
         catch (IOException e)
         {
