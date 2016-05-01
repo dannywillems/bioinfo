@@ -41,4 +41,26 @@ public class FastaWriter
 
         bw.close();
     }
+
+    public static void write(String sequence_name, Sequence sequence, File f, int chunkSize) throws IOException
+    {
+        FileWriter fw = new FileWriter(f);
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        bw.write(">" + sequence_name + "\n");
+        int offset = 0;
+        String repr = sequence.toString();
+
+        while(offset < repr.length() - 1)
+        {
+            int end = Math.min(offset + chunkSize, repr.length());
+
+            CharSequence sub = repr.substring(offset, end);
+            bw.write(sub.toString() + "\n");
+
+            offset = end;
+        }
+
+        bw.close();
+    }
 }

@@ -4,4 +4,4 @@ jdk:
     - oraclejdk8
 
 script:
-    ant run_test
+    ant run
