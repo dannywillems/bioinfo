@@ -28,6 +28,8 @@
 
   <!-- zip name if you want to create an archive -->
   <property name="zip_name"       value="${project_name}.zip" />
+  <!-- jar name -->
+  <property name="jar_name"       value="FragmentAssembler.jar" />
 
   <!-- external libraries -->
   <path id="classpath.src">
@@ -94,6 +96,7 @@
   <target name="fclean" depends="clean">
     <delete dir="${doc_dir}" />
     <delete file="${zip_name}" />
+    <delete file="${jar_name}" />
   </target>
   <!-- ################################################################### -->
 
@@ -128,6 +131,19 @@
         .settings/"
         basedir="."
       />
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="jar" depends="compile">
+    <jar  destfile = "${jar_name}">
+      <fileset dir="${bin_src}" />
+      <fileset dir="src" />
+      <fileset dir="lib" />
+      <manifest>
+        <attribute name="Main-Class" value="${exe}" />
+      </manifest>
+    </jar>
   </target>
   <!-- ################################################################### -->
 </project>
