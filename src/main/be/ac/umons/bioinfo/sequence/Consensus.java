@@ -18,6 +18,54 @@ public class Consensus
         this.alignment = new ArrayList<Sequence>();
     }
 
+    public int[][] computeOffset()
+    {
+        int offset[][] = new int[2][this.hamiltonian_path.size()];
+        // Will be useful to recenter the offset to 0 at the end
+        int min = 0;
+        SequenceAlignment sa = this.hamiltonian_path.get(0);
+
+        int pos_s1 = sa.s1.getPosFirstNucleotide();
+        int pos_s2 = sa.s2.getPosFirstNucleotide();
+
+        if (pos_s1 >= pos_s2)
+        {
+            offset[0][0] = pos_s1;
+            offset[1][0] = 0;
+        }
+        else
+        {
+            offset[0][0] = 0;
+            offset[1][0] = pos_s2 - pos_s1;
+        }
+
+        for(int i = 1;i < this.hamiltonian_path.size();i++)
+        {
+            sa = this.hamiltonian_path.get(i);
+            pos_s1 = sa.s1.getPosFirstNucleotide();
+            pos_s2 = sa.s2.getPosFirstNucleotide();
+
+            // Always >= 0
+            offset[0][i] = offset[1][i - 1];
+            if (pos_s1 != 0)
+            {
+                offset[1][i] = pos_s2 - pos_s1 + offset[0][i];
+                if (offset[1][i] < min)
+                    min = offset[1][i];
+            }
+            else
+                offset[1][i] = offset[0][i] + pos_s2;
+        }
+
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            offset[0][i] -= min;
+            offset[1][i] -= min;
+        }
+
+        return (offset);
+    }
+
     /**
      * Do the alignment and save it in alignment attribute.
      */
