@@ -11,8 +11,10 @@ import java.util.ArrayList;
 
 import java.lang.Character;
 import java.lang.Integer;
+
 public class ConsensusTest
 {
+    /* BEGIN TEST getBase */
     @Test
     public void getBaseTest()
     {
@@ -23,7 +25,7 @@ public class ConsensusTest
         s.put(new Character('g'), 2);
         s.put(new Character('t'), 4);
         s.put(new Character('-'), 1);
-        assertEquals(c.getBase(s), 'c');
+        assertEquals(c.getBase(s, false), 'c');
     }
 
     @Test
@@ -36,7 +38,7 @@ public class ConsensusTest
         s.put(new Character('g'), 5);
         s.put(new Character('t'), 4);
         s.put(new Character('-'), 1);
-        assertEquals(c.getBase(s), 'c');
+        assertEquals(c.getBase(s, false), 'c');
     }
 
     @Test
@@ -49,7 +51,7 @@ public class ConsensusTest
         s.put(new Character('g'), 5);
         s.put(new Character('t'), 4);
         s.put(new Character('-'), 6);
-        assertEquals(c.getBase(s), 'c');
+        assertEquals(c.getBase(s, false), 'c');
     }
 
     @Test
@@ -62,11 +64,13 @@ public class ConsensusTest
         s.put(new Character('g'), 2);
         s.put(new Character('t'), 4);
         s.put(new Character('-'), 6);
-        assertEquals(c.getBase(s), 'c');
+        assertEquals(c.getBase(s, false), 'c');
     }
+    /* END TEST getBase */
 
+    /* BEGIN TEST build with remove_if_max_gap false */
     @Test
-    public void buildSimpleTest()
+    public void buildNoRemoveSimpleTest()
     {
         ArrayList<Sequence> l = new ArrayList<Sequence>();
         l.add(new Sequence("acttt"));
@@ -76,11 +80,11 @@ public class ConsensusTest
         Consensus c = new Consensus(null);
         c.setAlignment(l);
 
-        assertEquals(c.build().toString(), "acttg");
+        assertEquals(c.build(false).toString(), "acttg");
     }
 
     @Test
-    public void buildNoGapMultipleTest()
+    public void buildNoGapNoRemoveMultipleTest()
     {
         ArrayList<Sequence> l = new ArrayList<Sequence>();
         l.add(new Sequence("acttt"));
@@ -90,11 +94,11 @@ public class ConsensusTest
         Consensus c = new Consensus(null);
         c.setAlignment(l);
 
-        assertEquals(c.build().toString(), "aattg");
+        assertEquals(c.build(false).toString(), "aattg");
     }
 
     @Test
-    public void buildGapMultipleTest()
+    public void buildGapNoRemoveMultipleTest()
     {
         ArrayList<Sequence> l = new ArrayList<Sequence>();
         l.add(new Sequence("a-ttt"));
@@ -104,7 +108,7 @@ public class ConsensusTest
         Consensus c = new Consensus(null);
         c.setAlignment(l);
 
-        assertEquals(c.build().toString(), "atttg");
+        assertEquals(c.build(false).toString(), "atttg");
     }
 
     @Test
@@ -117,8 +121,66 @@ public class ConsensusTest
 
         Consensus c = new Consensus(null); c.setAlignment(l);
 
-        assertEquals(c.build().toString(), "acttg");
+        assertEquals(c.build(false).toString(), "acttg");
     }
+    /* END TEST build with remove_if_max_gap false */
+
+    /* BEGIN TEST build with remove_if_max_gap true */
+    @Test
+    public void buildGapRemoveMultipleTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("a-ttt"));
+        l.add(new Sequence("t-ttg"));
+        l.add(new Sequence("atgag"));
+
+        Consensus c = new Consensus(null);
+        c.setAlignment(l);
+
+        assertEquals(c.build(true).toString(), "attg");
+    }
+
+    @Test
+    public void buildGapRemoveSimpleTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("a-ttt"));
+        l.add(new Sequence("tcttg"));
+        l.add(new Sequence("acgag"));
+
+        Consensus c = new Consensus(null); c.setAlignment(l);
+
+        assertEquals(c.build(true).toString(), "acttg");
+    }
+
+    @Test
+    public void buildRemoveSimpleTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("acttt"));
+        l.add(new Sequence("tcttg"));
+        l.add(new Sequence("atgag"));
+
+        Consensus c = new Consensus(null);
+        c.setAlignment(l);
+
+        assertEquals(c.build(true).toString(), "acttg");
+    }
+
+    @Test
+    public void buildNoGapRemoveMultipleTest()
+    {
+        ArrayList<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("acttt"));
+        l.add(new Sequence("tattg"));
+        l.add(new Sequence("atgag"));
+
+        Consensus c = new Consensus(null);
+        c.setAlignment(l);
+
+        assertEquals(c.build(true).toString(), "aattg");
+    }
+    /* END TEST build with remove_if_max_gap true */
 
     @Test
     public void computeOffsetSimpleTest()
