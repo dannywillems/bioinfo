@@ -238,4 +238,71 @@ public class SequenceTest
             }
         }
     }
+
+    @Test
+    public void getPosLastNucleotideWithGapEndTest()
+    {
+        Sequence a = new Sequence("--acg--");
+        assertEquals(a.getPosLastNucleotide(), 4);
+    }
+
+    @Test
+    public void getPosLastNucleotideNoGapTest()
+    {
+        Sequence a = new Sequence("--acg");
+        assertEquals(a.getPosLastNucleotide(), 4);
+    }
+
+    @Test
+    public void getPosFirstNucleotideWithGagBeginTest()
+    {
+        Sequence a = new Sequence("--acg--");
+        assertEquals(a.getPosFirstNucleotide(), 2);
+    }
+
+    @Test
+    public void getPosFirstNucleotideNoGapTest()
+    {
+        Sequence a = new Sequence("acg--");
+        assertEquals(a.getPosFirstNucleotide(), 0);
+    }
+
+    @Test
+    public void nbGapBeginWithGapTest()
+    {
+        Sequence a = new Sequence("--acg--");
+        assertEquals(a.nbGapBegin(), 2);
+    }
+
+    @Test
+    public void nbGapBeginNoGapTest()
+    {
+        Sequence a = new Sequence("acg--");
+        assertEquals(a.nbGapBegin(), 0);
+    }
+
+    @Test
+    public void nbEndWithGapTest()
+    {
+        Sequence a = new Sequence("--acg--");
+        assertEquals(a.nbGapEnd(), 2);
+    }
+
+    @Test
+    public void nbGapEndNoGapTest()
+    {
+        Sequence a = new Sequence("--acg");
+        assertEquals(a.nbGapEnd(), 0);
+    }
+
+    @Test
+    public void addingGapsTest()
+    {
+        Sequence s = new Sequence("cgatctg");
+        int[] gaps = new int[3];
+        gaps[0] = 1;
+        gaps[1] = 4;
+        gaps[2] = 4;
+        assertEquals(s.rebuildAddingGaps(gaps), new Sequence("c-gat--ctg"));
+    }
 }

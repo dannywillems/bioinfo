@@ -7,10 +7,7 @@ package be.ac.umons.bioinfo.sequence;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-
-/**
- * Represents a DNA sequence
+import java.util.List; /** Represents a DNA sequence
  */
 public class Sequence
 {
@@ -96,6 +93,11 @@ public class Sequence
     public char getLetter(int i)
     {
         return (base2letter(this.content[i]));
+    }
+
+    public byte getBaseAsByte(int i)
+    {
+        return (this.content[i]);
     }
 
     @Override
@@ -548,10 +550,85 @@ public class Sequence
     }
 
     /**
+    * Get the indice of the last nucleotide in the sequence. For example, if
+    * the sequence is
+    * --acg--
+    * the function will return 4.
+    * Useful for the alignment.
+    * @return the indice of the last nucleotide in the sequence
+    */
+    public int getPosLastNucleotide()
+    {
+        int s = this.getSize() - 1;
+        int current = s;
+        for(int i = s;i >= 0;i--)
+        {
+            if (this.content[i] == (byte) this.GAP)
+                current--;
+            else
+                return (current);
+        }
+        return (current);
+    }
+
+    /**
+     * Get the indice of the first nucleotide in the sequence. For example, if
+     * the sequence is
+     * --acg--
+     * the function will return 2.
+     * Useful for the alignment.
+     * @return the indice of the first nucleotide in the sequence
+     */
+
+    public int getPosFirstNucleotide()
+    {
+        int current = 0;
+        for(int i = 0;i < this.getSize();i++)
+        {
+            if (this.content[i] == (byte) this.GAP)
+                current++;
+            else
+                return (current);
+        }
+        return (current);
+    }
+
+    public int nbGapEnd()
+    {
+        return (this.getSize() - 1 - this.getPosLastNucleotide());
+    }
+
+    public int nbGapBegin()
+    {
+        return (this.getPosFirstNucleotide());
+    }
+
+    /**
      * @return true if this sequence is bounded by gaps; false otherwise.
      */
     public boolean isGapBounded()
     {
         return this.content[0] == GAP && this.content[this.content.length-1] == GAP;
+    }
+
+    public Sequence rebuildAddingGaps(int[] gaps)
+    {
+        StringBuilder s_final = new StringBuilder();
+        int gaps_i = 0;
+        int i = 0;
+        while (i < this.getSize())
+        {
+            if (gaps_i < gaps.length && gaps[gaps_i] == i)
+            {
+                s_final.append(this.base2letter((byte) Sequence.GAP));
+                gaps_i++;
+            }
+            else
+            {
+                s_final.append(this.getLetter(i));
+                i++;
+            }
+        }
+        return (new Sequence(s_final.toString()));
     }
 }
