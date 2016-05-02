@@ -14,10 +14,10 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
-        //test();
-        cible(1, true, false, false);
-        cible(2, true, false, false);
-        cible(3, true, false, false); // A exécuter en dernier, car long
+        test();
+        //cible(1, true, true, false);
+        //cible(2, false, false, true);
+        //cible(3, false, false, true); // A exécuter en dernier, car long
     }
 
     public static void test()
@@ -58,8 +58,8 @@ public class Main
         list.add(f);
         list.add(k);
         list.add(h);
-        list.add(i);
         list.add(g);
+        list.add(i);
 
         /*
         Sequence f = new Sequence("catagtc");
@@ -85,6 +85,9 @@ public class Main
         */
 
         Consensus c = new Consensus(result);
+        c.showWithOffset();
+
+        /*
         c.computeAlignment();
         Sequence consensus_final = c.build();
 
@@ -96,6 +99,14 @@ public class Main
 
         System.out.println("Le consensus final:\n");
         System.out.println(consensus_final);
+
+        for(SequenceAlignment s : result)
+        {
+            System.out.println(s.s1);
+            System.out.println(s.s2);
+            System.out.println("#####");
+        }
+        */
     }
 
     public static void cible(int num, boolean show_consensus, boolean show_alignment, boolean save)
