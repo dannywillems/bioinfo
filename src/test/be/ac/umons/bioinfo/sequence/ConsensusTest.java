@@ -190,7 +190,8 @@ public class ConsensusTest
         l.add(new SequenceAlignment(new Sequence("t-cg"), new Sequence("acct"), 0, 0));
 
         Consensus c = new Consensus(l);
-        int gaps[][] = c.computeOffset();
+        c.computeOffset();
+        int gaps[][] = c.getOffset();
         int result[][] = { {0, 1}, {1, 1} };
 
         for(int i = 0;i < result.length;i++)
@@ -211,7 +212,8 @@ public class ConsensusTest
         l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
 
         Consensus c = new Consensus(l);
-        int gaps[][] = c.computeOffset();
+        c.computeOffset();
+        int gaps[][] = c.getOffset();
         int result[][] = { {0, 1, 7, 3, 0}, {1, 7, 3, 0, 3} };
 
         for(int j = 0;j < result[0].length;j++)
@@ -232,7 +234,8 @@ public class ConsensusTest
         l.add(new SequenceAlignment(new Sequence("acggaatctg-cgagtta"), new Sequence("-----atcggtc------"), 0, 0));
 
         Consensus c = new Consensus(l);
-        int gaps[][] = c.computeOffset();
+        c.computeOffset();
+        int gaps[][] = c.getOffset();
         int result[][] = { {2, 3, 9, 5, 0}, {3, 9, 5, 0, 5} };
 
         for(int j = 0;j < result[0].length;j++)

@@ -11,35 +11,38 @@ public class Consensus
 {
     private List<SequenceAlignment> hamiltonian_path;
     private ArrayList<Sequence> alignment;
+    private int[][] offset;
 
     public Consensus(List<SequenceAlignment> hamiltonian_path)
     {
         this.hamiltonian_path = hamiltonian_path;
         this.alignment = new ArrayList<Sequence>();
+        // Check for tests which send a null to initialize a consensus
+        if (this.hamiltonian_path != null)
+            this.offset = new int[2][this.hamiltonian_path.size()];
     }
 
     /**
      * Computer the offset for a given hamiltonian path. The offset is defined
      * as the number of gaps to insert at the beginning of the sequence.
      */
-    public int[][] computeOffset()
+    public void computeOffset()
     {
-        int offset[][] = new int[2][this.hamiltonian_path.size()];
         // Will be useful to recenter the offset to 0 at the end
         int min = 0;
         SequenceAlignment sa = this.hamiltonian_path.get(0);
 
         int pos_s1 = sa.s1.getPosFirstNucleotide();
-        int pos_s2 = sa.s2.getPosFirstNucleotide(); 
+        int pos_s2 = sa.s2.getPosFirstNucleotide();
         if (pos_s1 >= pos_s2)
         {
-            offset[0][0] = pos_s1;
-            offset[1][0] = 0;
+            this.offset[0][0] = pos_s1;
+            this.offset[1][0] = 0;
         }
         else
         {
-            offset[0][0] = 0;
-            offset[1][0] = pos_s2 - pos_s1;
+            this.offset[0][0] = 0;
+            this.offset[1][0] = pos_s2 - pos_s1;
         }
 
         for(int i = 1;i < this.hamiltonian_path.size();i++)
@@ -49,48 +52,78 @@ public class Consensus
             pos_s2 = sa.s2.getPosFirstNucleotide();
 
             // Always >= 0
-            offset[0][i] = offset[1][i - 1];
+            this.offset[0][i] = this.offset[1][i - 1];
             if (pos_s1 != 0)
             {
-                offset[1][i] = pos_s2 - pos_s1 + offset[0][i];
-                if (offset[1][i] < min)
-                    min = offset[1][i];
+                this.offset[1][i] = pos_s2 - pos_s1 + this.offset[0][i];
+                if (this.offset[1][i] < min)
+                    min = this.offset[1][i];
             }
             else
-                offset[1][i] = offset[0][i] + pos_s2;
+                this.offset[1][i] = this.offset[0][i] + pos_s2;
         }
 
         for(int i = 0;i < this.hamiltonian_path.size();i++)
         {
-            offset[0][i] -= min;
-            offset[1][i] -= min;
+            this.offset[0][i] -= min;
+            this.offset[1][i] -= min;
         }
-
-        return (offset);
     }
 
     public void showWithOffset()
     {
-        int[][] gaps = this.computeOffset();
+        this.computeOffset();
         for(int i = 0;i < this.hamiltonian_path.size();i++)
         {
             SequenceAlignment sa = this.hamiltonian_path.get(i);
-            for(int j = 0;j < gaps[0][i] - sa.s1.getPosFirstNucleotide();j++)
+            for(int j = 0;j < this.offset[0][i] - sa.s1.getPosFirstNucleotide();j++)
                 System.out.print("-");
             System.out.println(sa.s1);
 
-            for(int j = 0;j < gaps[1][i] - sa.s2.getPosFirstNucleotide();j++)
+            for(int j = 0;j < this.offset[1][i] - sa.s2.getPosFirstNucleotide();j++)
                 System.out.print("-");
             System.out.println(sa.s2);
         }
     }
 
+    public void propageGapsDownFrom(int i, int[] gaps)
+    {
+
+    }
+
+    public void propageGapsUpFrom(int i, int[] gaps)
+    {
+
+    }
+
+    public void fillEndWithGaps()
+    {
+
+    }
     /**
      * Do the alignment and save it in alignment attribute.
      */
     public void computeAlignment()
     {
-        int[][] offset = this.computeOffset();
+        this.computeOffset();
+        for(int i = 0;i < this.hamiltonian_path.size() - 1;i++)
+        {
+            SequenceAlignment sa_up = this.hamiltonian_path.get(i);
+            SequenceAlignment sa_down = this.hamiltonian_path.get(i + 1);
+            SequencePairSame pair = new SequencePairSame(sa_up.initial_s2, sa_up.s2, sa_down.s1);
+            int[][] gaps = pair.findGaps();
+            pair.rebuildWithGaps();
+            this.propageGapsUpFrom(i, gaps[0]);
+            this.propageGapsDownFrom(i, gaps[1]);
+        }
+        this.fillEndWithGaps();
+
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            if (i == 0)
+                this.alignment.add(this.hamiltonian_path.get(i).s1);
+            this.alignment.add(this.hamiltonian_path.get(i).s2);
+        }
     }
 
     /**
@@ -159,6 +192,11 @@ public class Consensus
 
         //assert c_max != gap : "There must never been a gap in the final consensus";
         return (c_max);
+    }
+
+    public int[][] getOffset()
+    {
+        return (this.offset);
     }
 
     public void setAlignment(ArrayList<Sequence> a)
