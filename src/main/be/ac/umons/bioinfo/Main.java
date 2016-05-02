@@ -126,7 +126,7 @@ public class Main
             System.out.println("Done");
 
             System.out.print("Construction du consensus... ");
-            Sequence consensus_final = c.build();
+            Sequence consensus_final = c.build(true);
             System.out.println("Done");
 
             if (show_alignment)
