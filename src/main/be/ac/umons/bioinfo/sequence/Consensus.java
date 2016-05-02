@@ -18,6 +18,10 @@ public class Consensus
         this.alignment = new ArrayList<Sequence>();
     }
 
+    /**
+     * Computer the offset for a given hamiltonian path. The offset is defined
+     * as the number of gaps to insert at the beginning of the sequence.
+     */
     public int[][] computeOffset()
     {
         int offset[][] = new int[2][this.hamiltonian_path.size()];
