@@ -70,6 +70,21 @@ public class Consensus
         return (offset);
     }
 
+    public void showWithOffset()
+    {
+        int[][] gaps = this.computeOffset();
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            SequenceAlignment sa = this.hamiltonian_path.get(i);
+            for(int j = 0;j < gaps[0][i] - sa.s1.getPosFirstNucleotide();j++)
+                System.out.print("-");
+            System.out.println(sa.s1);
+
+            for(int j = 0;j < gaps[1][i] - sa.s2.getPosFirstNucleotide();j++)
+                System.out.print("-");
+            System.out.println(sa.s2);
+        }
+    }
     /**
      * Do the alignment and save it in alignment attribute.
      */
