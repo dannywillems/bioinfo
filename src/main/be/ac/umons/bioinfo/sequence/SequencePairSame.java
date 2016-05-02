@@ -64,8 +64,17 @@ public class SequencePairSame
 
     public void rebuildWithGaps()
     {
-        int[][] gaps = this.findGaps();
+        this.rebuildWithGaps(this.findGaps());
+    }
+
+    public void rebuildWithGaps(int[][] gaps)
+    {
         this.s = this.s.rebuildAddingGaps(gaps[0]);
         this.t = this.t.rebuildAddingGaps(gaps[1]);
+    }
+
+    public String toString()
+    {
+        return ("Initial sequence: " + this.initial + "\nAligned with s: " + this.s + "\nAligned with t: " + this.t);
     }
 }
