@@ -85,64 +85,12 @@ public class Consensus
             System.out.println(sa.s2);
         }
     }
+
     /**
      * Do the alignment and save it in alignment attribute.
      */
     public void computeAlignment()
     {
-        /**
-         * FIXME or IMPROVEME
-         * hamiltonian_path must be sent as a Sequence list, not alignment because we don't care about the
-         * aligned sequences. We need the initial sequences and the longest substring.
-         * We reconstruct the sequence list. It must not be necessary to do it.
-         */
-        for(int i = 0;i < this.hamiltonian_path.size();i++)
-        {
-            if (i == 0)
-                this.alignment.add(this.hamiltonian_path.get(i).initial_s1);
-            this.alignment.add(this.hamiltonian_path.get(i).initial_s2);
-        }
-
-        // Begin computing alignment. We add the gaps to add at the beginning and at the end of the sequence i.
-        int nbSequence = this.alignment.size();
-        int[] gaps = new int[2 * nbSequence];
-        gaps[0] = 0;
-        gaps[2 * (nbSequence - 1) + 1] = 0;
-
-        // Gaps at the beginning
-        for(int i = 1;i < nbSequence;i++)
-            gaps[2 * i] = this.alignment.get(i - 1).getSize() - this.hamiltonian_path.get(i - 1).longestCommonSubstringLength + gaps[2 * (i - 1)];
-
-        // Gaps at the end
-        for(int i = nbSequence - 2;i >= 0;i--)
-            gaps[2 * i + 1] = this.alignment.get(i + 1).getSize() - this.hamiltonian_path.get(i).longestCommonSubstringLength + gaps[2 * (i + 1) + 1];
-
-        this.alignment = this.addGap(gaps);
-    }
-
-    /**
-     * Add gaps to the initial alignments.
-     * @param gaps int array containing at the position 2i the number of gaps to
-     * add at the beginning of the ith sequence and at position 2i + 1 the
-     * numbers of gaps to add at the end of the ith sequence.
-     * @return the alignment with gaps
-     */
-    private ArrayList<Sequence> addGap(int[] gaps)
-    {
-        ArrayList<Sequence> final_alignment = new ArrayList<Sequence>();
-        for(int i = 0;i < this.alignment.size();i++)
-        {
-            Sequence current = this.alignment.get(i);
-            StringBuilder s = new StringBuilder();
-            for(int j = 0;j < gaps[2 * i];j++)
-                s.append(Sequence.base2letter((byte) Sequence.GAP));
-            for(int j = 0;j < current.getSize();j++)
-                s.append(current.getLetter(j));
-            for(int j = 0;j < gaps[2 * i + 1];j++)
-                s.append(Sequence.base2letter((byte) Sequence.GAP));
-            final_alignment.add(new Sequence(s.toString()));
-        }
-        return (final_alignment);
     }
 
     /**
