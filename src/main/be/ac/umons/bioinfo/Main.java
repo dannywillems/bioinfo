@@ -122,9 +122,12 @@ public class Main
             System.out.println("Done");
 
             Consensus c = new Consensus(result);
+            /*
             System.out.print("Alignement... ");
             c.computeAlignment();
             System.out.println("Done");
+            */
+            c.showWithEndGapAndOffset();
 
             /*
             System.out.print("Construction du consensus... ");

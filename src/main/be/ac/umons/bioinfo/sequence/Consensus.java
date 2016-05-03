@@ -32,19 +32,27 @@ public class Consensus
         int min = 0;
         SequenceAlignment sa = this.hamiltonian_path.get(0);
 
+        /* ------------------------------------------------------------------ */
+        /* basis case */
+        // The first line is used as basis. A recurrence rule will be used.
         int pos_s1 = sa.s1.getPosFirstNucleotide();
         int pos_s2 = sa.s2.getPosFirstNucleotide();
         if (pos_s1 >= pos_s2)
         {
+            // if s1 begins with gaps, pos_s2 doesn't begin with gaps
             this.offset[0][0] = pos_s1;
             this.offset[1][0] = 0;
         }
         else
         {
+            // Else, is s2 which begins with gaps and not s1.
             this.offset[0][0] = 0;
             this.offset[1][0] = pos_s2 - pos_s1;
         }
+        /* ------------------------------------------------------------------ */
 
+        /* ------------------------------------------------------------------ */
+        /* Recurrence rule */
         for(int i = 1;i < this.hamiltonian_path.size();i++)
         {
             sa = this.hamiltonian_path.get(i);
@@ -68,6 +76,7 @@ public class Consensus
             this.offset[0][i] -= min;
             this.offset[1][i] -= min;
         }
+        /* ------------------------------------------------------------------ */
     }
 
     public void showWithEndGapAndOffset()
@@ -129,16 +138,25 @@ public class Consensus
 
         int i = 0;
         int j = 0;
-        if (gaps[0][i] < gaps[1][j])
+        while (i < gaps[0].length || j < gaps[1].length)
         {
-            this.propageGapsDownFrom(begin, gaps[0][i] + move_down);
-            move_up++;
+            if (gaps[0][i] < gaps[1][j])
+            {
+                this.propageGapsDownFrom(begin, gaps[0][i] + move_down);
+                move_up++;
+                i++;
+            }
+            else
+            {
+                this.propageGapsUpFrom(begin, gaps[1][j] + move_up);
+                move_down++;
+                j++;
+            }
         }
-        else
-        {
-            this.propageGapsUpFrom(begin, gaps[1][i] + move_up);
-            move_down++;
-        }
+        while (j < gaps[1].length)
+            this.propageGapsUpFrom(begin, gaps[1][j++] + move_up);
+        while (i < gaps[0].length)
+            this.propageGapsDownFrom(begin, gaps[0][i++] + move_down);
     }
 
     /**
@@ -217,18 +235,11 @@ public class Consensus
 
         for(int i = 0;i < this.hamiltonian_path.size() - 1;i++)
         {
-            System.out.println(i);
             SequenceAlignment sa_up = this.hamiltonian_path.get(i);
             SequenceAlignment sa_down = this.hamiltonian_path.get(i + 1);
             SequencePairSame pair = new SequencePairSame(sa_up.initial_s2, sa_up.s2, sa_down.s1);
 
-            /*
-            System.out.println(pair.initial.toString());
-            System.out.println(pair.s.toString());
-            System.out.println(pair.t.toString());
-            */
             int[][] gaps = pair.findGaps();
-            //pair.rebuildWithGaps(); // Done in the propagation
             this.propageGaps(i, gaps);
         }
 
