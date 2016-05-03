@@ -70,9 +70,19 @@ public class Consensus
         }
     }
 
+    public void showWithEndGapAndOffset()
+    {
+        this.addOffset();
+        this.fillEndWithGaps();
+        this.showHamiltonianPath();
+    }
+
     public void showWithOffset()
     {
-        this.computeOffset();
+        this.addOffset();
+        this.showHamiltonianPath();
+
+        /*
         for(int i = 0;i < this.hamiltonian_path.size();i++)
         {
             SequenceAlignment sa = this.hamiltonian_path.get(i);
@@ -84,39 +94,136 @@ public class Consensus
                 System.out.print("-");
             System.out.println(sa.s2);
         }
+        */
     }
 
-    public void propageGapsDownFrom(int i, int[] gaps)
+    public void propageGapsDownFrom(int beg, int pos)
     {
-
+        SequenceAlignment sa_beg = this.hamiltonian_path.get(beg);
+        for(int i = beg + 1;i < this.hamiltonian_path.size();i++)
+        {
+            SequenceAlignment sa = this.hamiltonian_path.get(i);
+            sa.s1.addGapAtPos(pos);
+            sa.s2.addGapAtPos(pos);
+        }
     }
 
-    public void propageGapsUpFrom(int i, int[] gaps)
+    public void propageGapsUpFrom(int beg, int pos)
     {
-
+        SequenceAlignment sa_beg = this.hamiltonian_path.get(beg);
+        for(int i = beg - 1;i >= 0;i--)
+        {
+            SequenceAlignment sa = this.hamiltonian_path.get(i);
+            sa.s1.addGapAtPos(pos);
+            sa.s2.addGapAtPos(pos);
+        }
     }
 
+    /**
+     * Propage the gaps from begin to last sequence. IMPROVEME!
+     */
+    public void propageGaps(int begin, int[][] gaps)
+    {
+        int move_down = 0;
+        int move_up = 0;
+
+        int i = 0;
+        int j = 0;
+        if (gaps[0][i] < gaps[1][j])
+        {
+            this.propageGapsDownFrom(begin, gaps[0][i] + move_down);
+            move_up++;
+        }
+        else
+        {
+            this.propageGapsUpFrom(begin, gaps[1][i] + move_up);
+            move_down++;
+        }
+    }
+
+    /**
+     * Fill end with gaps. IMPROVEME!!
+     */
     public void fillEndWithGaps()
     {
+        int max = 0;
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            SequenceAlignment sa = this.hamiltonian_path.get(i);
+            int size = sa.s1.getSize();
+            if (size > max)
+                max = size;
+            size = sa.s2.getSize();
+            if (size > max)
+                max = size;
+        }
 
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            SequenceAlignment sa = this.hamiltonian_path.get(i);
+            byte[] content = new byte[max];
+            StringBuilder s = new StringBuilder();
+
+            int size = sa.s1.getSize();
+            for(int j = 0;j < size;j++)
+                s.append(sa.s1.getLetter(j));
+            for(int j = 0;j < max - size;j++)
+                s.append(Sequence.base2letter((byte) Sequence.GAP));
+            sa.s1.setContent(s.toString());
+
+            size = sa.s2.getSize();
+            s = new StringBuilder();
+            for(int j = 0;j < size;j++)
+                s.append(sa.s2.getLetter(j));
+            for(int j = 0;j < max - size;j++)
+                s.append(Sequence.base2letter((byte) Sequence.GAP));
+            sa.s2.setContent(s.toString());
+        }
     }
+
+    public void addOffset()
+    {
+        this.computeOffset();
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            SequenceAlignment sa = this.hamiltonian_path.get(i);
+            int pos_s1 = sa.s1.getPosFirstNucleotide();
+            int pos_s2 = sa.s2.getPosFirstNucleotide();
+            StringBuilder s = new StringBuilder();
+
+            for(int j = 0;j < offset[0][i] - pos_s1;j++)
+                s.append(Sequence.base2letter((byte) Sequence.GAP));
+            for(int j = 0;j < sa.s1.getSize();j++)
+                s.append(sa.s1.getLetter(j));
+            sa.s1.content = Sequence.letter2Base(s.toString());
+
+            s = new StringBuilder();
+            for(int j = 0;j < offset[1][i] - pos_s2;j++)
+                s.append(Sequence.base2letter((byte) Sequence.GAP));
+            for(int j = 0;j < sa.s2.getSize();j++)
+                s.append(sa.s2.getLetter(j));
+            sa.s2.content = Sequence.letter2Base(s.toString());
+        }
+    }
+
     /**
      * Do the alignment and save it in alignment attribute.
      */
     public void computeAlignment()
     {
-        this.computeOffset();
+        // Add offset and end gaps to work easier. IMPROVEME!
+        this.addOffset();
+        this.fillEndWithGaps();
+
         for(int i = 0;i < this.hamiltonian_path.size() - 1;i++)
         {
             SequenceAlignment sa_up = this.hamiltonian_path.get(i);
             SequenceAlignment sa_down = this.hamiltonian_path.get(i + 1);
             SequencePairSame pair = new SequencePairSame(sa_up.initial_s2, sa_up.s2, sa_down.s1);
             int[][] gaps = pair.findGaps();
-            pair.rebuildWithGaps();
-            this.propageGapsUpFrom(i, gaps[0]);
-            this.propageGapsDownFrom(i, gaps[1]);
+            //pair.rebuildWithGaps(); // Done in the propagation
+            this.propageGaps(i, gaps);
         }
-        this.fillEndWithGaps();
 
         for(int i = 0;i < this.hamiltonian_path.size();i++)
         {
@@ -207,5 +314,37 @@ public class Consensus
     public ArrayList<Sequence> getAlignment()
     {
         return (this.alignment);
+    }
+
+    public List<SequenceAlignment> getHamiltonianPath()
+    {
+        return (this.hamiltonian_path);
+    }
+
+    public void showHamiltonianPath()
+    {
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            SequenceAlignment sa = this.hamiltonian_path.get(i);
+            System.out.println(sa.s1.toString());
+            System.out.println(sa.s2.toString());
+        }
+    }
+
+    public boolean sameHamiltonianPath(Consensus other)
+    {
+        List<SequenceAlignment> hp_o = other.getHamiltonianPath();
+        if (hp_o.size() == this.hamiltonian_path.size())
+        {
+            for(int i = 0;i < this.hamiltonian_path.size();i++)
+            {
+                SequenceAlignment sa = this.hamiltonian_path.get(i);
+                SequenceAlignment sa_o = hp_o.get(i);
+                if (!sa.s1.equals(sa_o.s1) || !sa.s2.equals(sa_o.s2))
+                    return (false);
+            }
+            return (true);
+        }
+        return (false);
     }
 }
