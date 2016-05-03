@@ -305,4 +305,26 @@ public class SequenceTest
         gaps[2] = 4;
         assertEquals(s.rebuildAddingGaps(gaps), new Sequence("c-gat--ctg"));
     }
+
+    @Test
+    public void addByteAtPosTest()
+    {
+        Sequence s = new Sequence("cgatctg");
+
+        s.addByteAtPos((byte) Sequence.C, 2);
+        assertEquals("cgcatctg", s.toString());
+
+        s.addByteAtPos((byte) Sequence.C, 2);
+        assertEquals("cgccatctg", s.toString());
+    }
+
+    @Test
+    public void addGapAtPosTest()
+    {
+        Sequence s = new Sequence("cgatctg");
+
+        s.addByteAtPos((byte) Sequence.GAP, 2);
+        assertEquals("cg-atctg", s.toString());
+    }
+
 }

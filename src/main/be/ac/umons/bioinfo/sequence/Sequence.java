@@ -117,6 +117,34 @@ public class Sequence
     }
 
     /**
+     * FIXME: strange behavior when changing bytes... Cast doesn't work ? How
+     * does the cast is done?
+     */
+    public void addByteAtPos(byte b, int i)
+    {
+        StringBuilder s = new StringBuilder();
+        int j = 0;
+        while (j < this.content.length)
+        {
+            if (i == j)
+            {
+                s.append(this.base2letter(b));
+                i = -1;
+            }
+            else
+            {
+                s.append(this.getLetter(j));
+                j++;
+            }
+        }
+        this.content = this.letter2Base(s.toString());
+    }
+
+    public void addGapAtPos(int i)
+    {
+        this.addByteAtPos((byte) Sequence.GAP, i);
+    }
+    /**
      * Get the size of the sequence which is the number of bases.
      * @return The number of bases in this DNA sequence.
      */
