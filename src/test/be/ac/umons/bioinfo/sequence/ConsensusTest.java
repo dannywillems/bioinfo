@@ -3,6 +3,7 @@ package be.ac.umons.bioinfo.sequence;
 import org.junit.Ignore;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 import java.util.HashMap;
@@ -182,6 +183,8 @@ public class ConsensusTest
     }
     /* END TEST build with remove_if_max_gap true */
 
+    /* ---------------------------------------------------------------------- */
+    /* BEGIN TEST computeOffset */
     @Test
     public void computeOffsetSimpleTest()
     {
@@ -244,4 +247,140 @@ public class ConsensusTest
             assertEquals(result[1][j], gaps[1][j]);
         }
     }
+    /* END TEST computeOffset */
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /* BEGIN TEST propageGapsDownFrom */
+    @Test
+    public void propageGapsDownFromSimpleTest()
+    {
+        /* ------------------------------------------------------------------ */
+        ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
+        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+
+        Consensus c = new Consensus(l);
+        c.addOffset();
+        c.fillEndWithGaps();
+        c.propageGapsDownFrom(3, 6);
+        c.fillEndWithGaps(); // Needed because the last lines has more a nucleotide
+        /* ------------------------------------------------------------------ */
+
+        /* ------------------------------------------------------------------ */
+        /* WAITED OUTPUT WITHOUT OFFSET GAPS AND END */
+        ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
+        l2.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("ggaatc-tg-cgagtta"), new Sequence("---atc-ggtc------"), 0, 0));
+
+        Consensus c2 = new Consensus(l2);
+        c2.addOffset();
+        c2.fillEndWithGaps();
+        /* ------------------------------------------------------------------ */
+
+        assertTrue(c.sameHamiltonianPath(c2));
+    }
+    /* END TEST propageGapsDownFrom */
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /* BEGIN TEST propageGapsUpFrom */
+    @Test
+    public void propageGapsUpFromSimpleTest()
+    {
+        /* ------------------------------------------------------------------ */
+        ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
+        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+
+        Consensus c = new Consensus(l);
+        c.addOffset();
+        c.fillEndWithGaps();
+        c.propageGapsUpFrom(4, 8);
+        c.fillEndWithGaps(); // Needed because the last lines has more a nucleotide
+        /* ------------------------------------------------------------------ */
+
+        /* ------------------------------------------------------------------ */
+        /* WAITED OUTPUT WITHOUT OFFSET GAPS AND END */
+        ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
+        l2.add(new SequenceAlignment(new Sequence("tact------"), new Sequence("-actttac-g"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("actttac-g---"), new Sequence("------c-gcaa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("----c-gcaa"), new Sequence("atcgt-gcaa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("---atcgt-gcaa----"), new Sequence("ggaatc-t-gcgagtta"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+
+        Consensus c2 = new Consensus(l2);
+        c2.addOffset();
+        c2.fillEndWithGaps();
+        /* ------------------------------------------------------------------ */
+
+        assertTrue(c.sameHamiltonianPath(c2));
+    }
+    /* END TEST propageGapsUpFrom */
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /* BEGIN TEST sameHamiltonianPath */
+    @Test
+    public void sameHamiltonianPathSimpleTrueTest()
+    {
+        ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
+        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+
+        ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
+        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+
+        Consensus c = new Consensus(l);
+        Consensus c2 = new Consensus(l2);
+
+        assertTrue(c.sameHamiltonianPath(c2));
+    }
+
+    @Test
+    public void sameHamiltonianPathSimpleFalseTest()
+    {
+        ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
+        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("gctt"), new Sequence("gcaa"), 0, 0));
+
+        ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
+        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+
+        Consensus c = new Consensus(l);
+        Consensus c2 = new Consensus(l2);
+
+        assertFalse(c.sameHamiltonianPath(c2));
+    }
+
+    @Test
+    public void sameHamiltonianPathNotSameSizeTest()
+    {
+        ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
+        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("gctt"), new Sequence("gcaa"), 0, 0));
+
+        ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
+        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+
+        Consensus c = new Consensus(l);
+        Consensus c2 = new Consensus(l2);
+
+        assertFalse(c.sameHamiltonianPath(c2));
+    }
+    /* END TEST sameHamiltonianPath */
+    /* ---------------------------------------------------------------------- */
 }
