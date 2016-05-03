@@ -85,7 +85,8 @@ public class Main
         */
 
         Consensus c = new Consensus(result);
-        c.showWithOffset();
+        //c.showWithOffset();
+        c.showWithEndGapAndOffset();
 
         /*
         c.computeAlignment();
@@ -125,9 +126,11 @@ public class Main
             c.computeAlignment();
             System.out.println("Done");
 
+            /*
             System.out.print("Construction du consensus... ");
             Sequence consensus_final = c.build(true);
             System.out.println("Done");
+            */
 
             if (show_alignment)
             {
@@ -137,6 +140,8 @@ public class Main
                     System.out.println(alignment.get(counter));
                 System.out.println("#########################################\n");
             }
+
+            /*
             if (show_consensus)
             {
                 System.out.println("Le consensus final:\n");
@@ -152,6 +157,7 @@ public class Main
                 FastaWriter.write("Cible1", consensus_final, new File(directory + file_name), 80);
                 System.out.println("Done");
             }
+            */
         }
         catch (IOException e)
         {
