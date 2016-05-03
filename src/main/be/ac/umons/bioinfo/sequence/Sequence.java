@@ -16,7 +16,7 @@ public class Sequence
     public static final int G = 1;
     public static final int T = 2;
     public static final int A = 3;
-    private byte[] content;
+    public byte[] content;
 
 
     /**
@@ -55,6 +55,11 @@ public class Sequence
             case '-' : return GAP;
             default : return 5;
         }
+    }
+
+    public void setContent(String s)
+    {
+        this.content = letter2Base(s);
     }
 
     public static byte[] letter2Base(String text)
