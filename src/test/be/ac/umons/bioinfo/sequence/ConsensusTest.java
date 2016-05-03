@@ -325,6 +325,51 @@ public class ConsensusTest
 
         assertTrue(c.sameHamiltonianPath(c2));
     }
+
+    @Test
+    public void propageGapsDownNextUpFromSimpleTest()
+    {
+        /* ------------------------------------------------------------------ */
+        ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
+        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+
+        Consensus c = new Consensus(l);
+        c.addOffset();
+        c.fillEndWithGaps();
+
+        // In real cases, the down will be done first because the position (6)
+        // is less than 8. We also need to add 1 to 8 because the first
+        // propagation move to the left the 4th line. It's what it must happen.
+        c.propageGapsDownFrom(3, 6);
+        c.propageGapsUpFrom(4, 9);
+        c.fillEndWithGaps(); // Needed because the last lines has more a nucleotide
+        /* ------------------------------------------------------------------ */
+
+        /* ------------------------------------------------------------------ */
+        /* WAITED OUTPUT WITHOUT OFFSET GAPS AND END */
+        ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
+        l2.add(new SequenceAlignment(new Sequence("tact------"), new Sequence("-actttacg-"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("actttacg----"), new Sequence("------cg-caa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("----cg-caa"), new Sequence("atcgtg-caa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("---atcgtg-caa----"), new Sequence("ggaatc-tg-cgagtta"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("ggaatc-tg-cgagtta"), new Sequence("---atc-ggtc------"), 0, 0));
+
+        Consensus c2 = new Consensus(l2);
+        c2.addOffset();
+        c2.fillEndWithGaps();
+
+        c.showHamiltonianPath();
+        System.out.println("########################");
+        c2.showHamiltonianPath();
+        /* ------------------------------------------------------------------ */
+
+        assertTrue(c.sameHamiltonianPath(c2));
+    }
+
     /* END TEST propageGapsUpFrom */
     /* ---------------------------------------------------------------------- */
 
@@ -382,5 +427,39 @@ public class ConsensusTest
         assertFalse(c.sameHamiltonianPath(c2));
     }
     /* END TEST sameHamiltonianPath */
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /* BEGIN TEST computeAlignment */
+    @Test
+    public void computeAlignmentOnePropagationDownAndUpTest()
+    {
+        List<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("tact"));
+        l.add(new Sequence("actttacg"));
+        l.add(new Sequence("cgcaa"));
+        l.add(new Sequence("atcgtgcaa"));
+        l.add(new Sequence("ggaatctgcgagtta"));
+        l.add(new Sequence("atcggtc"));
+
+        Greedy g = new Greedy();
+        List<SequenceAlignment> result = g.greedy(l, 1, -1, -2);
+
+        Consensus c = new Consensus(result);
+        c.addOffset();
+        c.fillEndWithGaps();
+        //c.showHamiltonianPath();
+        //c.computeAlignment();
+
+        /*
+        ArrayList<Sequence> l2 = new ArrayList<Sequence>();
+        l2.add(new Sequence("tact-----"));
+        l2.add(new Sequence("actttacg---"));
+        l2.add(new Sequence("----cgcaa"));
+        l2.add(new Sequence("---atcgtgcaa----"));
+        l2.add(new Sequence("ggaatctg-cgagtta"));
+        */
+    }
+    /* END TEST computeAlignment */
     /* ---------------------------------------------------------------------- */
 }

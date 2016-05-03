@@ -217,9 +217,16 @@ public class Consensus
 
         for(int i = 0;i < this.hamiltonian_path.size() - 1;i++)
         {
+            System.out.println(i);
             SequenceAlignment sa_up = this.hamiltonian_path.get(i);
             SequenceAlignment sa_down = this.hamiltonian_path.get(i + 1);
             SequencePairSame pair = new SequencePairSame(sa_up.initial_s2, sa_up.s2, sa_down.s1);
+
+            /*
+            System.out.println(pair.initial.toString());
+            System.out.println(pair.s.toString());
+            System.out.println(pair.t.toString());
+            */
             int[][] gaps = pair.findGaps();
             //pair.rebuildWithGaps(); // Done in the propagation
             this.propageGaps(i, gaps);
