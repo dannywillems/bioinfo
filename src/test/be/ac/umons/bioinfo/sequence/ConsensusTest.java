@@ -569,21 +569,20 @@ public class ConsensusTest
         List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
 
         Consensus c = new Consensus(result);
-        //c.computeAlignment();
+        System.out.println("############################");
+        c.computeAlignment();
         ArrayList<Sequence> align = c.getAlignment();
 
         ArrayList<Sequence> l2 = new ArrayList<Sequence>();
-        l2.add(new Sequence("----------------cgcaa"));
-        l2.add(new Sequence("--------cgtaaagt-----"));
-        l2.add(new Sequence("--------agta---------"));
-        l2.add(new Sequence("-----------atcggtc---"));
-        l2.add(new Sequence("---atcgtgcaa---------"));
-        l2.add(new Sequence("ggaatc-tgcgagtta-----"));
+        l2.add(new Sequence("tact-------------"));
+        l2.add(new Sequence("-actttacg--------"));
+        l2.add(new Sequence("-------cg-caa----"));
+        l2.add(new Sequence("---atcgtg-caa----"));
+        l2.add(new Sequence("ggaatc-tg-cgagtta"));
+        l2.add(new Sequence("---atc-ggtc------"));
 
-        /*
-        for(int i = 0;i < l2.size();i++)
-            assertTrue(l2.get(i).equals(align.get(i)));
-        */
+        for(int l = 0;l < l2.size();l++)
+            assertEquals(l2.get(l), align.get(l));
     }
     /* ---------------------------------------------------------------------- */
 }

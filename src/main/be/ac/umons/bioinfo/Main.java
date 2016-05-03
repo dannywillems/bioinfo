@@ -14,8 +14,8 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
-        test();
-        //cible(1, true, true, false);
+        //test();
+        cible(1, false, false, true);
         //cible(2, false, false, true);
         //cible(3, false, false, true); // A exécuter en dernier, car long
     }
@@ -122,18 +122,14 @@ public class Main
             System.out.println("Done");
 
             Consensus c = new Consensus(result);
-            /*
             System.out.print("Alignement... ");
             c.computeAlignment();
             System.out.println("Done");
-            */
-            c.showWithEndGapAndOffset();
+            //c.showWithEndGapAndOffset();
 
-            /*
             System.out.print("Construction du consensus... ");
             Sequence consensus_final = c.build(true);
             System.out.println("Done");
-            */
 
             if (show_alignment)
             {
@@ -144,7 +140,6 @@ public class Main
                 System.out.println("#########################################\n");
             }
 
-            /*
             if (show_consensus)
             {
                 System.out.println("Le consensus final:\n");
@@ -160,7 +155,6 @@ public class Main
                 FastaWriter.write("Cible1", consensus_final, new File(directory + file_name), 80);
                 System.out.println("Done");
             }
-            */
         }
         catch (IOException e)
         {

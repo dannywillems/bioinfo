@@ -90,20 +90,6 @@ public class Consensus
     {
         this.addOffset();
         this.showHamiltonianPath();
-
-        /*
-        for(int i = 0;i < this.hamiltonian_path.size();i++)
-        {
-            SequenceAlignment sa = this.hamiltonian_path.get(i);
-            for(int j = 0;j < this.offset[0][i] - sa.s1.getPosFirstNucleotide();j++)
-                System.out.print("-");
-            System.out.println(sa.s1);
-
-            for(int j = 0;j < this.offset[1][i] - sa.s2.getPosFirstNucleotide();j++)
-                System.out.print("-");
-            System.out.println(sa.s2);
-        }
-        */
     }
 
     public void propageGapsDownFrom(int beg, int pos)
@@ -130,6 +116,7 @@ public class Consensus
 
     /**
      * Propage the gaps from begin to last sequence. IMPROVEME!
+     * gaps[0] contains the gaps the absolute position where gaps must be added.
      */
     public void propageGaps(int begin, int[][] gaps)
     {
@@ -138,25 +125,25 @@ public class Consensus
 
         int i = 0;
         int j = 0;
-        while (i < gaps[0].length || j < gaps[1].length)
+        while (i < gaps[0].length && j < gaps[1].length)
         {
             if (gaps[0][i] < gaps[1][j])
             {
-                this.propageGapsDownFrom(begin, gaps[0][i] + move_down);
-                move_up++;
+                this.propageGapsUpFrom(begin + 1, gaps[0][i] + move_up);
+                move_down++;
                 i++;
             }
             else
             {
-                this.propageGapsUpFrom(begin, gaps[1][j] + move_up);
-                move_down++;
+                this.propageGapsDownFrom(begin, gaps[1][j] + move_down);
+                move_up++;
                 j++;
             }
         }
         while (j < gaps[1].length)
-            this.propageGapsUpFrom(begin, gaps[1][j++] + move_up);
+            this.propageGapsDownFrom(begin, gaps[1][j++] + move_up);
         while (i < gaps[0].length)
-            this.propageGapsDownFrom(begin, gaps[0][i++] + move_down);
+            this.propageGapsUpFrom(begin + 1, gaps[0][i++] + move_down);
     }
 
     /**
@@ -347,6 +334,12 @@ public class Consensus
             System.out.println(sa.s1.toString());
             System.out.println(sa.s2.toString());
         }
+    }
+
+    public void showAlignment()
+    {
+        for(int i = 0;i < this.alignment.size();i++)
+            System.out.println(this.alignment.get(i).toString());
     }
 
     public boolean sameHamiltonianPath(Consensus other)
