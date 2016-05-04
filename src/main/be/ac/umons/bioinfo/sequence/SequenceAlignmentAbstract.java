@@ -25,4 +25,10 @@ public class SequenceAlignmentAbstract
         this.s = new SequenceAbstract(s);
         this.t = new SequenceAbstract(t);
     }
+
+    public void showAlignment()
+    {
+        System.out.println(this.s.toString());
+        System.out.println(this.t.toString());
+    }
 }

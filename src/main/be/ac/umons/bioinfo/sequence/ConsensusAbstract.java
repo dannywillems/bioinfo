@@ -25,6 +25,54 @@ public class ConsensusAbstract
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
+    public void updateOffset()
+    {
+        // Will be useful to recenter the offset to 0 at the end
+        int min = 0;
+        SequenceAlignmentAbstract sa = this.hamiltonian_path.get(0);
+        SequenceAlignmentAbstract sa_previous = this.hamiltonian_path.get(0);
+
+        /* ------------------------------------------------------------------ */
+        /* basis case */
+        // The first line is used as basis. A recurrence rule will be used.
+        int pos_s = sa.s.getOffset();
+        int pos_t = sa.t.getOffset();
+        if (pos_s >= pos_t)
+            // if s begins with gaps, pos_t doesn't begin with gaps
+            sa.t.setOffset(0);
+        else
+            // Else, is t which begins with gaps and not s.
+            sa.t.setOffset(pos_t);
+        /* ------------------------------------------------------------------ */
+
+        /* ------------------------------------------------------------------ */
+        /* Recurrence rule */
+        for(int i = 1;i < this.hamiltonian_path.size();i++)
+        {
+            sa_previous = sa;
+            sa = this.hamiltonian_path.get(i);
+            pos_s = sa.s.getOffset();
+            pos_t = sa.t.getOffset();
+
+            // Always >= 0
+            sa.s.setOffset(sa_previous.t.getOffset());
+            if (pos_s != 0)
+            {
+                sa.t.setOffset(pos_t - pos_s + sa.s.getOffset());
+                min = Math.min(sa.t.getOffset(), min);
+            }
+            else
+                sa.t.setOffset(sa.s.getOffset() + pos_t);
+        }
+
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+        {
+            sa = this.getHamiltonianPath().get(i);
+            sa.s.setOffset(sa.s.getOffset() - min);
+            sa.t.setOffset(sa.t.getOffset() - min);
+        }
+        /* ------------------------------------------------------------------ */
+    }
     public void computeAlignment()
     {
 
@@ -55,5 +103,21 @@ public class ConsensusAbstract
     {
         this.hamiltonian_path = hp;
     }
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    // SHOW METHODS
+    public void showHamiltonianPath()
+    {
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+            this.hamiltonian_path.get(i).showAlignment();
+    }
+
+    public void showAlignment()
+    {
+        for(int i = 0;i < this.hamiltonian_path.size();i++)
+            System.out.println(this.alignment.get(i).toString());
+    }
+
     /* ---------------------------------------------------------------------- */
 }
