@@ -130,6 +130,9 @@ public class SequenceAbstract
         }
     }
 
+    /**
+     * @return the string representation of the sequence.
+     */
     public String toString()
     {
         StringBuilder s = new StringBuilder();
@@ -144,16 +147,28 @@ public class SequenceAbstract
         return (s.toString());
     }
 
+    /**
+     * Get the number of gaps before the first nucleotide eg the offset.
+     * @return offset
+     */
     public int getOffset()
     {
         return (this.offset);
     }
 
+    /**
+     * Set the number of gaps before the first nucleotide eg the offset. Could
+     * be useful to dynamically create sequences during an alignment or compute
+     * the offset dynamically on a sequence.
+     */
     public void setOffset(int offset)
     {
         this.offset = offset;
     }
 
+    /**
+     * @return size of the sequence.
+     */
     public int getSize()
     {
         int size = this.getOffset();
@@ -163,6 +178,10 @@ public class SequenceAbstract
     }
 
     @Override
+    /**
+     * @return true if the sequences string representation are equals else
+     * false.
+     */
     public boolean equals(Object o)
     {
         if (o instanceof SequenceAbstract)
