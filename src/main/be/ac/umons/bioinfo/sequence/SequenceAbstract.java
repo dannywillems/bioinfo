@@ -27,7 +27,7 @@ public class SequenceAbstract
     {
         this.initial = initial;
         this.nb_gaps = new int[initial.getSize()];
-        int j, i = 0;
+        int j, i = aligned.getPosFirstNucleotide();;
         int count = 0;
         String s = aligned.toString();
         while (i < aligned.getSize())
@@ -40,7 +40,7 @@ public class SequenceAbstract
             i = i + j + 1;
         }
 
-        this.offset = 0;
+        this.offset = aligned.getPosFirstNucleotide();;
     }
 
     /**
@@ -152,5 +152,28 @@ public class SequenceAbstract
     public void setOffset(int offset)
     {
         this.offset = offset;
+    }
+
+    public int getSize()
+    {
+        int size = this.getOffset();
+        for(int i = 0;i < this.nb_gaps.length;i++)
+            size += 1 + this.nb_gaps[i];
+        return (size);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o instanceof SequenceAbstract)
+        {
+            SequenceAbstract other = (SequenceAbstract) o;
+            boolean equal = this.getOffset() == other.getOffset() && this.nb_gaps.length == other.nb_gaps.length;
+            int i = 0;
+            while (equal && i < this.nb_gaps.length)
+                equal &= (this.nb_gaps[i] == other.nb_gaps[i] && this.initial.getLetter(i) == other.initial.getLetter(i++));
+            return (equal);
+        }
+        return (false);
     }
 }

@@ -5,10 +5,21 @@ import java.util.*;
 import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertArrayEquals;
 
 public class SequenceAbstractTest
 {
+    @Test
+    public void constructorTest()
+    {
+        Sequence initial = new Sequence("actg");
+        Sequence aligned = new Sequence("--actg");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        assertEquals(s.toString(), aligned.toString());
+    }
+
     @Test
     public void arrayGapsNoGapsTest()
     {
@@ -288,5 +299,101 @@ public class SequenceAbstractTest
         assertEquals(aligned.getPosFirstNucleotide(), s.getOffset());
         assertEquals(initial.toString(), s.initial.toString());
         assertEquals(aligned.toString(), s.toString());
+    }
+
+    @Test
+    public void equals1()
+    {
+        Sequence initial = new Sequence("attg");
+        SequenceAbstract s1 = new SequenceAbstract(initial, initial);
+        SequenceAbstract s2 = new SequenceAbstract(initial, initial);
+
+        assertTrue(s1.equals(s2));
+    }
+
+    @Test
+    public void equals2()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = new Sequence("--attg");
+
+        SequenceAbstract s1 = new SequenceAbstract(initial, initial);
+        SequenceAbstract s2 = new SequenceAbstract(initial, aligned);
+        assertFalse(s1.equals(s2));
+
+        s1 = new SequenceAbstract(initial, aligned);
+        assertTrue(s1.equals(s2));
+    }
+
+    @Test
+    public void equals3()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = new Sequence("at--t--g");
+
+        SequenceAbstract s1 = new SequenceAbstract(initial, initial);
+        SequenceAbstract s2 = new SequenceAbstract(initial, aligned);
+        assertFalse(s1.equals(s2));
+
+        s1 = new SequenceAbstract(initial, aligned);
+        assertTrue(s1.equals(s2));
+    }
+
+    @Test
+    public void equals4()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = new Sequence("at--t--g");
+        SequenceAbstract s1 = new SequenceAbstract(initial, aligned);
+        SequenceAbstract s2 = new SequenceAbstract(aligned);
+
+        assertTrue(s1.equals(s2));
+    }
+
+    @Test
+    public void equals5()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = new Sequence("---at--t--g---");
+        SequenceAbstract s1 = new SequenceAbstract(initial, aligned);
+        SequenceAbstract s2 = new SequenceAbstract(aligned);
+
+        assertTrue(s1.equals(s2));
+    }
+
+    @Test
+    public void size1()
+    {
+        Sequence initial = new Sequence("attg");
+        SequenceAbstract s1 = new SequenceAbstract(initial, initial);
+
+        assertEquals(4, s1.getSize());
+    }
+
+    @Test
+    public void size2()
+    {
+        Sequence aligned = new Sequence("att--g");
+        SequenceAbstract s1 = new SequenceAbstract(aligned);
+
+        assertEquals(6, s1.getSize());
+    }
+
+    @Test
+    public void size3()
+    {
+        Sequence aligned = new Sequence("--att--g");
+        SequenceAbstract s1 = new SequenceAbstract(aligned);
+
+        assertEquals(8, s1.getSize());
+    }
+
+    @Test
+    public void size4()
+    {
+        Sequence aligned = new Sequence("--att--g----");
+        SequenceAbstract s1 = new SequenceAbstract(aligned);
+
+        assertEquals(12, s1.getSize());
     }
 }
