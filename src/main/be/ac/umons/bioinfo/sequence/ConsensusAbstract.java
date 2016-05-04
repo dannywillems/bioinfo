@@ -124,8 +124,8 @@ public class ConsensusAbstract
         for(int i = 0;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
-            sa.s.nb_gaps[sa.s.nb_gaps.length - 1] += max - sa.s.getSize();;
-            sa.t.nb_gaps[sa.t.nb_gaps.length - 1] += max - sa.t.getSize();;
+            sa.s.nb_gaps[sa.s.nb_gaps.length - 1] += max - sa.s.getSize();
+            sa.t.nb_gaps[sa.t.nb_gaps.length - 1] += max - sa.t.getSize();
         }
     }
     /* ---------------------------------------------------------------------- */
