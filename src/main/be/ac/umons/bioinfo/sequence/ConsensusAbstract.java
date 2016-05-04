@@ -73,9 +73,60 @@ public class ConsensusAbstract
         }
         /* ------------------------------------------------------------------ */
     }
+
+    public void propageGapsUpPosFrom(int begin, int pos, int nb)
+    {
+        for (int i = begin - 1;i >= 0;i--)
+        {
+            SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            sa.s.addGaps(nb, pos);
+            sa.t.addGaps(nb, pos);
+        }
+    }
+
+    public void propageGapsDownPosFrom(int begin, int pos, int nb)
+    {
+        for (int i = begin + 1;i < this.getHamiltonianPath().size();i++)
+        {
+            SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            sa.s.addGaps(nb, pos);
+            sa.t.addGaps(nb, pos);
+        }
+    }
+
+    public void propageGapsDownFrom(int begin)
+    {
+    }
+
+    public void propageGapsUpFrom(int begin)
+    {
+    }
+
     public void computeAlignment()
     {
+        this.updateOffset();
 
+        for (int i = 0;i < this.getHamiltonianPath().size() - 1;i++)
+            propageGapsDownFrom(i);
+        for (int i = this.getHamiltonianPath().size() - 1;i >= 1;i--)
+            propageGapsUpFrom(i);
+    }
+
+    public void addEndGaps()
+    {
+        int max = 0;
+        for(int i = 0;i < this.getHamiltonianPath().size();i++)
+        {
+            SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            max = Math.max(sa.s.getSize(), Math.max(sa.t.getSize(), max));
+        }
+
+        for(int i = 0;i < this.getHamiltonianPath().size();i++)
+        {
+            SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            sa.s.nb_gaps[sa.s.nb_gaps.length - 1] += max - sa.s.getSize();;
+            sa.t.nb_gaps[sa.t.nb_gaps.length - 1] += max - sa.t.getSize();;
+        }
     }
     /* ---------------------------------------------------------------------- */
 
@@ -119,5 +170,17 @@ public class ConsensusAbstract
             System.out.println(this.alignment.get(i).toString());
     }
 
+    public void showWithOffset()
+    {
+        this.updateOffset();
+        this.showHamiltonianPath();
+    }
+
+    public void showWithEndGapsAndOffset()
+    {
+        this.updateOffset();
+        this.addEndGaps();
+        this.showHamiltonianPath();
+    }
     /* ---------------------------------------------------------------------- */
 }
