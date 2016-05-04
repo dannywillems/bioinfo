@@ -178,7 +178,6 @@ public class ConsensusAbstractTest
             assertEquals(result[0][j], sa.s.getOffset());
             assertEquals(result[1][j], sa.t.getOffset());
         }
-        c.showWithEndGapsAndOffset();
     }
 
 
