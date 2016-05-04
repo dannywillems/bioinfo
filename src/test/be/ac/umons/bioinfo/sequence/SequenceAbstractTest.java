@@ -27,9 +27,9 @@ public class SequenceAbstractTest
         SequenceAbstract s2 = new SequenceAbstract(new Sequence("tact-----"));
         SequenceAbstract s3 = new SequenceAbstract(new Sequence("tact"), new Sequence("tact-----"));
 
-        assertEquals(s1.toString(), s2.toString());
-        assertEquals(s1.toString(), s3.toString());
-        assertEquals(s2.toString(), s3.toString());
+        assertEquals(s1, s2);
+        assertEquals(s1, s3);
+        assertEquals(s2, s3);
     }
 
     @Test
@@ -39,9 +39,9 @@ public class SequenceAbstractTest
         SequenceAbstract s2 = new SequenceAbstract(new Sequence("actttacg---"));
         SequenceAbstract s3 = new SequenceAbstract(new Sequence("actttacg"), new Sequence("actttacg---"));
 
-        assertEquals(s1.toString(), s2.toString());
-        assertEquals(s1.toString(), s3.toString());
-        assertEquals(s2.toString(), s3.toString());
+        assertEquals(s1, s2);
+        assertEquals(s1, s3);
+        assertEquals(s2, s3);
     }
 
     @Test
@@ -51,9 +51,9 @@ public class SequenceAbstractTest
         SequenceAbstract s2 = new SequenceAbstract(new Sequence("------cgcaa"));
         SequenceAbstract s3 = new SequenceAbstract(new Sequence("cgcaa"), new Sequence("------cgcaa"));
 
-        assertEquals(s1.toString(), s2.toString());
-        assertEquals(s1.toString(), s3.toString());
-        assertEquals(s2.toString(), s3.toString());
+        assertEquals(s1, s2);
+        assertEquals(s1, s3);
+        assertEquals(s2, s3);
     }
 
     @Test
@@ -63,9 +63,9 @@ public class SequenceAbstractTest
         SequenceAbstract s2 = new SequenceAbstract(new Sequence("ggaatc-tgcgagtta"));
         SequenceAbstract s3 = new SequenceAbstract(new Sequence("ggaatctgcgagtta"), new Sequence("ggaatc-tgcgagtta"));
 
-        assertEquals(s1.toString(), s2.toString());
-        assertEquals(s1.toString(), s3.toString());
-        assertEquals(s2.toString(), s3.toString());
+        assertEquals(s1, s2);
+        assertEquals(s1, s3);
+        assertEquals(s2, s3);
     }
 
     @Test
@@ -75,9 +75,9 @@ public class SequenceAbstractTest
         SequenceAbstract s2 = new SequenceAbstract(new Sequence("---atcgtgcaa----"));
         SequenceAbstract s3 = new SequenceAbstract(new Sequence("atcgtgcaa"), new Sequence("---atcgtgcaa----"));
 
-        assertEquals(s1.toString(), s2.toString());
-        assertEquals(s1.toString(), s3.toString());
-        assertEquals(s2.toString(), s3.toString());
+        assertEquals(s1, s2);
+        assertEquals(s1, s3);
+        assertEquals(s2, s3);
     }
 
     @Test
