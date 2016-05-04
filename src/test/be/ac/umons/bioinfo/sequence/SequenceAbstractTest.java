@@ -229,4 +229,64 @@ public class SequenceAbstractTest
         s.addGaps(3, 3);
         assertEquals("a-t---t--g", s.toString());
     }
+
+    @Test
+    public void buildFromAlignedSequence1()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = new Sequence("a--ttg");
+        SequenceAbstract s = new SequenceAbstract(aligned);
+
+        assertEquals(aligned.getPosFirstNucleotide(), s.getOffset());
+        assertEquals(initial.toString(), s.initial.toString());
+        assertEquals(aligned.toString(), s.toString());
+    }
+
+    @Test
+    public void buildFromAlignedSequence2()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = new Sequence("--a--ttg");
+        SequenceAbstract s = new SequenceAbstract(aligned);
+
+        assertEquals(aligned.getPosFirstNucleotide(), s.getOffset());
+        assertEquals(initial.toString(), s.initial.toString());
+        assertEquals(aligned.toString(), s.toString());
+    }
+
+    @Test
+    public void buildFromAlignedSequence3()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = new Sequence("--a--t---tg");
+        SequenceAbstract s = new SequenceAbstract(aligned);
+
+        assertEquals(aligned.getPosFirstNucleotide(), s.getOffset());
+        assertEquals(initial.toString(), s.initial.toString());
+        assertEquals(aligned.toString(), s.toString());
+    }
+
+    @Test
+    public void buildFromAlignedSequence4()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = new Sequence("--a--t---tg----");
+        SequenceAbstract s = new SequenceAbstract(aligned);
+
+        assertEquals(aligned.getPosFirstNucleotide(), s.getOffset());
+        assertEquals(initial.toString(), s.initial.toString());
+        assertEquals(aligned.toString(), s.toString());
+    }
+
+    @Test
+    public void buildFromAlignedSequenceSimplest()
+    {
+        Sequence initial = new Sequence("attg");
+        Sequence aligned = initial;
+        SequenceAbstract s = new SequenceAbstract(aligned);
+
+        assertEquals(aligned.getPosFirstNucleotide(), s.getOffset());
+        assertEquals(initial.toString(), s.initial.toString());
+        assertEquals(aligned.toString(), s.toString());
+    }
 }

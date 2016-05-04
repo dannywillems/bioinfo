@@ -1,5 +1,8 @@
 package be.ac.umons.bioinfo.sequence;
 
+import java.lang.Integer;
+import java.util.ArrayList;
+
 public class SequenceAbstract
 {
     public Sequence initial;
@@ -38,6 +41,37 @@ public class SequenceAbstract
         }
 
         this.offset = 0;
+    }
+
+    /**
+     * Create a new abstract sequence from an aligned sequence (or not) eg
+     * derive the initial sequence and compute the gaps array.
+     */
+    public SequenceAbstract(Sequence s)
+    {
+        this.offset = 0;
+        while (s.getBaseAsByte(this.offset) == (byte) Sequence.GAP)
+            this.offset++;
+
+        StringBuilder str = new StringBuilder();
+        int j;
+        int i = this.offset;
+        ArrayList<Integer> gaps = new ArrayList<Integer>();
+        while (i < s.getSize())
+        {
+            str.append(s.getLetter(i));
+            j = 0;
+            while (i + j + 1 < s.getSize() && s.getBaseAsByte(i + j + 1) == (byte) Sequence.GAP)
+                j++;
+            gaps.add(j);
+            i = i + j + 1;
+        }
+
+        this.nb_gaps = new int[gaps.size()];
+        for(int k = 0;k < gaps.size();k++)
+            this.nb_gaps[k] = gaps.get(k);
+
+        this.initial = new Sequence(str.toString());
     }
 
     /**
