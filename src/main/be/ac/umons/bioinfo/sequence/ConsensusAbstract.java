@@ -96,10 +96,40 @@ public class ConsensusAbstract
 
     public void propageGapsDownFrom(int begin)
     {
+        SequenceAlignmentAbstract sa_up = this.getHamiltonianPath().get(begin);
+        SequenceAlignmentAbstract sa_down = this.getHamiltonianPath().get(begin + 1);
+
+        SequenceAbstract s = sa_up.t;
+        SequenceAbstract t = sa_down.s;
+
+        int real_pos = s.getOffset();
+        for (int i = 0;i < s.nb_gaps.length;i++)
+        {
+            if (s.nb_gaps[i] > t.nb_gaps[i])
+            {
+                this.propageGapsDownPosFrom(begin, real_pos, s.nb_gaps[i] - t.nb_gaps[i]);
+                real_pos += s.nb_gaps[i] + 1;
+            }
+        }
     }
 
     public void propageGapsUpFrom(int begin)
     {
+        SequenceAlignmentAbstract sa_down = this.getHamiltonianPath().get(begin);
+        SequenceAlignmentAbstract sa_up = this.getHamiltonianPath().get(begin - 1);
+
+        SequenceAbstract s = sa_up.t;
+        SequenceAbstract t = sa_down.s;
+
+        int real_pos = t.getOffset();
+        for (int i = 0;i < t.nb_gaps.length;i++)
+        {
+            if (t.nb_gaps[i] > s.nb_gaps[i])
+            {
+                this.propageGapsUpPosFrom(begin, real_pos, t.nb_gaps[i] - s.nb_gaps[i]);
+                real_pos += t.nb_gaps[i] + 1;
+            }
+        }
     }
 
     public void computeAlignment()
