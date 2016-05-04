@@ -14,8 +14,8 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
-        //test();
-        cible(1, false, false, true);
+        test();
+        //cible(1, false, false, true);
         //cible(2, false, false, true);
         //cible(3, false, false, true); // A exécuter en dernier, car long
     }
