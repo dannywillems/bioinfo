@@ -21,6 +21,66 @@ public class SequenceAbstractTest
     }
 
     @Test
+    public void constructorStringTest1()
+    {
+        SequenceAbstract s1 = new SequenceAbstract("tact-----");
+        SequenceAbstract s2 = new SequenceAbstract(new Sequence("tact-----"));
+        SequenceAbstract s3 = new SequenceAbstract(new Sequence("tact"), new Sequence("tact-----"));
+
+        assertEquals(s1.toString(), s2.toString());
+        assertEquals(s1.toString(), s3.toString());
+        assertEquals(s2.toString(), s3.toString());
+    }
+
+    @Test
+    public void constructorStringTest2()
+    {
+        SequenceAbstract s1 = new SequenceAbstract("actttacg---");
+        SequenceAbstract s2 = new SequenceAbstract(new Sequence("actttacg---"));
+        SequenceAbstract s3 = new SequenceAbstract(new Sequence("actttacg"), new Sequence("actttacg---"));
+
+        assertEquals(s1.toString(), s2.toString());
+        assertEquals(s1.toString(), s3.toString());
+        assertEquals(s2.toString(), s3.toString());
+    }
+
+    @Test
+    public void constructorStringTest3()
+    {
+        SequenceAbstract s1 = new SequenceAbstract("------cgcaa");
+        SequenceAbstract s2 = new SequenceAbstract(new Sequence("------cgcaa"));
+        SequenceAbstract s3 = new SequenceAbstract(new Sequence("cgcaa"), new Sequence("------cgcaa"));
+
+        assertEquals(s1.toString(), s2.toString());
+        assertEquals(s1.toString(), s3.toString());
+        assertEquals(s2.toString(), s3.toString());
+    }
+
+    @Test
+    public void constructorStringTest4()
+    {
+        SequenceAbstract s1 = new SequenceAbstract("ggaatc-tgcgagtta");
+        SequenceAbstract s2 = new SequenceAbstract(new Sequence("ggaatc-tgcgagtta"));
+        SequenceAbstract s3 = new SequenceAbstract(new Sequence("ggaatctgcgagtta"), new Sequence("ggaatc-tgcgagtta"));
+
+        assertEquals(s1.toString(), s2.toString());
+        assertEquals(s1.toString(), s3.toString());
+        assertEquals(s2.toString(), s3.toString());
+    }
+
+    @Test
+    public void constructorStringTest5()
+    {
+        SequenceAbstract s1 = new SequenceAbstract("---atcgtgcaa----");
+        SequenceAbstract s2 = new SequenceAbstract(new Sequence("---atcgtgcaa----"));
+        SequenceAbstract s3 = new SequenceAbstract(new Sequence("atcgtgcaa"), new Sequence("---atcgtgcaa----"));
+
+        assertEquals(s1.toString(), s2.toString());
+        assertEquals(s1.toString(), s3.toString());
+        assertEquals(s2.toString(), s3.toString());
+    }
+
+    @Test
     public void arrayGapsNoGapsTest()
     {
         Sequence initial = new Sequence("actg");

@@ -9,6 +9,8 @@ public class SequenceAbstract
     public int[] nb_gaps;
     private int offset;
 
+    /* ---------------------------------------------------------------------- */
+    // CONSTRUCTORS
     /* initial sequence is useless, if no mutation, the initial sequence is the
      * aligned sequence where gaps has been removed
      */
@@ -75,6 +77,18 @@ public class SequenceAbstract
     }
 
     /**
+     * Create a new abstract sequence from a string.
+     * FIXME: lazy to reimplement an independent method from Sequence class.
+     * Must be independent!
+     */
+    public SequenceAbstract(String s)
+    {
+        this(new Sequence(s));
+    }
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /**
      * Add [nb] gaps before the element at position [pos]. If position is
      * greater than the number of element in the sequence, gaps are added at the
      * end, ie in the nb_gaps[sequence_size - 1].
@@ -129,7 +143,9 @@ public class SequenceAbstract
                 this.nb_gaps[i - 1] += nb;
         }
     }
+    /* ---------------------------------------------------------------------- */
 
+    /* ---------------------------------------------------------------------- */
     /**
      * @return the string representation of the sequence.
      */
@@ -146,7 +162,10 @@ public class SequenceAbstract
         }
         return (s.toString());
     }
+    /* ---------------------------------------------------------------------- */
 
+    /* ---------------------------------------------------------------------- */
+    // GETTERS
     /**
      * Get the number of gaps before the first nucleotide eg the offset.
      * @return offset
@@ -154,16 +173,6 @@ public class SequenceAbstract
     public int getOffset()
     {
         return (this.offset);
-    }
-
-    /**
-     * Set the number of gaps before the first nucleotide eg the offset. Could
-     * be useful to dynamically create sequences during an alignment or compute
-     * the offset dynamically on a sequence.
-     */
-    public void setOffset(int offset)
-    {
-        this.offset = offset;
     }
 
     /**
@@ -176,7 +185,22 @@ public class SequenceAbstract
             size += 1 + this.nb_gaps[i];
         return (size);
     }
+    /* ---------------------------------------------------------------------- */
 
+    /* ---------------------------------------------------------------------- */
+    // SETTERS
+    /**
+     * Set the number of gaps before the first nucleotide eg the offset. Could
+     * be useful to dynamically create sequences during an alignment or compute
+     * the offset dynamically on a sequence.
+     */
+    public void setOffset(int offset)
+    {
+        this.offset = offset;
+    }
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
     @Override
     /**
      * @return true if the sequences string representation are equals else
@@ -195,4 +219,5 @@ public class SequenceAbstract
         }
         return (false);
     }
+    /* ---------------------------------------------------------------------- */
 }
