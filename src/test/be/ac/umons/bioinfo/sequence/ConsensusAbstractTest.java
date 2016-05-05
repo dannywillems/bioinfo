@@ -323,10 +323,10 @@ public class ConsensusAbstractTest
         /* ------------------------------------------------------------------ */
         /* WAITED OUTPUT WITHOUT OFFSET GAPS AND END */
         ArrayList<SequenceAlignmentAbstract> l2 = new ArrayList<SequenceAlignmentAbstract>();
-        l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("tact------"), new SequenceAbstract("-actttac-g")));
-        l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("actttac-g---"), new SequenceAbstract("------c-gcaa")));
-        l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("----c-gcaa"), new SequenceAbstract("atcgt-gcaa")));
-        l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("---atcgt-gcaa----"), new SequenceAbstract("ggaatc-t-gcgagtta")));
+        l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("tact------"), new SequenceAbstract("-actttacg")));
+        l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("actttacg---"), new SequenceAbstract("------cg-caa")));
+        l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("----cg-caa"), new SequenceAbstract("atcgtg-caa")));
+        l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("---atcgtg-caa----"), new SequenceAbstract("ggaatc-tg-cgagtta")));
         l2.add(new SequenceAlignmentAbstract(new SequenceAbstract("ggaatctg-cgagtta"), new SequenceAbstract("---atcggtc------")));
 
         ConsensusAbstract c2 = new ConsensusAbstract(l2);
