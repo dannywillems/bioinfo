@@ -563,7 +563,9 @@ public class ConsensusAbstractTest
         assertEquals(c.build(false).toString(), "acttg");
     }
     /* END TEST build with remove_if_max_gap false */
+    /* ---------------------------------------------------------------------- */
 
+    /* ---------------------------------------------------------------------- */
     /* BEGIN TEST build with remove_if_max_gap true */
     @Test
     public void buildGapRemoveMultipleTest()
@@ -646,15 +648,6 @@ public class ConsensusAbstractTest
         c.computeAlignment();
         SequenceAbstract s_final = c.build(false);
 
-        /*
-        l2.add(new SequenceAbstract("tact-------------"));
-        l2.add(new SequenceAbstract("-actttacg--------"));
-        l2.add(new SequenceAbstract("-------cg-caa----"));
-        l2.add(new SequenceAbstract("---atcgtg-caa----"));
-        l2.add(new SequenceAbstract("ggaatc-tg-cgagtta"));
-        l2.add(new SequenceAbstract("---atc-ggtc------"));
-        */
-
         SequenceAbstract s = new SequenceAbstract("tacatcacgtcaagtta");
         assertEquals(s, s_final);
     }
@@ -684,15 +677,6 @@ public class ConsensusAbstractTest
         ConsensusAbstract c = new ConsensusAbstract(result);
         c.computeAlignment();
         SequenceAbstract s_final = c.build(true);
-
-        /*
-        l2.add(new SequenceAbstract("tact-------------"));
-        l2.add(new SequenceAbstract("-actttacg--------"));
-        l2.add(new SequenceAbstract("-------cg-caa----"));
-        l2.add(new SequenceAbstract("---atcgtg-caa----"));
-        l2.add(new SequenceAbstract("ggaatc-tg-cgagtta"));
-        l2.add(new SequenceAbstract("---atc-ggtc------"));
-        */
 
         SequenceAbstract s = new SequenceAbstract("atccgca");
         assertEquals(s, s_final);
