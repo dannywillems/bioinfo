@@ -84,10 +84,29 @@ public class ConsensusAbstract
         }
     }
 
+    public void propageGapsUpFrom(int begin)
+    {
+        SequenceAlignmentAbstract sa_down = this.getHamiltonianPath().get(begin);
+        SequenceAlignmentAbstract sa_up = this.getHamiltonianPath().get(begin - 1);
+
+        SequenceAbstract s = sa_up.t;
+        SequenceAbstract t = sa_down.s;
+
+        int real_pos = t.getOffset();
+        for (int i = 0;i < t.nb_gaps.length;i++)
+        {
+            if (t.nb_gaps[i] > s.nb_gaps[i])
+                this.propageGapsUpPosFrom(begin, real_pos + 1, t.nb_gaps[i] - s.nb_gaps[i]);
+            real_pos += t.nb_gaps[i] + 1;
+        }
+    }
+
     public void propageGapsDownPosFrom(int begin, int pos, int nb)
     {
         for (int i = begin + 1;i < this.getHamiltonianPath().size();i++)
         {
+            System.out.println("Begin = " + i);
+            System.out.println("Must add " + nb + " gaps at pos " + pos);
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
             sa.s.addGaps(nb, pos);
             sa.t.addGaps(nb, pos);
@@ -106,29 +125,8 @@ public class ConsensusAbstract
         for (int i = 0;i < s.nb_gaps.length;i++)
         {
             if (s.nb_gaps[i] > t.nb_gaps[i])
-            {
-                this.propageGapsDownPosFrom(begin, real_pos, s.nb_gaps[i] - t.nb_gaps[i]);
-                real_pos += s.nb_gaps[i] + 1;
-            }
-        }
-    }
-
-    public void propageGapsUpFrom(int begin)
-    {
-        SequenceAlignmentAbstract sa_down = this.getHamiltonianPath().get(begin);
-        SequenceAlignmentAbstract sa_up = this.getHamiltonianPath().get(begin - 1);
-
-        SequenceAbstract s = sa_up.t;
-        SequenceAbstract t = sa_down.s;
-
-        int real_pos = t.getOffset();
-        for (int i = 0;i < t.nb_gaps.length;i++)
-        {
-            if (t.nb_gaps[i] > s.nb_gaps[i])
-            {
-                this.propageGapsUpPosFrom(begin, real_pos, t.nb_gaps[i] - s.nb_gaps[i]);
-                real_pos += t.nb_gaps[i] + 1;
-            }
+                this.propageGapsDownPosFrom(begin, real_pos + 1, s.nb_gaps[i] - t.nb_gaps[i]);
+            real_pos += s.nb_gaps[i] + 1;
         }
     }
 
@@ -211,6 +209,18 @@ public class ConsensusAbstract
         this.updateOffset();
         this.addEndGaps();
         this.showHamiltonianPath();
+    }
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    public boolean sameHamiltonianPath(ConsensusAbstract other)
+    {
+        boolean equal = this.getHamiltonianPath().size() == other.getHamiltonianPath().size();
+        int i = 0;
+        while (equal && i < this.getHamiltonianPath().size())
+            equal &=  this.getHamiltonianPath().get(i).s.equals(other.getHamiltonianPath().get(i).s)
+                  &&  this.getHamiltonianPath().get(i).t.equals(other.getHamiltonianPath().get(i++).t);
+        return (equal);
     }
     /* ---------------------------------------------------------------------- */
 }
