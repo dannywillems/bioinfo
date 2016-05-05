@@ -5,6 +5,7 @@ import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConsensusAbstractTest
 {
@@ -184,27 +185,24 @@ public class ConsensusAbstractTest
     @Test
     public void updateOffsetLongerOneNoOverlapTest()
     {
-        /*
-        List<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
-        l.add(new SequenceAbstract("tact"));
-        l.add(new SequenceAbstract("actttacg"));
-        l.add(new SequenceAbstract("cgcaa"));
-        l.add(new SequenceAbstract("atcgtgcaa"));
-        l.add(new SequenceAbstract("ggaatctgcgagtta"));
-        l.add(new SequenceAbstract("atcggtc"));
+        List<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("tact"));
+        l.add(new Sequence("actttacg"));
+        l.add(new Sequence("cgcaa"));
+        l.add(new Sequence("atcgtgcaa"));
+        l.add(new Sequence("ggaatctgcgagtta"));
+        l.add(new Sequence("atcggtc"));
 
         Greedy g = new Greedy();
         ConsensusAbstract c = new ConsensusAbstract(g.greedy(l, 1, -1, -2));
         c.updateOffset();
-        int gaps[][] = c.getOffset();
         int result[][] = { {16, 8, 8, 11, 3}, {8, 8, 11, 3, 0} };
 
         for(int j = 0;j < result[0].length;j++)
         {
-            assertEquals(result[0][j], gaps[0][j]);
-            assertEquals(result[1][j], gaps[1][j]);
+            assertEquals(result[0][j], c.getHamiltonianPath().get(j).s.getOffset());
+            assertEquals(result[1][j], c.getHamiltonianPath().get(j).t.getOffset());
         }
-        */
     }
 
 }
