@@ -1,5 +1,7 @@
 package be.ac.umons.bioinfo.sequence;
 
+import be.ac.umons.bioinfo.Debug;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,9 +161,19 @@ public class ConsensusAbstract
         for (int i = 0;i < t.nb_gaps.length - 1;i++)
         {
             if (t.nb_gaps[i] > s.nb_gaps[i])
+            {
                 this.propageGapsUpPosFrom(begin, real_pos + 1, t.nb_gaps[i] - s.nb_gaps[i]);
-            real_pos += t.nb_gaps[i] + 1;
+                this.checkEqualitySameGapsNumberDuringPropagation(begin - 1, i);
+                /*
+                if (s.nb_gaps[i] == t.nb_gaps[i])
+                    System.out.println("OK!!!! Même nombre de gaps maintenant");
+                else
+                    System.out.println("ERROR!!!! Les gaps ne se sont pas bien propagés!");
+                */
+            }
+            real_pos += s.nb_gaps[i] + 1;
         }
+        this.checkPropageGapDownFrom(begin - 1);
     }
 
     /**
@@ -191,19 +203,29 @@ public class ConsensusAbstract
         SequenceAbstract s = sa_up.t;
         SequenceAbstract t = sa_down.s;
 
-        int real_pos = s.getOffset();
+        int real_pos = t.getOffset();
         for (int i = 0;i < s.nb_gaps.length - 1;i++)
         {
             if (s.nb_gaps[i] > t.nb_gaps[i])
+            {
                 this.propageGapsDownPosFrom(begin, real_pos + 1, s.nb_gaps[i] - t.nb_gaps[i]);
-            real_pos += s.nb_gaps[i] + 1;
+                this.checkEqualitySameGapsNumberDuringPropagation(begin, i);
+                /*
+                if (s.nb_gaps[i] == t.nb_gaps[i])
+                    System.out.println("OK!!!! Même nombre de gaps maintenant");
+                else
+                    System.out.println("ERROR!!!! Les gaps ne se sont pas bien propagés!");
+                */
+            }
+            real_pos += t.nb_gaps[i] + 1;
         }
+        this.checkPropageGapDownFrom(begin);
     }
 
     /**
      * Compute the alignment by
      * - update the offset
-     * - progage down gaps
+     * - propage down gaps
      * - propage up gaps
      * - update the alignment
      * - add ending gaps to the hamiltonian path.
@@ -214,12 +236,38 @@ public class ConsensusAbstract
         this.updateOffset();
 
         for (int i = 0;i < this.getHamiltonianPath().size() - 1;i++)
-            propageGapsDownFrom(i);
+        {
+            this.checkOffsetSame("Offset avant propagation bas: ", i);
+            this.propageGapsDownFrom(i);
+            this.checkOffsetSame("Offset après propagation bas: ", i);
+        }
         for (int i = this.getHamiltonianPath().size() - 1;i >= 1;i--)
-            propageGapsUpFrom(i);
+        {
+            this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
+            this.propageGapsUpFrom(i);
+            this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
+        }
+
+        /* To propage up and down at the same time. NOT WORKING. FIXME -->
+         * ArrayOutOfBounds.
+        for (int i = 0;i < this.getHamiltonianPath().size();i++)
+        {
+            if (i == 0)
+                this.propageGapsDownFrom(i);
+            else if (i == this.getHamiltonianPath().size())
+                this.propageGapsUpFrom(i);
+            else
+            {
+                this.propageGapsDownFrom(i);
+                this.propageGapsUpFrom(i);
+            }
+        }
+        */
 
         this.updateAlignment();
         this.addEndGaps();
+
+        this.checkEqualitySameGapsNumber();
     }
 
     /**
@@ -400,7 +448,7 @@ public class ConsensusAbstract
                 Character c = new Character(s_list.get(j).charAt(i));
                 Integer c_occurence = occurences.get(c);
                 if (c_occurence == null)
-                    occurences.put(c, 0);
+                    occurences.put(c, 1);
                 else
                     occurences.put(c, c_occurence + 1);
             }
@@ -448,6 +496,75 @@ public class ConsensusAbstract
         }
 
         //assert c_max != gap : "There must never been a gap in the final consensus";
+        if (Debug.GAP_IN_CONSENSUS && false)
+        {
+            if (c_max == gap && !remove_if_max_gap)
+            {
+                System.out.println("GAP renvoyée");
+                System.out.println("Il y a " + o.keySet().size() + " nucléotides dans cette colonne.");
+            }
+        }
+
         return (c_max);
     }
+
+    /* ---------------------------------------------------------------------- */
+    // Check functions
+    public void checkOffsetSame(String str, int i)
+    {
+        if (Debug.OFFSET)
+        {
+            System.out.print(str);
+            if (this.hamiltonian_path.get(i).t.getOffset() == this.hamiltonian_path.get(i + 1).s.getOffset())
+                System.out.println("OK");
+            else
+                System.out.println("ERROR!!!!!");
+        }
+    }
+
+    public void checkEqualitySameGapsNumber()
+    {
+        if (Debug.EQUALITY_SAME_GAPS_NUMBER)
+        {
+            for(int i = 0;i < this.hamiltonian_path.size() - 1;i++)
+            {
+                if (this.hamiltonian_path.get(i).t.hasSameGapsNumber(this.hamiltonian_path.get(i + 1).s))
+                    System.out.println("OK");
+                else
+                {
+                    System.out.println(this.hamiltonian_path.get(i).t);
+                    System.out.println(this.hamiltonian_path.get(i + 1).s);
+                    System.out.println("ERROR!!!!!");
+                }
+            }
+        }
+    }
+
+    public void checkEqualitySameGapsNumberDuringPropagation(int begin, int pos)
+    {
+        if (Debug.EQUALITY_SAME_GAPS_NUMBER_DURING_PROPAGATION)
+        {
+            if (this.hamiltonian_path.get(begin).t.nb_gaps[pos] == this.hamiltonian_path.get(begin + 1).s.nb_gaps[pos])
+                System.out.println("OK");
+            else
+            {
+                System.out.println(this.hamiltonian_path.get(begin).t);
+                System.out.println(this.hamiltonian_path.get(begin + 1).s);
+                System.out.println("ERROR!!!!!");
+            }
+        }
+    }
+
+    public void checkPropageGapDownFrom(int begin)
+    {
+        if (Debug.PROPAGATION_GAP_DOWN_FROM)
+        {
+            for(int i = 0;i < this.getHamiltonianPath().get(begin).s.nb_gaps.length;i++)
+            {
+                if (this.getHamiltonianPath().get(begin).t.nb_gaps[i] > this.getHamiltonianPath().get(begin + 1).s.nb_gaps[i])
+                    this.checkEqualitySameGapsNumberDuringPropagation(begin, i);
+            }
+        }
+    }
+    /* ---------------------------------------------------------------------- */
 }
