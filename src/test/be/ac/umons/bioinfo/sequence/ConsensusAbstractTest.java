@@ -404,8 +404,6 @@ public class ConsensusAbstractTest
         l2.add(new SequenceAbstract("---atcgtgcaa---------"));
         l2.add(new SequenceAbstract("ggaatc-tgcgagtta-----"));
 
-        c.showHamiltonianPath();
-        System.out.println("#######################################");
         for(int i = 0;i < l2.size();i++)
             assertTrue(l2.get(i).equals(align.get(i)));
     }
