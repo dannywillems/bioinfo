@@ -376,6 +376,82 @@ public class ConsensusAbstractTest
         assertTrue(c.sameHamiltonianPath(c2));
     }
 
+    /* ---------------------------------------------------------------------- */
+    /* BEGIN TEST computeAlignment */
+    @Test
+    public void computeAlignmentNoPropagationTest()
+    {
+        List<Sequence> l = new ArrayList<Sequence>();
+        l.add(new Sequence("tact"));
+        l.add(new Sequence("actttacg"));
+        l.add(new Sequence("cgcaa"));
+        l.add(new Sequence("atcgtgcaa"));
+        l.add(new Sequence("ggaatctgcgagtta"));
+        l.add(new Sequence("atcggtc"));
+
+        Greedy g = new Greedy();
+        List<SequenceAlignment> result = g.greedy(l, 1, -1, -2);
+
+        ConsensusAbstract c = new ConsensusAbstract(result);
+        c.computeAlignment();
+        ArrayList<SequenceAbstract> align = c.getAlignment();
+
+        ArrayList<SequenceAbstract> l2 = new ArrayList<SequenceAbstract>();
+        l2.add(new SequenceAbstract("----------------cgcaa"));
+        l2.add(new SequenceAbstract("--------cgtaaagt-----"));
+        l2.add(new SequenceAbstract("--------agta---------"));
+        l2.add(new SequenceAbstract("-----------atcggtc---"));
+        l2.add(new SequenceAbstract("---atcgtgcaa---------"));
+        l2.add(new SequenceAbstract("ggaatc-tgcgagtta-----"));
+
+        c.showHamiltonianPath();
+        System.out.println("#######################################");
+        for(int i = 0;i < l2.size();i++)
+            assertTrue(l2.get(i).equals(align.get(i)));
+    }
+    /* END TEST computeAlignment */
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    @Test
+    public void computeAlignmentOnePropagationDownAndUpTest()
+    {
+        Sequence f = new Sequence("actttacg");
+        Sequence g = new Sequence("ttgcacgat");
+        Sequence h = new Sequence("ttgcg");
+        Sequence i = new Sequence("ggaatctgcgagtta");
+        Sequence j = new Sequence("tact");
+        Sequence k = new Sequence("gaccgat");
+
+        List<Sequence> list = new ArrayList<Sequence>();
+
+        list.add(j);
+        list.add(f);
+        list.add(k);
+        list.add(h);
+        list.add(g);
+        list.add(i);
+
+        Greedy greed = new Greedy();
+        List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
+
+        ConsensusAbstract c = new ConsensusAbstract(result);
+        c.computeAlignment();
+        ArrayList<SequenceAbstract> align = c.getAlignment();
+
+        ArrayList<SequenceAbstract> l2 = new ArrayList<SequenceAbstract>();
+        l2.add(new SequenceAbstract("tact-------------"));
+        l2.add(new SequenceAbstract("-actttacg--------"));
+        l2.add(new SequenceAbstract("-------cg-caa----"));
+        l2.add(new SequenceAbstract("---atcgtg-caa----"));
+        l2.add(new SequenceAbstract("ggaatc-tg-cgagtta"));
+        l2.add(new SequenceAbstract("---atc-ggtc------"));
+
+        for(int l = 0;l < l2.size();l++)
+            assertEquals(l2.get(l), align.get(l));
+    }
+    /* ---------------------------------------------------------------------- */
+
     /* END TEST propageGapsUpFrom */
     /* ---------------------------------------------------------------------- */
 }

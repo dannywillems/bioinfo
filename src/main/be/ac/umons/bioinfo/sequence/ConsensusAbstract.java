@@ -10,21 +10,60 @@ public class ConsensusAbstract
 
     /* ---------------------------------------------------------------------- */
     // CONSTRUCTORS
+    /**
+     * Create a ConsensusAbstract object from a hamilonian path of
+     * SequenceAlignment object.
+     * Complexity: ??? Be careful by using ArrayList.add !
+     */
     public ConsensusAbstract(List<SequenceAlignment> hamiltonian_path)
     {
         this.hamiltonian_path = new ArrayList<SequenceAlignmentAbstract>();
         for(int i = 0;i < hamiltonian_path.size();i++)
             this.hamiltonian_path.add(new SequenceAlignmentAbstract(hamiltonian_path.get(i)));
+
         this.alignment = new ArrayList<SequenceAbstract>();
+        for(int i = 0;i < this.getHamiltonianPath().size();i++)
+        {
+            SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            if (i == 0)
+                this.alignment.add(sa.s);
+            this.alignment.add(sa.t);
+        }
     }
 
+    /**
+     * Create a ConsensusAbstract object from an ArrayList of
+     * SequenceAlignmentAbstract.
+     * Complexity: O(n) where n is the size of the hamiltonian path due to
+     * initialisation of the alignment attribute.
+     */
     public ConsensusAbstract(ArrayList<SequenceAlignmentAbstract> hp)
     {
         this.hamiltonian_path = hp;
+
+        // Initialize alignment to be able to use ArrayList.set which is in O(1)
+        // contrary to ArrayList.add which is O(n). So it takes much time to
+        // initialize a Consensus but the updateAlignment method is in O(n)
+        // where n is the hamiltonian path size, not in O(n^2) (due to insertion
+        // in O(n)).
+        this.alignment = new ArrayList<SequenceAbstract>();
+        for(int i = 0;i < this.getHamiltonianPath().size();i++)
+        {
+            SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            if (i == 0)
+                this.alignment.add(sa.s);
+            this.alignment.add(sa.t);
+        }
     }
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
+    /**
+     * Update the offset of the sequences in the hamiltonian path.
+     * Complexity: O(n) where n is the size of the hamiltonian path. Using
+     * ArrayList.get, SequenceAbstract.getOffset, SequenceAbstract.setOffset is
+     * in O(1).
+     */
     public void updateOffset()
     {
         // Will be useful to recenter the offset to 0 at the end
@@ -74,6 +113,11 @@ public class ConsensusAbstract
         /* ------------------------------------------------------------------ */
     }
 
+    /**
+     * Propage up [nb] gaps from [begin] to the beginning of the hamiltonian
+     * path at the position [pos].
+     * Complexity: ???
+     */
     public void propageGapsUpPosFrom(int begin, int pos, int nb)
     {
         for (int i = begin - 1;i >= 0;i--)
@@ -84,6 +128,10 @@ public class ConsensusAbstract
         }
     }
 
+    /**
+     * Propage up gaps from [begin] to the beginning of the hamiltonian path.
+     * Complexity: ???
+     */
     public void propageGapsUpFrom(int begin)
     {
         SequenceAlignmentAbstract sa_down = this.getHamiltonianPath().get(begin);
@@ -93,7 +141,7 @@ public class ConsensusAbstract
         SequenceAbstract t = sa_down.s;
 
         int real_pos = t.getOffset();
-        for (int i = 0;i < t.nb_gaps.length;i++)
+        for (int i = 0;i < t.nb_gaps.length - 1;i++)
         {
             if (t.nb_gaps[i] > s.nb_gaps[i])
                 this.propageGapsUpPosFrom(begin, real_pos + 1, t.nb_gaps[i] - s.nb_gaps[i]);
@@ -101,18 +149,25 @@ public class ConsensusAbstract
         }
     }
 
+    /**
+     * Propage down [nb] gaps from [begin] to the end of the hamiltonian
+     * path at the position [pos].
+     * Complexity: ???
+     */
     public void propageGapsDownPosFrom(int begin, int pos, int nb)
     {
         for (int i = begin + 1;i < this.getHamiltonianPath().size();i++)
         {
-            System.out.println("Begin = " + i);
-            System.out.println("Must add " + nb + " gaps at pos " + pos);
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
             sa.s.addGaps(nb, pos);
             sa.t.addGaps(nb, pos);
         }
     }
 
+    /**
+     * Propage down gaps from [begin] to the end of the hamiltonian path.
+     * Complexity: ???
+     */
     public void propageGapsDownFrom(int begin)
     {
         SequenceAlignmentAbstract sa_up = this.getHamiltonianPath().get(begin);
@@ -122,7 +177,7 @@ public class ConsensusAbstract
         SequenceAbstract t = sa_down.s;
 
         int real_pos = s.getOffset();
-        for (int i = 0;i < s.nb_gaps.length;i++)
+        for (int i = 0;i < s.nb_gaps.length - 1;i++)
         {
             if (s.nb_gaps[i] > t.nb_gaps[i])
                 this.propageGapsDownPosFrom(begin, real_pos + 1, s.nb_gaps[i] - t.nb_gaps[i]);
@@ -130,6 +185,15 @@ public class ConsensusAbstract
         }
     }
 
+    /**
+     * Compute the alignment by
+     * - update the offset
+     * - progage down gaps
+     * - propage up gaps
+     * - update the alignment
+     * - add ending gaps to the hamiltonian path.
+     * Complexity: ???
+     */
     public void computeAlignment()
     {
         this.updateOffset();
@@ -138,22 +202,87 @@ public class ConsensusAbstract
             propageGapsDownFrom(i);
         for (int i = this.getHamiltonianPath().size() - 1;i >= 1;i--)
             propageGapsUpFrom(i);
+
+        this.updateAlignment();
+        this.addEndGaps();
     }
 
+    /**
+     * Update the alignment attribute based on the hamiltonian path. It only
+     * consists of ranging the hamiltonian path, taking the first sequence for
+     * the first alignment and the second for all alignments.
+     * Complexity: O(n) where n is the size of the hamiltonian path due to
+     * ArrayList.set method used to update the alignment attribute and to
+     * ArrayList.get to get the i-th element of the hamiltonian path.
+     * ArrayList.size is also in O(1).
+     */
+    public void updateAlignment()
+    {
+        for(int i = 0;i < this.getHamiltonianPath().size();i++)
+        {
+            SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            if (i == 0)
+                this.alignment.set(i, sa.s);
+            this.alignment.set(i + 1, sa.t);
+        }
+    }
+
+    /**
+     * Add ending gaps to the sequences in the hamiltonian path.
+     * Complexity: O(n + m) where n is the number of sequences in the hamiltonian
+     * path and where m is the compressed size (see getSize in SequenceAbstract
+     * of the bigger sequence. The m is due to the computation of the size at
+     * (*). NB: get on ArrayList is O(1).
+     */
     public void addEndGaps()
     {
         int max = 0;
         for(int i = 0;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            // IMPROVEME: compute the size is not in O(1) but in O(m) where m
+            // is the compressed size. Can be improve by saving the size in the
+            // SequenceAbstract object. (*)
             max = Math.max(sa.s.getSize(), Math.max(sa.t.getSize(), max));
         }
 
         for(int i = 0;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
+            // IMPROVEME: compute the size is not in O(1) but in O(m) where m
+            // is the compressed size. Can be improve by saving the size in the
+            // SequenceAbstract object. (*)
             sa.s.nb_gaps[sa.s.nb_gaps.length - 1] += max - sa.s.getSize();
             sa.t.nb_gaps[sa.t.nb_gaps.length - 1] += max - sa.t.getSize();
+        }
+    }
+
+    /**
+     * Add ending gaps to the sequences in the alignment.
+     * Complexity: O(n + m) where n is the number of sequences in the alignment
+     * and where m is the compressed size (see getSize in SequenceAbstract
+     * of the bigger sequence. The m is due to the computation of the size at
+     * (*). NB: get on ArrayList is O(1).
+     * @deprecated:
+     *  Use addEndGaps following by updateAlignment ==> Same
+     *  complexity and update at the same time all sequences
+     */
+    @Deprecated public void addEndGapsAlignment()
+    {
+        int max = 0;
+        for(int i = 0;i < this.getAlignment().size();i++)
+            // IMPROVEME: compute the size is not in O(1) but in O(m) where m
+            // is the compressed size. Can be improve by saving the size in the
+            // SequenceAbstract object. (*)
+            max = Math.max(this.getAlignment().get(i).getSize(), max);
+
+        for(int i = 0;i < this.getHamiltonianPath().size();i++)
+        {
+            SequenceAbstract s = this.getAlignment().get(i);
+            // IMPROVEME: compute the size is not in O(1) but in O(m) where m
+            // is the compressed size. Can be improve by saving the size in the
+            // SequenceAbstract object. (*)
+            s.nb_gaps[s.nb_gaps.length - 1] += max - s.getSize();
         }
     }
     /* ---------------------------------------------------------------------- */
@@ -213,6 +342,14 @@ public class ConsensusAbstract
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
+    /**
+     * Check if two ConsensusAbstract object have the same hamiltonian paths.
+     * Complexity: O(n + m) where n is the size of the hamiltonian path and m
+     * the compressed size of the longer sequence in the hamiltonian path. The m
+     * is due to the equals function.
+     * @return true if the ConsensusAbstract objects have the same hamiltonian
+     * paths else false.
+     */
     public boolean sameHamiltonianPath(ConsensusAbstract other)
     {
         boolean equal = this.getHamiltonianPath().size() == other.getHamiltonianPath().size();
