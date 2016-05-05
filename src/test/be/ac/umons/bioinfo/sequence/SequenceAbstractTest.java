@@ -509,6 +509,63 @@ public class SequenceAbstractTest
 
     /* ---------------------------------------------------------------------- */
     @Test
+    public void addGapsAfterIndiceAndReturnPositionTest1()
+    {
+        Sequence initial = new Sequence("attgc");
+        SequenceAbstract s = new SequenceAbstract(initial);
+
+        assertEquals(2, s.addGapsAfterIndiceAndReturnPosition(1, 1));
+        assertEquals("at-tgc", s.toString());
+    }
+
+    @Test
+    public void addGapsAfterIndiceAndReturnPositionTest2()
+    {
+        Sequence initial = new Sequence("attgc");
+        Sequence aligned = new Sequence("at--tgc");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        assertEquals(5, s.addGapsAfterIndiceAndReturnPosition(1, 2));
+        assertEquals("at--t-gc", s.toString());
+    }
+
+    @Test
+    public void addGapsAfterIndiceAndReturnPositionTest3()
+    {
+        Sequence initial = new Sequence("attgc");
+        Sequence aligned = new Sequence("at--tgc");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        assertEquals(7, s.addGapsAfterIndiceAndReturnPosition(3, 5));
+        assertEquals("at--tgc---", s.toString());
+    }
+
+    @Test
+    public void addGapsAfterIndiceAndReturnPositionTest4()
+    {
+        Sequence initial = new Sequence("attgc");
+        Sequence aligned = new Sequence("at--tgc");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        assertEquals(1, s.addGapsAfterIndiceAndReturnPosition(3, 0));
+        assertEquals("a---t--tgc", s.toString());
+    }
+
+    @Test
+    public void addGapsAfterIndiceAndReturnPositionTest5()
+    {
+        Sequence initial = new Sequence("attgc");
+        Sequence aligned = new Sequence("at--tgc");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        assertEquals(0, s.addGapsAfterIndiceAndReturnPosition(3, -5));
+        assertEquals("---at--tgc", s.toString());
+    }
+    /* ---------------------------------------------------------------------- */
+
+
+    /* ---------------------------------------------------------------------- */
+    @Test
     public void buildFromAlignedSequence1()
     {
         Sequence initial = new Sequence("attg");
