@@ -453,6 +453,62 @@ public class SequenceAbstractTest
 
     /* ---------------------------------------------------------------------- */
     @Test
+    public void addGapsAfterIndiceTest1()
+    {
+        Sequence initial = new Sequence("attgc");
+        SequenceAbstract s = new SequenceAbstract(initial);
+
+        s.addGapsAfterIndice(1, 1);
+        assertEquals("at-tgc", s.toString());
+    }
+
+    @Test
+    public void addGapsAfterIndiceTest2()
+    {
+        Sequence initial = new Sequence("attgc");
+        Sequence aligned = new Sequence("at--tgc");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        s.addGapsAfterIndice(1, 2);
+        assertEquals("at--t-gc", s.toString());
+    }
+
+    @Test
+    public void addGapsAfterIndiceTest3()
+    {
+        Sequence initial = new Sequence("attgc");
+        Sequence aligned = new Sequence("at--tgc");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        s.addGapsAfterIndice(3, 5);
+        assertEquals("at--tgc---", s.toString());
+    }
+
+    @Test
+    public void addGapsAfterIndiceTest4()
+    {
+        Sequence initial = new Sequence("attgc");
+        Sequence aligned = new Sequence("at--tgc");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        s.addGapsAfterIndice(3, 0);
+        assertEquals("a---t--tgc", s.toString());
+    }
+
+    @Test
+    public void addGapsAfterIndiceTest5()
+    {
+        Sequence initial = new Sequence("attgc");
+        Sequence aligned = new Sequence("at--tgc");
+        SequenceAbstract s = new SequenceAbstract(initial, aligned);
+
+        s.addGapsAfterIndice(3, -5);
+        assertEquals("---at--tgc", s.toString());
+    }
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    @Test
     public void buildFromAlignedSequence1()
     {
         Sequence initial = new Sequence("attg");

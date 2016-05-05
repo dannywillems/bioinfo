@@ -154,13 +154,13 @@ public class SequenceAbstract //implements Iterable<Character>
      * 1].
      * If position is before the offset or at 0, gaps are added as offset.
      * Examples:
-     *  - addGaps(1, 1) on the sequence
+     *  - addGapsAndReturnIndice(1, 1) on the sequence
      *      attgc ==> a-ttgc and returns 0
-     *  - addGaps(1, 2) on the sequence
+     *  - addGapsAndReturnIndice(1, 2) on the sequence
      *      at--tgc ==> at---tgc and returns 1
-     *  - addGaps(3, 5) on the sequence
+     *  - addGapsAndReturnIndice(3, 5) on the sequence
      *      at--tgc ==> at--t---gc and returns 2
-     *  - addGaps(3, 0) on the sequence
+     *  - addGapsAndReturnIndice(3, 0) on the sequence
      *      at--tgc ==> ---at--tgc and returns -1
      * @param nb number of gaps to add
      * @param pos where the gaps must be added. Absolute position eg including
@@ -208,6 +208,39 @@ public class SequenceAbstract //implements Iterable<Character>
             this.nb_gaps[i - 1] += nb;
             return (i - 1);
         }
+    }
+    /* ---------------------------------------------------------------------- */
+
+    /**
+     * Add [nb] gaps after the nucleotide at the position [pos] in the initial
+     * sequence.
+     * If [pos] is negative, it inserts in the offset. To add gaps at the end,
+     * use [pos] greater than or equal to nb_gaps.length - 1.
+     * Examples:
+     *  - addGapsAfterIndice(1, 1) on the sequence
+     *      attgc ==> at-tgc
+     *  - addGapsAfterIndice(1, 2) on the sequence
+     *      at--tgc ==> at--t-gc
+     *  - addGapsAfterIndice(3, 5) on the sequence
+     *      at--tgc ==> at--tgc---
+     *  - addGapsAfterIndice(3, 0) on the sequence
+     *      at--tgc ==> a---t--tgc
+     *  - addGapsAfterIndice(3, -5) on the sequence
+     *      at--tgc ==> ---at--tgc
+     * @param nb number of gaps to add
+     * @param pos where the gaps must be added. Absolute position eg including
+     * the offset.
+     * @return indice of the nucleotide which gaps has been inserted after. -1
+     * if it's in the offset.
+     */
+    public void addGapsAfterIndice(int nb, int indice)
+    {
+        if (indice < 0)
+            this.offset += nb;
+        else if (indice < nb_gaps.length - 1)
+            this.nb_gaps[indice] += nb;
+        else
+            this.nb_gaps[nb_gaps.length - 1] += nb;
     }
     /* ---------------------------------------------------------------------- */
 
