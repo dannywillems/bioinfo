@@ -2,8 +2,9 @@ package be.ac.umons.bioinfo.sequence;
 
 import java.lang.Integer;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class SequenceAbstract
+public class SequenceAbstract //implements Iterable<Character>
 {
     public Sequence initial;
     public int[] nb_gaps;
@@ -220,4 +221,38 @@ public class SequenceAbstract
         return (false);
     }
     /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /*
+    @Override
+    public Iterator<Character> iterator()
+    {
+        SequenceAbstract s = this;
+        Iterator<Character> it = new Iterator<Character>()
+        {
+            private int size = s.getSize();
+            private int index = 0;
+            private int gaps_i = -1;
+
+            @Override
+            public boolean hasNext()
+            {
+                return (index < s);
+            }
+
+            public Character next()
+            {
+                if (index < s.getOffset())
+                    return (Character("-"));
+                else if (index
+                index++;
+            }
+        }
+    }
+    */
+    /* ---------------------------------------------------------------------- */
+
+
+    /* ---------------------------------------------------------------------- */
+
 }
