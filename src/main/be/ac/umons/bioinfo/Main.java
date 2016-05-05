@@ -14,10 +14,10 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
-        test();
-        //cible(1, false, false, true);
-        //cible(2, false, false, true);
-        //cible(3, false, false, true); // A exécuter en dernier, car long
+        //test();
+        cible(1, false, false, false, false);
+        //cible(2, false, false, false, false);
+        //cible(3, false, false, true, false);
     }
 
     public static void test()
@@ -84,20 +84,16 @@ public class Main
         System.out.println("------->");
         */
 
-        Consensus c = new Consensus(result);
-        //c.showWithOffset();
-        c.showWithEndGapAndOffset();
-
-        /*
+        ConsensusAbstract c = new ConsensusAbstract(result);
         c.computeAlignment();
-        Sequence consensus_final = c.build();
 
         System.out.println("Les séquences alignées:\n");
-        ArrayList<Sequence> alignment = c.getAlignment();
+        ArrayList<SequenceAbstract> alignment = c.getAlignment();
         for(int counter = 0;counter < alignment.size();counter++)
             System.out.println(alignment.get(counter));
         System.out.println("#########################################\n");
 
+        /*
         System.out.println("Le consensus final:\n");
         System.out.println(consensus_final);
 
@@ -110,7 +106,7 @@ public class Main
         */
     }
 
-    public static void cible(int num, boolean show_consensus, boolean show_alignment, boolean save)
+    public static void cible(int num, boolean show_consensus, boolean show_alignment, boolean show_greedy, boolean save)
     {
         try
         {
@@ -121,24 +117,35 @@ public class Main
             List<SequenceAlignment> result = g.greedy(list, 1, -1, -2);
             System.out.println("Done");
 
-            Consensus c = new Consensus(result);
+            ConsensusAbstract c = new ConsensusAbstract(result);
+            c.updateOffset();
+            if (show_greedy)
+            {
+                for(int i = 0;i < c.getHamiltonianPath().size();i++)
+                {
+                    System.out.println(c.getHamiltonianPath().get(i).s);
+                    System.out.println(c.getHamiltonianPath().get(i).t);
+                    System.out.println("###");
+                }
+                System.out.println("#########################################\n");
+            }
+
             System.out.print("Alignement... ");
             c.computeAlignment();
-            System.out.println("Done");
-            //c.showWithEndGapAndOffset();
-
-            System.out.print("Construction du consensus... ");
-            Sequence consensus_final = c.build(true);
             System.out.println("Done");
 
             if (show_alignment)
             {
                 System.out.println("Les séquences alignées:\n");
-                ArrayList<Sequence> alignment = c.getAlignment();
+                ArrayList<SequenceAbstract> alignment = c.getAlignment();
                 for(int counter = 0;counter < alignment.size();counter++)
                     System.out.println(alignment.get(counter));
                 System.out.println("#########################################\n");
             }
+
+            System.out.print("Construction du consensus... ");
+            SequenceAbstract consensus_final = c.build(false);
+            System.out.println("Done");
 
             if (show_consensus)
             {
