@@ -450,6 +450,253 @@ public class ConsensusAbstractTest
     }
     /* ---------------------------------------------------------------------- */
 
-    /* END TEST propageGapsUpFrom */
+    /* ---------------------------------------------------------------------- */
+    /* BEGIN TEST getBase */
+    @Test
+    public void getBaseTest()
+    {
+        ConsensusAbstract c = new ConsensusAbstract();
+
+        HashMap<Character, Integer> s = new HashMap<Character, Integer>();
+        s.put(new Character('c'), 5);
+        s.put(new Character('g'), 2);
+        s.put(new Character('t'), 4);
+        s.put(new Character('-'), 1);
+        assertEquals(c.getBase(s, false), 'c');
+    }
+
+    @Test
+    public void getBaseMultipleTest()
+    {
+        ConsensusAbstract c = new ConsensusAbstract();
+
+        HashMap<Character, Integer> s = new HashMap<Character, Integer>();
+        s.put(new Character('c'), 5);
+        s.put(new Character('g'), 5);
+        s.put(new Character('t'), 4);
+        s.put(new Character('-'), 1);
+        assertEquals(c.getBase(s, false), 'c');
+    }
+
+    @Test
+    public void getBaseNoGapMultipleTest()
+    {
+        ConsensusAbstract c = new ConsensusAbstract();
+
+        HashMap<Character, Integer> s = new HashMap<Character, Integer>();
+        s.put(new Character('c'), 5);
+        s.put(new Character('g'), 5);
+        s.put(new Character('t'), 4);
+        s.put(new Character('-'), 6);
+        assertEquals(c.getBase(s, false), 'c');
+    }
+
+    @Test
+    public void getBaseNoGapTest()
+    {
+        ConsensusAbstract c = new ConsensusAbstract();
+
+        HashMap<Character, Integer> s = new HashMap<Character, Integer>();
+        s.put(new Character('c'), 5);
+        s.put(new Character('g'), 2);
+        s.put(new Character('t'), 4);
+        s.put(new Character('-'), 6);
+        assertEquals(c.getBase(s, false), 'c');
+    }
+    /* END TEST getBase */
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /* BEGIN TEST build with remove_if_max_gap false */
+    @Test
+    public void buildNoRemoveSimpleTest()
+    {
+        ArrayList<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
+        l.add(new SequenceAbstract("acttt"));
+        l.add(new SequenceAbstract("tcttg"));
+        l.add(new SequenceAbstract("atgag"));
+
+        ConsensusAbstract c = new ConsensusAbstract();
+        c.setAlignment(l);
+
+        assertEquals(c.build(false).toString(), "acttg");
+    }
+
+    @Test
+    public void buildNoGapNoRemoveMultipleTest()
+    {
+        ArrayList<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
+        l.add(new SequenceAbstract("acttt"));
+        l.add(new SequenceAbstract("tattg"));
+        l.add(new SequenceAbstract("atgag"));
+
+        ConsensusAbstract c = new ConsensusAbstract();
+        c.setAlignment(l);
+
+        assertEquals(c.build(false).toString(), "aattg");
+    }
+
+    @Test
+    public void buildGapNoRemoveMultipleTest()
+    {
+        ArrayList<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
+        l.add(new SequenceAbstract("a-ttt"));
+        l.add(new SequenceAbstract("t-ttg"));
+        l.add(new SequenceAbstract("atgag"));
+
+        ConsensusAbstract c = new ConsensusAbstract();
+        c.setAlignment(l);
+
+        assertEquals(c.build(false).toString(), "atttg");
+    }
+
+    @Test
+    public void buildGapSimpleTest()
+    {
+        ArrayList<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
+        l.add(new SequenceAbstract("a-ttt"));
+        l.add(new SequenceAbstract("tcttg"));
+        l.add(new SequenceAbstract("acgag"));
+
+        ConsensusAbstract c = new ConsensusAbstract(); c.setAlignment(l);
+
+        assertEquals(c.build(false).toString(), "acttg");
+    }
+    /* END TEST build with remove_if_max_gap false */
+
+    /* BEGIN TEST build with remove_if_max_gap true */
+    @Test
+    public void buildGapRemoveMultipleTest()
+    {
+        ArrayList<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
+        l.add(new SequenceAbstract("a-ttt"));
+        l.add(new SequenceAbstract("t-ttg"));
+        l.add(new SequenceAbstract("atgag"));
+
+        ConsensusAbstract c = new ConsensusAbstract();
+        c.setAlignment(l);
+
+        assertEquals(c.build(true).toString(), "attg");
+    }
+
+    @Test
+    public void buildGapRemoveSimpleTest()
+    {
+        ArrayList<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
+        l.add(new SequenceAbstract("a-ttt"));
+        l.add(new SequenceAbstract("tcttg"));
+        l.add(new SequenceAbstract("acgag"));
+
+        ConsensusAbstract c = new ConsensusAbstract(); c.setAlignment(l);
+
+        assertEquals(c.build(true).toString(), "acttg");
+    }
+
+    @Test
+    public void buildRemoveSimpleTest()
+    {
+        ArrayList<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
+        l.add(new SequenceAbstract("acttt"));
+        l.add(new SequenceAbstract("tcttg"));
+        l.add(new SequenceAbstract("atgag"));
+
+        ConsensusAbstract c = new ConsensusAbstract();
+        c.setAlignment(l);
+
+        assertEquals(c.build(true).toString(), "acttg");
+    }
+
+    @Test
+    public void buildNoGapRemoveMultipleTest()
+    {
+        ArrayList<SequenceAbstract> l = new ArrayList<SequenceAbstract>();
+        l.add(new SequenceAbstract("acttt"));
+        l.add(new SequenceAbstract("tattg"));
+        l.add(new SequenceAbstract("atgag"));
+
+        ConsensusAbstract c = new ConsensusAbstract();
+        c.setAlignment(l);
+
+        assertEquals(c.build(true).toString(), "aattg");
+    }
+
+    @Test
+    public void buildRealTestNoRemove()
+    {
+        Sequence f = new Sequence("actttacg");
+        Sequence g = new Sequence("ttgcacgat");
+        Sequence h = new Sequence("ttgcg");
+        Sequence i = new Sequence("ggaatctgcgagtta");
+        Sequence j = new Sequence("tact");
+        Sequence k = new Sequence("gaccgat");
+
+        List<Sequence> list = new ArrayList<Sequence>();
+
+        list.add(j);
+        list.add(f);
+        list.add(k);
+        list.add(h);
+        list.add(g);
+        list.add(i);
+
+        Greedy greed = new Greedy();
+        List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
+
+        ConsensusAbstract c = new ConsensusAbstract(result);
+        c.computeAlignment();
+        SequenceAbstract s_final = c.build(false);
+
+        /*
+        l2.add(new SequenceAbstract("tact-------------"));
+        l2.add(new SequenceAbstract("-actttacg--------"));
+        l2.add(new SequenceAbstract("-------cg-caa----"));
+        l2.add(new SequenceAbstract("---atcgtg-caa----"));
+        l2.add(new SequenceAbstract("ggaatc-tg-cgagtta"));
+        l2.add(new SequenceAbstract("---atc-ggtc------"));
+        */
+
+        SequenceAbstract s = new SequenceAbstract("tacatcacgtcaagtta");
+        assertEquals(s, s_final);
+    }
+
+    @Test
+    public void buildRealTestRemove()
+    {
+        Sequence f = new Sequence("actttacg");
+        Sequence g = new Sequence("ttgcacgat");
+        Sequence h = new Sequence("ttgcg");
+        Sequence i = new Sequence("ggaatctgcgagtta");
+        Sequence j = new Sequence("tact");
+        Sequence k = new Sequence("gaccgat");
+
+        List<Sequence> list = new ArrayList<Sequence>();
+
+        list.add(j);
+        list.add(f);
+        list.add(k);
+        list.add(h);
+        list.add(g);
+        list.add(i);
+
+        Greedy greed = new Greedy();
+        List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
+
+        ConsensusAbstract c = new ConsensusAbstract(result);
+        c.computeAlignment();
+        SequenceAbstract s_final = c.build(true);
+
+        /*
+        l2.add(new SequenceAbstract("tact-------------"));
+        l2.add(new SequenceAbstract("-actttacg--------"));
+        l2.add(new SequenceAbstract("-------cg-caa----"));
+        l2.add(new SequenceAbstract("---atcgtg-caa----"));
+        l2.add(new SequenceAbstract("ggaatc-tg-cgagtta"));
+        l2.add(new SequenceAbstract("---atc-ggtc------"));
+        */
+
+        SequenceAbstract s = new SequenceAbstract("atccgca");
+        assertEquals(s, s_final);
+    }
+    /* END TEST build with remove_if_max_gap true */
     /* ---------------------------------------------------------------------- */
 }

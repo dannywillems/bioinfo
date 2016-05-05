@@ -2,6 +2,10 @@ package be.ac.umons.bioinfo.sequence;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import java.util.Iterator;
+
 
 public class ConsensusAbstract
 {
@@ -54,6 +58,17 @@ public class ConsensusAbstract
                 this.alignment.add(sa.s);
             this.alignment.add(sa.t);
         }
+    }
+
+    /**
+     * Create a ConsensusAbstract object from an ArrayList of SequenceAbstract
+     * which will be set as the alignment.
+     * It can only be used to build the consensus, not compute it because we
+     * don't have an hamiltonian path.
+     */
+    public ConsensusAbstract()
+    {
+        this.alignment = new ArrayList<SequenceAbstract>();
     }
     /* ---------------------------------------------------------------------- */
 
@@ -360,4 +375,79 @@ public class ConsensusAbstract
         return (equal);
     }
     /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /** Build the consensus.
+     * FIXME: Convert all sequences in the aligment in strings to be able to use
+     * the old algorithm which works on strings and char. We can think about an
+     * Iterator.
+     */
+    public SequenceAbstract build(boolean remove_if_max_gap)
+    {
+        StringBuilder consensus = new StringBuilder();
+
+        ArrayList<String> s_list = new ArrayList<String>();
+        for (int i = 0;i < this.alignment.size();i++)
+            s_list.add(this.alignment.get(i).toString());
+
+        int size_consensus = this.alignment.get(0).getSize();
+        for (int i = 0;i < size_consensus;i++)
+        {
+            HashMap<Character, Integer> occurences = new HashMap<Character, Integer>();
+            // We browse all sequences in the alignment at pos i.
+            for (int j = 0;j < alignment.size();j++)
+            {
+                Character c = new Character(s_list.get(j).charAt(i));
+                Integer c_occurence = occurences.get(c);
+                if (c_occurence == null)
+                    occurences.put(c, 0);
+                else
+                    occurences.put(c, c_occurence + 1);
+            }
+            char base = this.getBase(occurences, remove_if_max_gap);
+            // if remove_if_max_gap is true, we can have a gap as a maximum but
+            // we don't add it
+            if (remove_if_max_gap)
+            {
+                if (base != Sequence.base2letter((byte) Sequence.GAP))
+                    consensus.append(base);
+            }
+            // else, we know the max is not a gap because getBase manage this
+            // case. So we can add without regarding the type.
+            else
+                consensus.append(base);
+        }
+        return (new SequenceAbstract(consensus.toString()));
+    }
+
+    /**
+     * Return the more occured character at a position.
+     * If equality, it takes the first. If a gap is more occured than others, it
+     * takes in an undefined ordre (due to HashMap, not a feature). FIXME
+     * It supposes that there is another character than the gap.
+     */
+    public char getBase(HashMap<Character, Integer> o, boolean remove_if_max_gap)
+    {
+        int max = Integer.MIN_VALUE;
+        char gap = Sequence.base2letter((byte) Sequence.GAP);
+        char c_max = gap;
+
+        Iterator<Character> iterator_o = o.keySet().iterator();
+        while (iterator_o.hasNext())
+        {
+            Character c = iterator_o.next();
+            if (o.get(c).intValue() > max)
+            {
+                // if remove_if_max_gap is false, we don't have to take the gap.
+                if (remove_if_max_gap || (c.charValue() != gap))
+                {
+                    max = o.get(c).intValue();
+                    c_max = c.charValue();
+                }
+            }
+        }
+
+        //assert c_max != gap : "There must never been a gap in the final consensus";
+        return (c_max);
+    }
 }
