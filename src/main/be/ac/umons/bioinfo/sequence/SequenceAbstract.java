@@ -223,6 +223,17 @@ public class SequenceAbstract //implements Iterable<Character>
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
+    public boolean hasSameGapsNumber(SequenceAbstract other)
+    {
+        int i = 0;
+        boolean equal = this.nb_gaps.length == other.nb_gaps.length;
+        while (equal && i < this.nb_gaps.length)
+            equal &= this.nb_gaps[i] == other.nb_gaps[i++];
+        return (equal);
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /* ---------------------------------------------------------------------- */
     /*
     @Override
     public Iterator<Character> iterator()
