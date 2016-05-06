@@ -1,6 +1,9 @@
 # Projet de bio-informatique
 
-[![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=master)](https://travis-ci.com/dannywillems/bioinfo)
+* master: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=master)](https://travis-ci.com/dannywillems/bioinfo)
+* propage_en_deux_fois: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=propage_en_deux_fois)](https://travis-ci.com/dannywillems/bioinfo)
+* aline: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=aline)](https://travis-ci.com/dannywillems/bioinfo)
+* Consensusaline: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=consensusaline)](https://travis-ci.com/dannywillems/bioinfo)
 
 Testé avec:
 * Oracle JDK 8
@@ -68,6 +71,7 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 - [ ] Suppression des fonctions *inutiles*.
   - [x] Récupérer positions gaps finaux et du début.
 - [ ] Fix les FIXME/IMPROVEME.
+- [ ] Renvoyer le complétaire inversé.
 
 ## Plus d'informations
 
