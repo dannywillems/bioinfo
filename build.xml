@@ -85,7 +85,11 @@
 
   <!-- ################################################################### -->
   <target name="run" depends="run_test">
-    <java dir="${bin_src}" classname="${exe}" fork="true" />
+    <java dir="${bin_src}" classname="${exe}" fork="true">
+      <assertions>
+        <enable />
+      </assertions>
+    </java>
   </target>
   <!-- ################################################################### -->
 
