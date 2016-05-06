@@ -192,8 +192,8 @@ public class ConsensusTest
     public void computeOffsetSimpleTest()
     {
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("at-cg"), new Sequence("-tcg-"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("t-cg"), new Sequence("acct"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("at-cg"), new Sequence("-tcg-"), 0));
+        l.add(new SequenceAlignment(new Sequence("t-cg"), new Sequence("acct"), 0));
 
         Consensus c = new Consensus(l);
         c.computeOffset();
@@ -211,11 +211,11 @@ public class ConsensusTest
     public void computeOffsetHarderTest()
     {
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0));
+        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0));
+        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0));
 
         Consensus c = new Consensus(l);
         c.computeOffset();
@@ -233,7 +233,7 @@ public class ConsensusTest
     public void computeOffsetNoOverlapTest()
     {
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("--------cgcaa"), new Sequence("cgtaaagt-----"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("--------cgcaa"), new Sequence("cgtaaagt-----"), 0));
 
         Consensus c = new Consensus(l);
         c.computeOffset();
@@ -251,11 +251,11 @@ public class ConsensusTest
     public void computeOffsetWithMinChangedTest()
     {
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("-----atcgtgcaa----"), new Sequence("acggaatc-tgcgagtta"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("acggaatctg-cgagtta"), new Sequence("-----atcggtc------"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0));
+        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("-----atcgtgcaa----"), new Sequence("acggaatc-tgcgagtta"), 0));
+        l.add(new SequenceAlignment(new Sequence("acggaatctg-cgagtta"), new Sequence("-----atcggtc------"), 0));
 
         Consensus c = new Consensus(l);
         c.computeOffset();
@@ -301,7 +301,7 @@ public class ConsensusTest
     public void showOffsetNoOverlapTest()
     {
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("--------cgcaa"), new Sequence("cgtaaagt-----"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("--------cgcaa"), new Sequence("cgtaaagt-----"), 0));
 
         Consensus c = new Consensus(l);
         c.addOffset();
@@ -327,11 +327,11 @@ public class ConsensusTest
         c.fillEndWithGaps();
 
         ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
-        l2.add(new SequenceAlignment(new Sequence("----------------cgcaa"), new Sequence("--------cgtaaagt-----"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("--------cgtaaagt-----"), new Sequence("--------agta---------"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("--------agta---------"), new Sequence("-----------atcggtc---"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("-----------atcggtc---"), new Sequence("---atcgtgcaa---------"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("---atcgtgcaa---------"), new Sequence("ggaatc-tgcgagtta-----"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("----------------cgcaa"), new Sequence("--------cgtaaagt-----"), 0));
+        l2.add(new SequenceAlignment(new Sequence("--------cgtaaagt-----"), new Sequence("--------agta---------"), 0));
+        l2.add(new SequenceAlignment(new Sequence("--------agta---------"), new Sequence("-----------atcggtc---"), 0));
+        l2.add(new SequenceAlignment(new Sequence("-----------atcggtc---"), new Sequence("---atcgtgcaa---------"), 0));
+        l2.add(new SequenceAlignment(new Sequence("---atcgtgcaa---------"), new Sequence("ggaatc-tgcgagtta-----"), 0));
 
         Consensus c2 = new Consensus(l2);
         assertTrue(c.sameHamiltonianPath(c2));
@@ -346,11 +346,11 @@ public class ConsensusTest
     {
         /* ------------------------------------------------------------------ */
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0));
+        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0));
+        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0));
 
         Consensus c = new Consensus(l);
         c.addOffset();
@@ -362,11 +362,11 @@ public class ConsensusTest
         /* ------------------------------------------------------------------ */
         /* WAITED OUTPUT WITHOUT OFFSET GAPS AND END */
         ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
-        l2.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("ggaatc-tg-cgagtta"), new Sequence("---atc-ggtc------"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0));
+        l2.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0));
+        l2.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0));
+        l2.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0));
+        l2.add(new SequenceAlignment(new Sequence("ggaatc-tg-cgagtta"), new Sequence("---atc-ggtc------"), 0));
 
         Consensus c2 = new Consensus(l2);
         c2.addOffset();
@@ -385,11 +385,11 @@ public class ConsensusTest
     {
         /* ------------------------------------------------------------------ */
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0));
+        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0));
+        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0));
 
         Consensus c = new Consensus(l);
         c.addOffset();
@@ -401,11 +401,11 @@ public class ConsensusTest
         /* ------------------------------------------------------------------ */
         /* WAITED OUTPUT WITHOUT OFFSET GAPS AND END */
         ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
-        l2.add(new SequenceAlignment(new Sequence("tact------"), new Sequence("-actttac-g"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("actttac-g---"), new Sequence("------c-gcaa"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("----c-gcaa"), new Sequence("atcgt-gcaa"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("---atcgt-gcaa----"), new Sequence("ggaatc-t-gcgagtta"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("tact------"), new Sequence("-actttac-g"), 0));
+        l2.add(new SequenceAlignment(new Sequence("actttac-g---"), new Sequence("------c-gcaa"), 0));
+        l2.add(new SequenceAlignment(new Sequence("----c-gcaa"), new Sequence("atcgt-gcaa"), 0));
+        l2.add(new SequenceAlignment(new Sequence("---atcgt-gcaa----"), new Sequence("ggaatc-t-gcgagtta"), 0));
+        l2.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0));
 
         Consensus c2 = new Consensus(l2);
         c2.addOffset();
@@ -420,11 +420,11 @@ public class ConsensusTest
     {
         /* ------------------------------------------------------------------ */
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("tact-----"), new Sequence("-actttacg"), 0));
+        l.add(new SequenceAlignment(new Sequence("actttacg---"), new Sequence("------cgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("----cgcaa"), new Sequence("atcgtgcaa"), 0));
+        l.add(new SequenceAlignment(new Sequence("---atcgtgcaa----"), new Sequence("ggaatc-tgcgagtta"), 0));
+        l.add(new SequenceAlignment(new Sequence("ggaatctg-cgagtta"), new Sequence("---atcggtc------"), 0));
 
         Consensus c = new Consensus(l);
         c.addOffset();
@@ -441,11 +441,11 @@ public class ConsensusTest
         /* ------------------------------------------------------------------ */
         /* WAITED OUTPUT WITHOUT OFFSET GAPS AND END */
         ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
-        l2.add(new SequenceAlignment(new Sequence("tact------"), new Sequence("-actttacg-"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("actttacg----"), new Sequence("------cg-caa"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("----cg-caa"), new Sequence("atcgtg-caa"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("---atcgtg-caa----"), new Sequence("ggaatc-tg-cgagtta"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("ggaatc-tg-cgagtta"), new Sequence("---atc-ggtc------"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("tact------"), new Sequence("-actttacg-"), 0));
+        l2.add(new SequenceAlignment(new Sequence("actttacg----"), new Sequence("------cg-caa"), 0));
+        l2.add(new SequenceAlignment(new Sequence("----cg-caa"), new Sequence("atcgtg-caa"), 0));
+        l2.add(new SequenceAlignment(new Sequence("---atcgtg-caa----"), new Sequence("ggaatc-tg-cgagtta"), 0));
+        l2.add(new SequenceAlignment(new Sequence("ggaatc-tg-cgagtta"), new Sequence("---atc-ggtc------"), 0));
 
         Consensus c2 = new Consensus(l2);
         c2.addOffset();
@@ -464,12 +464,12 @@ public class ConsensusTest
     public void sameHamiltonianPathSimpleTrueTest()
     {
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0));
+        l.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0));
 
         ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
-        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0));
+        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0));
 
         Consensus c = new Consensus(l);
         Consensus c2 = new Consensus(l2);
@@ -481,12 +481,12 @@ public class ConsensusTest
     public void sameHamiltonianPathSimpleFalseTest()
     {
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("gctt"), new Sequence("gcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0));
+        l.add(new SequenceAlignment(new Sequence("gctt"), new Sequence("gcaa"), 0));
 
         ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
-        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0));
+        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0));
 
         Consensus c = new Consensus(l);
         Consensus c2 = new Consensus(l2);
@@ -498,13 +498,13 @@ public class ConsensusTest
     public void sameHamiltonianPathNotSameSizeTest()
     {
         ArrayList<SequenceAlignment> l = new ArrayList<SequenceAlignment>();
-        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
-        l.add(new SequenceAlignment(new Sequence("gctt"), new Sequence("gcaa"), 0, 0));
+        l.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0));
+        l.add(new SequenceAlignment(new Sequence("gctt"), new Sequence("gcaa"), 0));
 
         ArrayList<SequenceAlignment> l2 = new ArrayList<SequenceAlignment>();
-        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
-        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0, 0));
+        l2.add(new SequenceAlignment(new Sequence("tact"), new Sequence("actt"), 0));
+        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0));
+        l2.add(new SequenceAlignment(new Sequence("actt"), new Sequence("gcaa"), 0));
 
         Consensus c = new Consensus(l);
         Consensus c2 = new Consensus(l2);
