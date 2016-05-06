@@ -648,7 +648,7 @@ public class ConsensusAbstractTest
         c.computeAlignment();
         SequenceAbstract s_final = c.build(false);
 
-        SequenceAbstract s = new SequenceAbstract("tacatcacgtcaagtta");
+        SequenceAbstract s = new SequenceAbstract("gacatcacgtcaagtta");
         assertEquals(s, s_final);
     }
 
@@ -676,10 +676,9 @@ public class ConsensusAbstractTest
 
         ConsensusAbstract c = new ConsensusAbstract(result);
         c.computeAlignment();
-        //c.showHamiltonianPath();
         SequenceAbstract s_final = c.build(true);
 
-        SequenceAbstract s = new SequenceAbstract("atccgca");
+        SequenceAbstract s = new SequenceAbstract("atccgc");
         assertEquals(s, s_final);
     }
     /* END TEST build with remove_if_max_gap true */
