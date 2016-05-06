@@ -5,6 +5,8 @@ import be.ac.umons.bioinfo.Debug;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeSet;
+import java.util.SortedSet;
 
 import java.util.Iterator;
 
@@ -223,7 +225,7 @@ public class ConsensusAbstract
     {
         this.updateOffset();
 
-        System.out.println("On propage vers le bas...");
+        //System.out.println("On propage vers le bas...");
         for (int i = 0;i < this.getHamiltonianPath().size() - 1;i++)
         {
             this.checkOffsetSame("Offset avant propagation bas: ", i);
@@ -475,16 +477,23 @@ public class ConsensusAbstract
     {
         int max = Integer.MIN_VALUE;
         char gap = Sequence.base2letter((byte) Sequence.GAP);
-        char c_max = gap;
 
-        Iterator<Character> iterator_o = o.keySet().iterator();
-        while (iterator_o.hasNext())
+        SortedSet<Character> keys = new TreeSet<Character>(o.keySet());
+        char c_max = keys.first().charValue();
+
+        for (Character c : keys)
         {
-            Character c = iterator_o.next();
             if (o.get(c).intValue() > max)
             {
-                // if remove_if_max_gap is false, we don't have to take the gap.
-                if (remove_if_max_gap || (c.charValue() != gap))
+                if (!remove_if_max_gap)
+                {
+                    if (c.charValue() != gap)
+                    {
+                        max = o.get(c).intValue();
+                        c_max = c.charValue();
+                    }
+                }
+                else
                 {
                     max = o.get(c).intValue();
                     c_max = c.charValue();
@@ -492,8 +501,8 @@ public class ConsensusAbstract
             }
         }
 
-        //assert c_max != gap : "There must never been a gap in the final consensus";
-        if (Debug.GAP_IN_CONSENSUS && false)
+        //assert c_max == gap : "There must never been a gap in the final consensus";
+        if (Debug.GAP_IN_CONSENSUS)
         {
             if (c_max == gap && !remove_if_max_gap)
             {
@@ -513,9 +522,9 @@ public class ConsensusAbstract
         {
             System.out.print(str);
             if (this.hamiltonian_path.get(i).t.getOffset() == this.hamiltonian_path.get(i + 1).s.getOffset())
-                System.out.println("OK");
+                System.out.println("Offset: OK");
             else
-                System.out.println("ERROR!!!!!");
+                System.out.println("Offset: ERROR!!!!!");
         }
     }
 
@@ -526,12 +535,12 @@ public class ConsensusAbstract
             for(int i = 0;i < this.hamiltonian_path.size() - 1;i++)
             {
                 if (this.hamiltonian_path.get(i).t.hasSameGapsNumber(this.hamiltonian_path.get(i + 1).s))
-                    System.out.println("OK");
+                    System.out.println("Same gaps number: OK");
                 else
                 {
                     System.out.println(this.hamiltonian_path.get(i).t);
                     System.out.println(this.hamiltonian_path.get(i + 1).s);
-                    System.out.println("ERROR!!!!!");
+                    System.out.println("Same gaps number : ERROR!!!!!");
                 }
             }
         }
@@ -542,12 +551,12 @@ public class ConsensusAbstract
         if (Debug.EQUALITY_SAME_GAPS_NUMBER_DURING_PROPAGATION)
         {
             if (this.hamiltonian_path.get(begin).t.nb_gaps[pos] == this.hamiltonian_path.get(begin + 1).s.nb_gaps[pos])
-                System.out.println("OK");
+                System.out.println("Same gaps number during propagation: OK");
             else
             {
                 System.out.println(this.hamiltonian_path.get(begin).t);
                 System.out.println(this.hamiltonian_path.get(begin + 1).s);
-                System.out.println("ERROR!!!!!");
+                System.out.println("Same gaps number during propagation: ERROR!!!!!");
             }
         }
     }
