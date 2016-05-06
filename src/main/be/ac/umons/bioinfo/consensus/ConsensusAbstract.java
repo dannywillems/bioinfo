@@ -1,15 +1,18 @@
 package be.ac.umons.bioinfo.sequence;
 
 import be.ac.umons.bioinfo.Debug;
+import be.ac.umons.bioinfo.fasta.FastaWriter;
+import be.ac.umons.bioinfo.sequence.*;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.SortedSet;
-
 import java.util.Iterator;
 
+import java.io.IOException;
+import java.io.File;
 
 public class ConsensusAbstract
 {
@@ -144,7 +147,8 @@ public class ConsensusAbstract
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
             //System.out.println("On doit propager à l'indice " + indice + " dans " + sa.t.toString());
-            pos = sa.t.addGapsAfterIndiceAndReturnPosition(nb, indice);
+            //pos = sa.t.addGapsAfterIndiceAndReturnPosition(nb, indice);
+            pos = sa.t.addGapsAfterIndiceEndAndReturnPosition(nb, indice);
             //System.out.println("On doit propager à la position " + pos + " dans " + sa.s.toString());
             indice = sa.s.addGapsAndReturnIndice(nb, pos);
         }
@@ -184,7 +188,7 @@ public class ConsensusAbstract
         for (int i = begin + 1;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
-            pos = sa.s.addGapsAfterIndiceAndReturnPosition(nb, indice);
+            pos = sa.s.addGapsAfterIndiceEndAndReturnPosition(nb, indice);
             indice = sa.t.addGapsAndReturnIndice(nb, pos);
         }
     }
@@ -223,50 +227,61 @@ public class ConsensusAbstract
      */
     public void computeAlignment()
     {
-        this.updateOffset();
-
-        //System.out.println("On propage vers le bas...");
-        for (int i = 0;i < this.getHamiltonianPath().size() - 1;i++)
+        try
         {
-            this.checkOffsetSame("Offset avant propagation bas: ", i);
-            this.propageGapsDownFrom(i);
-            this.checkOffsetSame("Offset après propagation bas: ", i);
-        }
+            this.updateOffset();
 
-        //System.out.println("Résultat après propagation vers le bas:");
-        //this.showHamiltonianPath();
-        //System.out.println("########################################");
-
-        //System.out.println("On propage vers le haut...");
-        for (int i = this.getHamiltonianPath().size() - 1;i >= 1;i--)
-        {
-            this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
-            this.propageGapsUpFrom(i);
-            this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
-        }
-        //System.out.println("Résultat après propagation vers le haut:");
-        //this.showHamiltonianPath();
-        //System.out.println("########################################");
-        /* To propage up and down at the same time. NOT WORKING. FIXME -->
-         * ArrayOutOfBounds.
-        for (int i = 0;i < this.getHamiltonianPath().size();i++)
-        {
-            if (i == 0)
-                this.propageGapsDownFrom(i);
-            else if (i == this.getHamiltonianPath().size())
-                this.propageGapsUpFrom(i);
-            else
+            //System.out.println("On propage vers le bas...");
+            for (int i = 0;i < this.getHamiltonianPath().size() - 1;i++)
             {
+                this.checkOffsetSame("Offset avant propagation bas: ", i);
                 this.propageGapsDownFrom(i);
-                this.propageGapsUpFrom(i);
+                this.checkOffsetSame("Offset après propagation bas: ", i);
             }
+            FastaWriter.writeAlignment(this.getHamiltonianPath(), new File("../../hp_after_down_" + Debug.count_writer + ".fasta"), 80);
+
+            //System.out.println("Résultat après propagation vers le bas:");
+            //this.showHamiltonianPath();
+            //System.out.println("########################################");
+
+            //System.out.println("On propage vers le haut...");
+            for (int i = this.getHamiltonianPath().size() - 1;i >= 1;i--)
+            {
+                this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
+                this.propageGapsUpFrom(i);
+                this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
+            }
+            FastaWriter.writeAlignment(this.getHamiltonianPath(), new File("../../hp_after_up_" + Debug.count_writer + ".fasta"), 80);
+            Debug.count_writer++;
+
+            //System.out.println("Résultat après propagation vers le haut:");
+            //this.showHamiltonianPath();
+            //System.out.println("########################################");
+            /* To propage up and down at the same time. NOT WORKING. FIXME -->
+             * ArrayOutOfBounds.
+            for (int i = 0;i < this.getHamiltonianPath().size();i++)
+            {
+                if (i == 0)
+                    this.propageGapsDownFrom(i);
+                else if (i == this.getHamiltonianPath().size())
+                    this.propageGapsUpFrom(i);
+                else
+                {
+                    this.propageGapsDownFrom(i);
+                    this.propageGapsUpFrom(i);
+                }
+            }
+            */
+
+            this.addEndGaps();
+            this.updateAlignment();
+
+            this.checkEqualitySameGapsNumber();
         }
-        */
-
-        this.updateAlignment();
-        this.addEndGaps();
-
-        this.checkEqualitySameGapsNumber();
+        catch (IOException e)
+        {
+            System.out.println(e);
+        }
     }
 
     /**
@@ -501,7 +516,7 @@ public class ConsensusAbstract
             }
         }
 
-        //assert c_max == gap : "There must never been a gap in the final consensus";
+        //assert c_max != gap : "There must never been a gap in the final consensus";
         if (Debug.GAP_IN_CONSENSUS)
         {
             if (c_max == gap && !remove_if_max_gap)
