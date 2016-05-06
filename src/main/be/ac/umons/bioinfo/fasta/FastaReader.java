@@ -1,4 +1,4 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.fasta;
 
 /**
  * Created by aline on 31/03/16.
@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import be.ac.umons.bioinfo.sequence.Sequence;
 
 /**
  * This class allows reading of a FASTA file.

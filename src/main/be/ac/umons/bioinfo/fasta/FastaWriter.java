@@ -1,4 +1,4 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.fasta;
 
 /**
  * Created by aline on 31/03/16.
@@ -10,6 +10,11 @@ import java.io.IOException;
 
 import java.util.Map;
 import java.util.ArrayList;
+
+import be.ac.umons.bioinfo.sequence.SequenceAbstract;
+import be.ac.umons.bioinfo.sequence.SequenceAlignment;
+import be.ac.umons.bioinfo.sequence.SequenceAlignmentAbstract;
+import be.ac.umons.bioinfo.sequence.Sequence;
 
 public class FastaWriter
 {
