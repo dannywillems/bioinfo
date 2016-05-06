@@ -4,6 +4,8 @@ package be.ac.umons.bioinfo.sequence;
  * Created by aline on 31/03/16.
  */
 
+import be.ac.umons.bioinfo.Pair;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +30,7 @@ public class Sequence
         this.content = letter2Base(seq);
     }
 
-    private Sequence(byte[] seq)
+    protected Sequence(byte[] seq)
     {
         this.content = seq;
     }
@@ -98,6 +100,11 @@ public class Sequence
     public char getLetter(int i)
     {
         return (base2letter(this.content[i]));
+    }
+
+    public Pair<Byte> getPairBase(Sequence that, int i)
+    {
+        return new Pair<>(this.content[i], that.content[i]);
     }
 
     public byte getBaseAsByte(int i)

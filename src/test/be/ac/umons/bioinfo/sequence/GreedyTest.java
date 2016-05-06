@@ -16,11 +16,11 @@ import java.util.*;
 public class GreedyTest {
 
     @Test
-    @Ignore
+    //@Ignore
     public void greedyCollection1Test() {
 
         Greedy greed = new Greedy();
-        String path2 = "src/test/be/ac/umons/bioinfo/sequence/Collections/test1/collection1.fasta";
+        String path2 = "src/test/be/ac/umons/bioinfo/sequence/Collections/test4/collection4.fasta";
         File file = new File(path2);
 
         FastaReader fasta = new FastaReader();
@@ -30,7 +30,7 @@ public class GreedyTest {
             List<Sequence> list = fasta.readFromFile(file);
             List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
             Iterator<SequenceAlignment> iterator = result.iterator();
-
+            /*
             while (iterator.hasNext()) {
                 SequenceAlignment alignment = iterator.next();
                 System.out.println(alignment.s1);
@@ -38,8 +38,12 @@ public class GreedyTest {
 
                 System.out.println("****************");
             }
+            */
 
-
+            ConsensusAline consensus = new ConsensusAline(result);
+            Sequence seq = consensus.buildSequence();
+            FastaWriter.write("helloworld", seq,new File("./output4.fasta"),80);
+            System.out.println(seq);
         } catch (IOException e) {
             System.out.println("ça ne fonctionne pas ");
             System.out.println(e);

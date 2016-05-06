@@ -15,14 +15,51 @@ public class Main
     public static void main(String[] args) throws IOException
     {
         //test();
-        cible(1, false, false, true);
+        //cible(1, false, false, true);
         //cible(2, false, false, true);
         //cible(3, false, false, true); // A exécuter en dernier, car long
+
+        //test2();
+
+
     }
 
+
+    public static void test2()
+    {
+        Sequence s1 = new Sequence("act-gtg-");
+        Sequence s2 = new Sequence("--ta-tac");
+        Sequence _s2 = new Sequence("t--at-ac---");
+        Sequence s3 = new Sequence("-ac-tc-cgta");
+
+        SequenceAlignment sA1 = new SequenceAlignment(s1, s2, 42, 2);
+        SequenceAlignment sA2 = new SequenceAlignment(_s2,s3, 42, 2);
+
+        List<SequenceAlignment>list = new ArrayList<>();
+        list.add(sA1);
+        list.add(sA2);
+
+        ConsensusAline consensus = new ConsensusAline(list);
+        Sequence result = consensus.buildSequence();
+
+        System.out.println(result);
+
+    }
     public static void test()
     {
         Greedy greed = new Greedy();
+
+
+        Sequence s = new Sequence("attagaccatgcggc");
+        Sequence t = new Sequence("atcggcattcagt");
+        Sequence u = new Sequence("cgtaccgtttacgttt");
+        Sequence v = new Sequence("gtacctt");
+
+        List<Sequence> list = new ArrayList<Sequence>();
+        list.add(s);
+        list.add(t);
+        list.add(u);
+        list.add(v);
 
         /*
         Sequence f = new Sequence("catagtc");
@@ -33,8 +70,8 @@ public class Main
 
         list.add(f);
         list.add(g);
-        list.add(h);
-        */
+        list.add(h);*/
+
 
         /*
         Sequence f = new Sequence("cacgt");
@@ -43,8 +80,18 @@ public class Main
         Sequence i = new Sequence("gtact");
         Sequence j = new Sequence("actga");
         Sequence k = new Sequence("ctga");
+
+        List<Sequence> list = new ArrayList<Sequence>();
+
+        list.add(f);
+        list.add(g);
+        list.add(h);
+        list.add(i);
+        list.add(j);
+        list.add(k);
         */
 
+        /*
         Sequence f = new Sequence("actttacg");
         Sequence g = new Sequence("ttgcacgat");
         Sequence h = new Sequence("ttgcg");
@@ -59,7 +106,7 @@ public class Main
         list.add(k);
         list.add(h);
         list.add(g);
-        list.add(i);
+        list.add(i);*/
 
         /*
         Sequence f = new Sequence("catagtc");
@@ -75,6 +122,23 @@ public class Main
         */
 
         List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
+        System.out.println(result.size());
+        for(SequenceAlignment seq : result)
+        {
+            System.out.println(seq.s1);
+            System.out.println(seq.s2);
+            System.out.println("score "+ seq.score);
+
+
+            System.out.println("****************");
+        }
+
+        ConsensusAline consensus = new ConsensusAline(result);
+        Sequence cible = consensus.buildSequence();
+        System.out.println("tadaaaam");
+        System.out.println(cible);
+
+
 
         /*
         System.out.println("Je veux aligner :");
@@ -84,9 +148,9 @@ public class Main
         System.out.println("------->");
         */
 
-        Consensus c = new Consensus(result);
+        //Consensus c = new Consensus(result);
         //c.showWithOffset();
-        c.showWithEndGapAndOffset();
+        //c.showWithEndGapAndOffset();
 
         /*
         c.computeAlignment();
