@@ -1,4 +1,8 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.consensus;
+
+import be.ac.umons.bioinfo.fasta.*;
+import be.ac.umons.bioinfo.greedy.*;
+import be.ac.umons.bioinfo.sequence.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;

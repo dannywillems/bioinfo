@@ -8,18 +8,22 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.ac.umons.bioinfo.consensus.*;
+import be.ac.umons.bioinfo.greedy.*;
 import be.ac.umons.bioinfo.sequence.*;
+import be.ac.umons.bioinfo.fasta.FastaReader;
+import be.ac.umons.bioinfo.fasta.FastaWriter;
 
 public class Main
 {
     public static void main(String[] args) throws IOException
     {
         //test();
-        //cible(1, true, false, false, true);
-        //cible(2, true, true, false, true);
-        //cible(4, false, false, true, false);
+        cible(1, true, false, false, true);
+        cible(2, true, false, false, true);
+        //cible(4, true, false, false, true);
         //cible(5, true, false, false, true);
-        compute(jar(args));
+        //compute(jar(args));
     }
 
     public static void test()
@@ -141,14 +145,14 @@ public class Main
 
             System.out.print("Construction du consensus... ");
             SequenceAbstract consensus_final = c.build(false);
-            Sequence n_s = new Sequence(consensus_final.toString());
-            n_s = n_s.complement();
+            //Sequence n_s = new Sequence(consensus_final.toString());
+            //n_s = n_s.complement();
             System.out.println("Done");
 
             if (show_consensus)
             {
                 System.out.println("Le consensus final:\n");
-                System.out.println(n_s);
+                System.out.println(consensus_final);
                 System.out.println("#########################################\n");
             }
 
@@ -157,7 +161,7 @@ public class Main
                 String file_name = "Cible_calcul" + num + ".fasta";
                 String directory = "../../res/results/cible" + num + "/";
                 System.out.print("Ecriture du consensus dans le fichier " + file_name + "... ");
-                FastaWriter.write("Cible" + num, n_s, new File(directory + file_name), 80);
+                FastaWriter.write("Cible" + num, consensus_final, new File(directory + file_name), 80);
                 System.out.println("Done");
             }
         }

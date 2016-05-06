@@ -292,6 +292,49 @@ public class SequenceAbstract //implements Iterable<Character>
         return (real_pos + 1);
     }
 
+    /**
+     * Add [nb] gaps after the nucleotide at the position [pos] in the initial
+     * sequence and returns the absolute position where gaps were inserted.
+     * If [pos] is negative, it inserts in the offset. To add gaps at the end,
+     * use [pos] greater than or equal to nb_gaps.length - 1.
+     * Examples:
+     *  - addGapsAfterIndice(1, 1) on the sequence
+     *      attgc ==> at-tgc and returns 2
+     *  - addGapsAfterIndice(1, 2) on the sequence
+     *      at--tgc ==> at--t-gc and returns 5
+     *  - addGapsAfterIndice(3, 5) on the sequence
+     *      at--tgc ==> at--tgc--- and returns 7
+     *  - addGapsAfterIndice(3, 0) on the sequence
+     *      at--tgc ==> a---t--tgc and returns 1
+     *  - addGapsAfterIndice(3, -5) on the sequence
+     *      at--tgc ==> ---at--tgc and returns 0
+     * @param nb number of gaps to add
+     * @param indice which the gaps must be added after.
+     * @return absolute position (eg including offset) where the gaps has been
+     * added.
+     */
+    public int addGapsAfterIndiceEndAndReturnPosition(int nb, int indice)
+    {
+        int real_pos = this.getOffset();
+        int i = 0;
+        if (indice < 0)
+        {
+            this.offset += nb;
+            return (this.offset - nb);
+        }
+        while (i < indice && i < nb_gaps.length)
+            real_pos += nb_gaps[i++] + 1;
+        if (i == nb_gaps.length)
+        {
+            //this.nb_gaps[nb_gaps.length - 1] += nb;
+            return (real_pos + nb);
+        }
+        else if (i == indice)
+            nb_gaps[i] += nb;
+        return (real_pos + 1 + nb_gaps[i] - nb);
+    }
+
+
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */

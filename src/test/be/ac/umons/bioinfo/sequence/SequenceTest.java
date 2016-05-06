@@ -3,6 +3,9 @@ package be.ac.umons.bioinfo.sequence;
 /**
  * Created by aline on 31/03/16.
  */
+
+import be.ac.umons.bioinfo.greedy.*;
+
 import org.junit.Test;
 
 import java.util.*;

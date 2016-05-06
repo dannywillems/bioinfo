@@ -1,5 +1,7 @@
 package be.ac.umons.bioinfo.sequence;
 
+import be.ac.umons.bioinfo.greedy.*;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;

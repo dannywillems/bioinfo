@@ -1,4 +1,4 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.greedy;
 
 import org.junit.Test;
 
@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import be.ac.umons.bioinfo.sequence.*;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,5 +1,7 @@
 package be.ac.umons.bioinfo.sequence;
 
+import be.ac.umons.bioinfo.greedy.*;
+
 import java.util.*;
 
 import org.junit.Test;

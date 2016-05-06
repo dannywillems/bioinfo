@@ -1,5 +1,7 @@
 package be.ac.umons.bioinfo.sequence;
 
+import be.ac.umons.bioinfo.greedy.*;
+
 /**
  * Created by aline on 31/03/16.
  */

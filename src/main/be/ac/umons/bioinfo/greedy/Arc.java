@@ -1,7 +1,8 @@
-package be.ac.umons.bioinfo.sequence;
-
+package be.ac.umons.bioinfo.greedy;
 
 import java.util.List;
+
+import be.ac.umons.bioinfo.sequence.*;
 
 public class Arc
 {
