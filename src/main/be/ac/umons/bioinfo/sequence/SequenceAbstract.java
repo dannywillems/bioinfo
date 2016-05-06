@@ -263,7 +263,7 @@ public class SequenceAbstract //implements Iterable<Character>
      */
     public int addGapsAfterIndiceAndReturnPosition(int nb, int indice)
     {
-        int real_pos = 0;
+        int real_pos = this.getOffset();
         int i = 0;
         if (indice < 0)
         {
