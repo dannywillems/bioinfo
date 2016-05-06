@@ -15,7 +15,7 @@ public class Main
     public static void main(String[] args) throws IOException
     {
         //test();
-        cible(1, false, false, false, false);
+        cible(1, true, true, false, true);
         //cible(2, false, false, false, false);
         //cible(3, false, false, true, false);
     }

@@ -135,13 +135,16 @@ public class ConsensusAbstract
      * path at the position [pos].
      * Complexity: ???
      */
-    public void propageGapsUpPosFrom(int begin, int pos, int nb)
+    public void propageGapsUpPosFrom(int begin, int indice, int nb)
     {
+        int pos = 0;
         for (int i = begin - 1;i >= 0;i--)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
-            sa.s.addGaps(nb, pos);
-            sa.t.addGaps(nb, pos);
+            //System.out.println("On doit propager à l'indice " + indice + " dans " + sa.t.toString());
+            pos = sa.t.addGapsAfterIndiceAndReturnPosition(nb, indice);
+            //System.out.println("On doit propager à la position " + pos + " dans " + sa.s.toString());
+            indice = sa.s.addGapsAndReturnIndice(nb, pos);
         }
     }
 
@@ -151,27 +154,19 @@ public class ConsensusAbstract
      */
     public void propageGapsUpFrom(int begin)
     {
-        SequenceAlignmentAbstract sa_down = this.getHamiltonianPath().get(begin);
         SequenceAlignmentAbstract sa_up = this.getHamiltonianPath().get(begin - 1);
+        SequenceAlignmentAbstract sa_down = this.getHamiltonianPath().get(begin);
 
         SequenceAbstract s = sa_up.t;
         SequenceAbstract t = sa_down.s;
 
-        int real_pos = t.getOffset();
         for (int i = 0;i < t.nb_gaps.length - 1;i++)
         {
             if (t.nb_gaps[i] > s.nb_gaps[i])
             {
-                this.propageGapsUpPosFrom(begin, real_pos + 1, t.nb_gaps[i] - s.nb_gaps[i]);
+                this.propageGapsUpPosFrom(begin, i, t.nb_gaps[i] - s.nb_gaps[i]);
                 this.checkEqualitySameGapsNumberDuringPropagation(begin - 1, i);
-                /*
-                if (s.nb_gaps[i] == t.nb_gaps[i])
-                    System.out.println("OK!!!! Même nombre de gaps maintenant");
-                else
-                    System.out.println("ERROR!!!! Les gaps ne se sont pas bien propagés!");
-                */
             }
-            real_pos += s.nb_gaps[i] + 1;
         }
         this.checkPropageGapDownFrom(begin - 1);
     }
@@ -181,13 +176,14 @@ public class ConsensusAbstract
      * path at the position [pos].
      * Complexity: ???
      */
-    public void propageGapsDownPosFrom(int begin, int pos, int nb)
+    public void propageGapsDownPosFrom(int begin, int indice, int nb)
     {
+        int pos = 0;
         for (int i = begin + 1;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
-            sa.s.addGaps(nb, pos);
-            sa.t.addGaps(nb, pos);
+            pos = sa.s.addGapsAfterIndiceAndReturnPosition(nb, indice);
+            indice = sa.t.addGapsAndReturnIndice(nb, pos);
         }
     }
 
@@ -203,21 +199,13 @@ public class ConsensusAbstract
         SequenceAbstract s = sa_up.t;
         SequenceAbstract t = sa_down.s;
 
-        int real_pos = t.getOffset();
         for (int i = 0;i < s.nb_gaps.length - 1;i++)
         {
             if (s.nb_gaps[i] > t.nb_gaps[i])
             {
-                this.propageGapsDownPosFrom(begin, real_pos + 1, s.nb_gaps[i] - t.nb_gaps[i]);
+                this.propageGapsDownPosFrom(begin, i, s.nb_gaps[i] - t.nb_gaps[i]);
                 this.checkEqualitySameGapsNumberDuringPropagation(begin, i);
-                /*
-                if (s.nb_gaps[i] == t.nb_gaps[i])
-                    System.out.println("OK!!!! Même nombre de gaps maintenant");
-                else
-                    System.out.println("ERROR!!!! Les gaps ne se sont pas bien propagés!");
-                */
             }
-            real_pos += t.nb_gaps[i] + 1;
         }
         this.checkPropageGapDownFrom(begin);
     }
@@ -235,19 +223,28 @@ public class ConsensusAbstract
     {
         this.updateOffset();
 
+        System.out.println("On propage vers le bas...");
         for (int i = 0;i < this.getHamiltonianPath().size() - 1;i++)
         {
             this.checkOffsetSame("Offset avant propagation bas: ", i);
             this.propageGapsDownFrom(i);
             this.checkOffsetSame("Offset après propagation bas: ", i);
         }
+
+        //System.out.println("Résultat après propagation vers le bas:");
+        //this.showHamiltonianPath();
+        //System.out.println("########################################");
+
+        //System.out.println("On propage vers le haut...");
         for (int i = this.getHamiltonianPath().size() - 1;i >= 1;i--)
         {
             this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
             this.propageGapsUpFrom(i);
             this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
         }
-
+        //System.out.println("Résultat après propagation vers le haut:");
+        //this.showHamiltonianPath();
+        //System.out.println("########################################");
         /* To propage up and down at the same time. NOT WORKING. FIXME -->
          * ArrayOutOfBounds.
         for (int i = 0;i < this.getHamiltonianPath().size();i++)
@@ -559,10 +556,13 @@ public class ConsensusAbstract
     {
         if (Debug.PROPAGATION_GAP_DOWN_FROM)
         {
-            for(int i = 0;i < this.getHamiltonianPath().get(begin).s.nb_gaps.length;i++)
+            for(int i = 0;i < this.getHamiltonianPath().get(begin).t.nb_gaps.length - 1;i++)
             {
                 if (this.getHamiltonianPath().get(begin).t.nb_gaps[i] > this.getHamiltonianPath().get(begin + 1).s.nb_gaps[i])
-                    this.checkEqualitySameGapsNumberDuringPropagation(begin, i);
+                {
+                    System.out.println("ERROR!!!! Must not have more gaps in the sequence up");
+                    System.out.println("Found at: " + begin);
+                }
             }
         }
     }

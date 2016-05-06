@@ -676,6 +676,7 @@ public class ConsensusAbstractTest
 
         ConsensusAbstract c = new ConsensusAbstract(result);
         c.computeAlignment();
+        //c.showHamiltonianPath();
         SequenceAbstract s_final = c.build(true);
 
         SequenceAbstract s = new SequenceAbstract("atccgca");
