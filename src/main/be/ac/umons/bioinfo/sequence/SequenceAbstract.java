@@ -90,6 +90,16 @@ public class SequenceAbstract //implements Iterable<Character>
 
     /* ---------------------------------------------------------------------- */
     /**
+     * TODO
+     */
+    public SequenceAbstract complement()
+    {
+        return (this);
+    }
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /**
      * Add [nb] gaps before the element at position [pos]. If position is
      * greater than the number of element in the sequence, gaps are added at the
      * end, ie in the nb_gaps[sequence_size - 1].
@@ -324,6 +334,14 @@ public class SequenceAbstract //implements Iterable<Character>
             size += 1 + this.nb_gaps[i];
         return (size);
     }
+
+    public int getSizeWithoutEndGaps()
+    {
+        int size = this.getOffset();
+        for(int i = 0;i < this.nb_gaps.length - 1;i++)
+            size += 1 + this.nb_gaps[i];
+        return (size);
+    }
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
@@ -365,7 +383,7 @@ public class SequenceAbstract //implements Iterable<Character>
     {
         int i = 0;
         boolean equal = this.nb_gaps.length == other.nb_gaps.length;
-        while (equal && i < this.nb_gaps.length)
+        while (equal && i < this.nb_gaps.length - 1)
             equal &= this.nb_gaps[i] == other.nb_gaps[i++];
         return (equal);
     }
@@ -400,8 +418,4 @@ public class SequenceAbstract //implements Iterable<Character>
     }
     */
     /* ---------------------------------------------------------------------- */
-
-
-    /* ---------------------------------------------------------------------- */
-
 }
