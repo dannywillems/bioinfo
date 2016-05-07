@@ -36,7 +36,7 @@ public class SequenceAbstract //implements Iterable<Character>
         while (i < aligned.getSize())
         {
             j = 0;
-            while (i + j + 1 < aligned.getSize() && aligned.getBaseAsByte(i + j + 1) == (byte) Sequence.GAP)
+            while (i + j + 1 < aligned.getSize() && aligned.getBaseAsByte(i + j + 1) == (byte) Nucleotide.GAP)
                 j++;
             nb_gaps[count] = j;
             count++;
@@ -53,7 +53,7 @@ public class SequenceAbstract //implements Iterable<Character>
     public SequenceAbstract(Sequence s)
     {
         this.offset = 0;
-        while (s.getBaseAsByte(this.offset) == (byte) Sequence.GAP)
+        while (s.getBaseAsByte(this.offset) == (byte) Nucleotide.GAP)
             this.offset++;
 
         StringBuilder str = new StringBuilder();
@@ -64,7 +64,7 @@ public class SequenceAbstract //implements Iterable<Character>
         {
             str.append(s.getLetter(i));
             j = 0;
-            while (i + j + 1 < s.getSize() && s.getBaseAsByte(i + j + 1) == (byte) Sequence.GAP)
+            while (i + j + 1 < s.getSize() && s.getBaseAsByte(i + j + 1) == (byte) Nucleotide.GAP)
                 j++;
             gaps.add(j);
             i = i + j + 1;

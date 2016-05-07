@@ -173,7 +173,7 @@ public class Consensus
             for(int j = 0;j < size;j++)
                 s.append(sa.s1.getLetter(j));
             for(int j = 0;j < max - size;j++)
-                s.append(Sequence.base2letter((byte) Sequence.GAP));
+                s.append(Nucleotide.base2letter((byte) Nucleotide.GAP));
             sa.s1.setContent(s.toString());
 
             size = sa.s2.getSize();
@@ -181,7 +181,7 @@ public class Consensus
             for(int j = 0;j < size;j++)
                 s.append(sa.s2.getLetter(j));
             for(int j = 0;j < max - size;j++)
-                s.append(Sequence.base2letter((byte) Sequence.GAP));
+                s.append(Nucleotide.base2letter((byte) Nucleotide.GAP));
             sa.s2.setContent(s.toString());
         }
     }
@@ -197,14 +197,14 @@ public class Consensus
             StringBuilder s = new StringBuilder();
 
             for(int j = 0;j < offset[0][i] - pos_s1;j++)
-                s.append(Sequence.base2letter((byte) Sequence.GAP));
+                s.append(Nucleotide.base2letter((byte) Nucleotide.GAP));
             for(int j = 0;j < sa.s1.getSize();j++)
                 s.append(sa.s1.getLetter(j));
             sa.s1.content = Sequence.letter2Base(s.toString());
 
             s = new StringBuilder();
             for(int j = 0;j < offset[1][i] - pos_s2;j++)
-                s.append(Sequence.base2letter((byte) Sequence.GAP));
+                s.append(Nucleotide.base2letter((byte) Nucleotide.GAP));
             for(int j = 0;j < sa.s2.getSize();j++)
                 s.append(sa.s2.getLetter(j));
             sa.s2.content = Sequence.letter2Base(s.toString());
@@ -264,7 +264,7 @@ public class Consensus
             // we don't add it
             if (remove_if_max_gap)
             {
-                if (base != Sequence.base2letter((byte) Sequence.GAP))
+                if (base != Nucleotide.base2letter((byte) Nucleotide.GAP))
                     consensus.append(base);
             }
             // else, we know the max is not a gap because getBase manage this
@@ -284,7 +284,7 @@ public class Consensus
     public char getBase(HashMap<Character, Integer> o, boolean remove_if_max_gap)
     {
         int max = Integer.MIN_VALUE;
-        char gap = Sequence.base2letter((byte) Sequence.GAP);
+        char gap = Nucleotide.base2letter((byte) Nucleotide.GAP);
         char c_max = gap;
 
         Iterator<Character> iterator_o = o.keySet().iterator();

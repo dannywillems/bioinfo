@@ -475,12 +475,12 @@ public class ConsensusAbstract
             // we don't add it
             if (remove_if_max_gap)
             {
-                if (base != Sequence.base2letter((byte) Sequence.GAP))
+                if (base != Nucleotide.base2letter((byte) Nucleotide.GAP))
                     consensus.append(base);
             }
             // else, we know the max is not a gap because getBase manage this
             // case. So we can add without regarding the type.
-            else if (base != Sequence.base2letter((byte) Sequence.GAP))
+            else if (base != Nucleotide.base2letter((byte) Nucleotide.GAP))
                 consensus.append(base);
         }
         return (new SequenceAbstract(consensus.toString()));
@@ -495,7 +495,7 @@ public class ConsensusAbstract
     public char getBase(HashMap<Character, Integer> o, boolean remove_if_max_gap)
     {
         int max = Integer.MIN_VALUE;
-        char gap = Sequence.base2letter((byte) Sequence.GAP);
+        char gap = Nucleotide.base2letter((byte) Nucleotide.GAP);
 
         SortedSet<Character> keys = new TreeSet<Character>(o.keySet());
         char c_max = keys.first().charValue();
