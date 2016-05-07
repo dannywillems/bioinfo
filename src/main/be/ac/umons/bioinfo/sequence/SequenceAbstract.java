@@ -94,7 +94,8 @@ public class SequenceAbstract //implements Iterable<Character>
      */
     public SequenceAbstract complement()
     {
-        return (this);
+        Sequence s = new Sequence(this.toString());
+        return (new SequenceAbstract(s.complement()));
     }
     /* ---------------------------------------------------------------------- */
 
