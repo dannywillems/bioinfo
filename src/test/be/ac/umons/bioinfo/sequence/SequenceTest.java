@@ -314,10 +314,10 @@ public class SequenceTest
     {
         Sequence s = new Sequence("cgatctg");
 
-        s.addByteAtPos((byte) Sequence.C, 2);
+        s.addByteAtPos((byte) Nucleotide.C, 2);
         assertEquals("cgcatctg", s.toString());
 
-        s.addByteAtPos((byte) Sequence.C, 2);
+        s.addByteAtPos((byte) Nucleotide.C, 2);
         assertEquals("cgccatctg", s.toString());
     }
 
@@ -326,7 +326,7 @@ public class SequenceTest
     {
         Sequence s = new Sequence("cgatctg");
 
-        s.addByteAtPos((byte) Sequence.GAP, 2);
+        s.addByteAtPos((byte) Nucleotide.GAP, 2);
         assertEquals("cg-atctg", s.toString());
     }
 
