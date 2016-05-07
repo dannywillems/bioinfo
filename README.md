@@ -52,7 +52,7 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 ## To-do
 
 #### Fichiers fasta
-- [ ] Tests unitaires sur lecture/écriture de fichier fasta.
+- [x] Tests unitaires sur lecture/écriture de fichier fasta. **Pas utile**
 - [x] Lectures et écritures de fichier fasta.
 
 #### Alignement
@@ -61,17 +61,17 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 
 #### Algorithme greedy
 - [x] Implémenter l'algorithme.
-- [ ] Multi threader l'algorithme.
+- [x] Multi threader l'algorithme.
 - [ ] Fonctionne quand on a une séquence qui est dans l'autre ?
 - [x] Unit test pour l'algorithme greedy.
 
 #### MISC
-- [ ] Suppression des tests *inutiles*.
+- [x] Suppression des tests *inutiles*.
 - [ ] Suppression des commentaires *inutiles*.
 - [ ] Suppression des fonctions *inutiles*.
-  - [x] Récupérer positions gaps finaux et du début.
 - [ ] Fix les FIXME/IMPROVEME.
-- [ ] Renvoyer le complétaire inversé.
+- [x] Renvoyer le complétaire inversé.
+- [ ] Nom de la séquence dans le fichier fasta output.
 
 ## Plus d'informations
 
