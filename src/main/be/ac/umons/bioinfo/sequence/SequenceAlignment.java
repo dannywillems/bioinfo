@@ -69,6 +69,6 @@ public class SequenceAlignment
      */
     public boolean inside()
     {
-        return this.s1.isGapBounded() || this.s2.isGapBounded();
+        return this.s1.isGapBounded() || this.s2.isGapBounded()|| (this.s1.noExternalGap() && this.s2.noExternalGap());
     }
 }

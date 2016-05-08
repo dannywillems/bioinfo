@@ -72,14 +72,15 @@ public class Arc
         else b = end;
 
         List<SequenceAlignment> candidates = Sequence.semiGlobalAlignment(a, b, match, mismatch, gap);
-
+        /*
         if(startBefore) return candidates.get(0);
         else return new SequenceAlignment(  candidates.get(1).s2,
                                             candidates.get(1).s1,
                                             candidates.get(1).initial_s2,
                                             candidates.get(1).initial_s1,
                                             candidates.get(1).score,
-                                            candidates.get(1).longestCommonSubstringLength);
+                                            candidates.get(1).longestCommonSubstringLength);*/
+        return candidates.get(0);
     }
 
     public String toString()

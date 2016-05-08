@@ -13,11 +13,11 @@ import java.util.List; /** Represents a DNA sequence
  */
 public class Sequence
 {
-    public static final int GAP = 4;
-    public static final int C = 0;
-    public static final int G = 1;
-    public static final int T = 2;
-    public static final int A = 3;
+    public static final byte GAP = 4;
+    public static final byte C = 0;
+    public static final byte G = 1;
+    public static final byte T = 2;
+    public static final byte A = 3;
     public byte[] content;
 
 
@@ -650,6 +650,12 @@ public class Sequence
     {
         return this.content[0] == GAP && this.content[this.content.length-1] == GAP;
     }
+
+    /**
+     *
+     * @return true if there is no gap at the two extremities of the sequence; false otherwise
+     */
+    public boolean noExternalGap(){return this.content[0] != GAP && this.content[this.content.length-1] != GAP;}
 
     public Sequence rebuildAddingGaps(int[] gaps)
     {

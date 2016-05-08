@@ -34,7 +34,7 @@ public class Counter {
     public void setMoveRight(int addMoveRight){this.moveRight += addMoveRight;}
     public int getMoveRight(){return this.moveRight;}
 
-    public void refresh(int nucleotide){
+    public void vote(int nucleotide){
         switch(nucleotide)
         {
             case GAP: this.nbrGAP += 1; break;

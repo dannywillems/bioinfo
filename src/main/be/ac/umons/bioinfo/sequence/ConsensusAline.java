@@ -1,7 +1,5 @@
 package be.ac.umons.bioinfo.sequence;
 
-import be.ac.umons.bioinfo.Pair;
-
 import java.util.*;
 
 /**
@@ -10,15 +8,56 @@ import java.util.*;
 public class ConsensusAline {
 
     public List<SequenceAlignment> path;
-    public static final int GAP = 4;
-    public static final int C = 0;
-    public static final int G = 1;
-    public static final int T = 2;
-    public static final int A = 3;
 
     public ConsensusAline(List<SequenceAlignment> path){
         this.path = path;
     }
+
+    public static Sequence consensus(List<SequenceAlignment> path)
+    {
+        return produceConsensusSequence(buildConsensus(path));
+    }
+
+    /**
+     *
+     * @param votes the votes associated to each position of the consensus sequences. Must not be empty.
+     * @return The consensus sequence resulting from the votes.
+     */
+    public static Sequence produceConsensusSequence(Map<Integer, MyCounter> votes)
+    {
+        int min = votes.keySet().stream().mapToInt(Integer::intValue).min().getAsInt();
+        int max = votes.keySet().stream().mapToInt(Integer::intValue).max().getAsInt();
+        
+        byte[] result = new byte[max-min+1];
+
+        for(int pos=min ; pos <= max ; pos++)
+            result[pos-min] = votes.get(pos).max();
+        
+        return new Sequence(result);
+    }
+
+    public static Map<Integer, MyCounter> buildConsensus(List<SequenceAlignment> path)
+    {
+        Map<Integer, MyCounter> votes = new HashMap<Integer, MyCounter>();
+
+        return votes;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public ConsensusResult computeConsensus(){
 
@@ -28,7 +67,7 @@ public class ConsensusAline {
         HashMap<Integer, Counter> count = new HashMap<Integer, Counter>();
         int posMin = Integer.MAX_VALUE; // the minimum position in the map count
         int posMax = Integer.MIN_VALUE; // the maximum position in the map count
-        // these two variables permit to know if a counter already exists for a specific offset
+        // these two variables allows to know if a counter already exists for a specific offset
         int offset = 0;
         List<SequenceAlignment> path = this.path;
 
@@ -38,12 +77,12 @@ public class ConsensusAline {
             Sequence s1 = alignment.s1;
             Sequence s2 = alignment.s2;
 
-            if(s1.content[0] == GAP )
+            if(s1.content[0] == Sequence.GAP )
             {
                 //the offset has to be moved to the left
                 int i = 0;
 
-                while(s1.content[i] == GAP)
+                while(s1.content[i] == Sequence.GAP)
                 {
                     offset -= 1;
                     i += 1;
@@ -63,60 +102,59 @@ public class ConsensusAline {
                     //System.out.println("Pas encore de vote pour cette position");
                     //There is no counter yet for this offset
                     Counter c = new Counter();
-                    c.refresh(s1.content[i]);
+                    c.vote(s1.content[i]);
                     //System.out.println("vote a cette etape");
                     //System.out.println(c);
                     count.put(pos,c);
 
-                    if (pos < posMin)
-                        posMin = pos;
-                    else
-                        posMax = pos;
-
+                    posMin = Math.min(posMin, pos);
+                    posMax = Math.max(posMax, pos);
                 }
 
-                if(s1.content[i] == GAP && count.get(pos).getLast() != GAP)
+                System.out.println(count.get(pos));
+
+                if(s1.content[i] == Sequence.GAP && count.get(pos).getLast() != Sequence.GAP)
                 {
                     //System.out.println("propagation de gap vers le haut");
 
                     // Alors nous sommes dans le cas où nous voulons propager un gap vers le haut
-                    //Tous les compteurs enregistrés à une position supérieure doivent donc etre decalles vers la droite
+                    //Tous les compteurs enregistrés à une position supérieure doivent donc etre decalés vers la droite
 
                     Counter c = new Counter();
-                    c.refresh(s2.content[i]);
-                    // il faut decaller toutes les clefs plus grandes que pos d'une unité
+                    c.vote(s2.content[i]);
+                    // il faut décaler toutes les clefs plus grandes que pos d'une unité
                     count.put(posMax+1,count.get(posMax));
                     for(int j = posMax; j > pos ; j--)
-                    {
-                        count.replace(j,count.get(j-1));
-                    }
+                        count.put(j+1,count.get(j));
+
                     count.put(pos,c);
                     pos +=1;
                     posMax +=1;
                 }
-
-                else {
-                    if (s1.content[i] != GAP && count.get(pos).getLast() == GAP) {
+                else
+                {
+                    if (s1.content[i] != Sequence.GAP && count.get(pos).getLast() ==Sequence.GAP)
+                    {
                         //System.out.println("propagation de gap vers le bas");
 
 
                         //Alors cela signifie qu'il y avait un gap dans la sequence inferieure de l etape precedente
                         // à propager vers le bas.
-                        //Il faut donc une nouvelle fois décaller les compteurs vers la droite
+                        //Il faut donc une nouvelle fois décaler les compteurs vers la droite
                         //Avant cela on va voter puis seulement decaller
                         //Sinon on peut decaller et puis voter pour deux positions plus loin que la position en cours
                         // de traitement
 
-                        count.get(pos).refresh(GAP);// voter pour de vrai pour un GAP ou se contenter de dire que
-                        // à l'étape d'avant on avait considéré un GAP ?
+                        count.get(pos).vote(Sequence.GAP);// voter pour de vrai pour unSequence.GAP ou se contenter de dire que
+                        // à l'étape d'avant on avait considéré un Sequence.GAP ?
                         count.get(pos).setMoveRight(1);
 
                         if(count.containsKey(pos+1))
-                            count.get(pos + 1).refresh(s2.content[i]);
+                            count.get(pos + 1).vote(s2.content[i]);
                         else
                         {
                             Counter c = new Counter();
-                            c.refresh(s2.content[i]);
+                            c.vote(s2.content[i]);
                             count.put(pos +1,c);
                         }
 
@@ -130,7 +168,7 @@ public class ConsensusAline {
                         //mais peut etre qu'on a une propagation induite avant
 
                         int moveRight = count.get(pos).getMoveRight();
-                        count.get(pos + moveRight).refresh(s2.content[i]);
+                        count.get(pos + moveRight).vote(s2.content[i]);
 
                         //System.out.println("actualisiation du vote");
                         //System.out.println(count.get(pos + moveRight));
@@ -139,10 +177,10 @@ public class ConsensusAline {
                 }
 
             }
-            if (s1.content[0] != GAP)
+            if (s1.content[0] !=Sequence.GAP)
             {
                 int i = 0;
-                while(s2.content[i] == GAP)
+                while(s2.content[i] ==Sequence.GAP)
                 {
                     offset += 1;
                     i += 1;
