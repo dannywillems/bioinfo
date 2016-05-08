@@ -1,5 +1,7 @@
 package be.ac.umons.bioinfo.sequence;
 
+import be.ac.umons.bioinfo.greedy.*;
+
 /**
  * Created by aline on 31/03/16.
  */
@@ -11,15 +13,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List; /** Represents a DNA sequence
  */
+
+
 public class Sequence
 {
-    public static final byte GAP = 4;
-    public static final byte C = 0;
-    public static final byte G = 1;
-    public static final byte T = 2;
-    public static final byte A = 3;
     public byte[] content;
-
 
     /**
      * @param seq A DNA sequence to encode
@@ -45,20 +43,6 @@ public class Sequence
         this.content = content;
     }
 
-    public static byte letter2Base(char c)
-    {
-
-        switch(java.lang.Character.toLowerCase(c))
-        {
-            case 'c' : return C;
-            case 'g' : return G;
-            case 't' : return T;
-            case 'a' : return A;
-            case '-' : return GAP;
-            default : return 5;
-        }
-    }
-
     public void setContent(String s)
     {
         this.content = letter2Base(s);
@@ -69,22 +53,9 @@ public class Sequence
         byte[] ret = new byte[text.length()];
 
         for(int i = 0; i<text.length() ; i++)
-            ret[i] = letter2Base(text.charAt(i));
+            ret[i] = Nucleotide.letter2Base(text.charAt(i));
 
         return ret;
-    }
-
-    public static char base2letter(byte c)
-    {
-        switch(c)
-        {
-            case C: return 'c';
-            case G : return 'g';
-            case T : return 't';
-            case A : return 'a';
-            case GAP: return '-';
-            default : return '?';
-        }
     }
 
     public static String base2letter(byte[] bases)
@@ -92,14 +63,14 @@ public class Sequence
         StringBuilder builder = new StringBuilder();
 
         for(byte c : bases)
-            builder.append(base2letter(c));
+            builder.append(Nucleotide.base2letter(c));
 
         return builder.toString();
     }
 
     public char getLetter(int i)
     {
-        return (base2letter(this.content[i]));
+        return (Nucleotide.base2letter(this.content[i]));
     }
 
     public Pair<Byte> getPairBase(Sequence that, int i)
@@ -118,7 +89,7 @@ public class Sequence
         StringBuilder builder = new StringBuilder();
 
         for(byte c : this.content)
-            builder.append(base2letter(c));
+            builder.append(Nucleotide.base2letter(c));
 
         return builder.toString();
     }
@@ -135,7 +106,7 @@ public class Sequence
         {
             if (i == j)
             {
-                s.append(this.base2letter(b));
+                s.append(Nucleotide.base2letter(b));
                 i = -1;
             }
             else
@@ -149,7 +120,7 @@ public class Sequence
 
     public void addGapAtPos(int i)
     {
-        this.addByteAtPos((byte) Sequence.GAP, i);
+        this.addByteAtPos((byte) Nucleotide.GAP, i);
     }
     /**
      * Get the size of the sequence which is the number of bases.
@@ -173,21 +144,9 @@ public class Sequence
         byte[] comp = new byte[this.content.length];
 
         for(int i = 0; i<this.content.length ; i++)
-            comp[i] = complement(this.content[this.content.length - 1 - i]);
+            comp[i] = Nucleotide.complement(this.content[this.content.length - 1 - i]);
 
         return new Sequence(comp);
-    }
-
-    private static final byte complement(byte base)
-    {
-        switch(base)
-        {
-            case C: return G;
-            case G : return C;
-            case T : return A;
-            case A : return T;
-            default : return -1;
-        }
     }
 
     /**
@@ -209,7 +168,7 @@ public class Sequence
 
         for(int i = 0; i<minLength ; i++)
         {
-            if (this.content[i] == GAP || that.content[i] == GAP)
+            if (this.content[i] == Nucleotide.GAP || that.content[i] == Nucleotide.GAP)
                 score += gap;
             else if (this.content[i] == that.content[i])
                 score += match;
@@ -491,8 +450,6 @@ public class Sequence
         int x = jPos;
         int y = iPos;
 
-        int lengthCommonAlignment = 0;
-
         List<Byte> aligned_s = new ArrayList<Byte>();
         List<Byte> aligned_t = new ArrayList<Byte>();
 
@@ -501,7 +458,7 @@ public class Sequence
         {
             for(int i=m ; i>y ; i--)
             {
-                aligned_t.add((byte) GAP);
+                aligned_t.add((byte) Nucleotide.GAP);
                 aligned_s.add(s1.content[i-1]);
             }
         }
@@ -509,7 +466,7 @@ public class Sequence
         {
             for(int j=n ; j>x ; j--)
             {
-                aligned_s.add((byte) GAP);
+                aligned_s.add((byte) Nucleotide.GAP);
                 aligned_t.add(s2.content[j-1]);
             }
         }
@@ -530,34 +487,32 @@ public class Sequence
             {
                 if (b == a[y][x])
                 {
-                    aligned_s.add((byte) GAP);
+                    aligned_s.add((byte) Nucleotide.GAP);
                     aligned_t.add((byte) s2.content[x - 1]);
 
                     x -= 1;
                 } else
                 {
                     aligned_s.add((byte) s1.content[y - 1]);
-                    aligned_t.add((byte) GAP);
+                    aligned_t.add((byte) Nucleotide.GAP);
 
                     y -= 1;
                 }
             }
-
-            lengthCommonAlignment++;
         }
 
         if (x > 0)
         {
             for(int j=x ; j>0 ; j--)
             {
-                aligned_s.add((byte) GAP);
+                aligned_s.add((byte) Nucleotide.GAP);
                 aligned_t.add(s2.content[j-1]);
             }
         } else
         {
             for(int i=y ; i>0 ; i--)
             {
-                aligned_t.add((byte) GAP);
+                aligned_t.add((byte) Nucleotide.GAP);
                 aligned_s.add(s1.content[i-1]);
             }
         }
@@ -576,9 +531,9 @@ public class Sequence
 
         // TODO: verifier que c est bien le comportement souhaite dans le cas des sequences inclues l une dans l autre
         if(bottom)
-            return new SequenceAlignment(alignedS, alignedT, s1, s2, jMax, lengthCommonAlignment);
+            return new SequenceAlignment(alignedS, alignedT, s1, s2, jMax);
         else
-             return new SequenceAlignment(alignedT, alignedS, s2, s1, iMax, lengthCommonAlignment);
+             return new SequenceAlignment(alignedT, alignedS, s2, s1, iMax);
     }
 
     /**
@@ -595,7 +550,7 @@ public class Sequence
         int current = s;
         for(int i = s;i >= 0;i--)
         {
-            if (this.content[i] == (byte) this.GAP)
+            if (this.content[i] == (byte) Nucleotide.GAP)
                 current--;
             else
                 return (current);
@@ -617,7 +572,7 @@ public class Sequence
         int current = 0;
         for(int i = 0;i < this.getSize();i++)
         {
-            if (this.content[i] == (byte) this.GAP)
+            if (this.content[i] == (byte) Nucleotide.GAP)
                 current++;
             else
                 return (current);
@@ -640,14 +595,14 @@ public class Sequence
      */
     public boolean isGapBounded()
     {
-        return this.content[0] == GAP && this.content[this.content.length-1] == GAP;
+        return this.content[0] == Nucleotide.GAP && this.content[this.content.length-1] == Nucleotide.GAP;
     }
 
     /**
      *
      * @return true if there is no gap at the two extremities of the sequence; false otherwise
      */
-    public boolean noExternalGap(){return this.content[0] != GAP && this.content[this.content.length-1] != GAP;}
+    public boolean noExternalGap(){return this.content[0] != Nucleotide.GAP && this.content[this.content.length-1] != Nucleotide.GAP;}
 
     public Sequence rebuildAddingGaps(int[] gaps)
     {
@@ -658,7 +613,7 @@ public class Sequence
         {
             if (gaps_i < gaps.length && gaps[gaps_i] == i)
             {
-                s_final.append(this.base2letter((byte) Sequence.GAP));
+                s_final.append(Nucleotide.base2letter((byte) Nucleotide.GAP));
                 gaps_i++;
             }
             else

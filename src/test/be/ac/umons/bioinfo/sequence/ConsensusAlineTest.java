@@ -18,28 +18,28 @@ public class ConsensusAlineTest
 
         Map<Integer, MyCounter> data = new HashMap();
         MyCounter counter1 = new MyCounter();
-        counter1.vote(Sequence.A);
-        counter1.vote(Sequence.A);
-        counter1.vote(Sequence.C);
-        counter1.vote(Sequence.GAP);
-        counter1.vote(Sequence.GAP);
-        counter1.vote(Sequence.GAP);
+        counter1.vote((byte) Nucleotide.A);
+        counter1.vote((byte) Nucleotide.A);
+        counter1.vote((byte) Nucleotide.C);
+        counter1.vote((byte) Nucleotide.GAP);
+        counter1.vote((byte) Nucleotide.GAP);
+        counter1.vote((byte) Nucleotide.GAP);
 
         MyCounter counter2 = new MyCounter();
-        counter2.vote(Sequence.GAP);
-        counter2.vote(Sequence.T);
-        counter2.vote(Sequence.T);
-        counter2.vote(Sequence.GAP);
-        counter2.vote(Sequence.GAP);
-        counter2.vote(Sequence.G);
+        counter2.vote((byte) Nucleotide.GAP);
+        counter2.vote((byte) Nucleotide.T);
+        counter2.vote((byte) Nucleotide.T);
+        counter2.vote((byte) Nucleotide.GAP);
+        counter2.vote((byte) Nucleotide.GAP);
+        counter2.vote((byte) Nucleotide.G);
 
         MyCounter counter3 = new MyCounter();
-        counter3.vote(Sequence.A);
-        counter3.vote(Sequence.T);
-        counter3.vote(Sequence.T);
-        counter3.vote(Sequence.GAP);
-        counter3.vote(Sequence.GAP);
-        counter3.vote(Sequence.C);
+        counter3.vote((byte) Nucleotide.A);
+        counter3.vote((byte) Nucleotide.T);
+        counter3.vote((byte) Nucleotide.T);
+        counter3.vote((byte) Nucleotide.GAP);
+        counter3.vote((byte) Nucleotide.GAP);
+        counter3.vote((byte) Nucleotide.C);
 
         data.put(-1,counter1);
         data.put(0,counter2);

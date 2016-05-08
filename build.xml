@@ -49,6 +49,9 @@
     <mkdir dir="${bin_dir}" />
     <mkdir dir="${bin_src}" />
     <javac includeantruntime="false" srcdir="${src_dir}" debug="on" destdir="${bin_src}">
+      <classpath>
+        <path refid="classpath.test" />
+      </classpath>
     </javac>
   </target>
   <!-- ################################################################### -->
@@ -82,6 +85,16 @@
 
   <!-- ################################################################### -->
   <target name="run" depends="run_test">
+    <java dir="${bin_src}" classname="${exe}" fork="true">
+      <assertions>
+        <enable />
+      </assertions>
+    </java>
+  </target>
+  <!-- ################################################################### -->
+
+  <!-- ################################################################### -->
+  <target name="run_no_test" depends="compile">
     <java dir="${bin_src}" classname="${exe}" fork="true" />
   </target>
   <!-- ################################################################### -->

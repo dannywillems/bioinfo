@@ -27,12 +27,12 @@ public class ConsensusAline {
     {
         int min = votes.keySet().stream().mapToInt(Integer::intValue).min().getAsInt();
         int max = votes.keySet().stream().mapToInt(Integer::intValue).max().getAsInt();
-        
+
         byte[] result = new byte[max-min+1];
 
         for(int pos=min ; pos <= max ; pos++)
             result[pos-min] = votes.get(pos).max();
-        
+
         return new Sequence(result);
     }
 
@@ -42,22 +42,6 @@ public class ConsensusAline {
 
         return votes;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public ConsensusResult computeConsensus(){
 
@@ -77,12 +61,12 @@ public class ConsensusAline {
             Sequence s1 = alignment.s1;
             Sequence s2 = alignment.s2;
 
-            if(s1.content[0] == Sequence.GAP )
+            if(s1.content[0] == Nucleotide.GAP )
             {
                 //the offset has to be moved to the left
                 int i = 0;
 
-                while(s1.content[i] == Sequence.GAP)
+                while(s1.content[i] == Nucleotide.GAP)
                 {
                     offset -= 1;
                     i += 1;
@@ -113,7 +97,7 @@ public class ConsensusAline {
 
                 System.out.println(count.get(pos));
 
-                if(s1.content[i] == Sequence.GAP && count.get(pos).getLast() != Sequence.GAP)
+                if(s1.content[i] == Nucleotide.GAP && count.get(pos).getLast() != Nucleotide.GAP)
                 {
                     //System.out.println("propagation de gap vers le haut");
 
@@ -133,7 +117,7 @@ public class ConsensusAline {
                 }
                 else
                 {
-                    if (s1.content[i] != Sequence.GAP && count.get(pos).getLast() ==Sequence.GAP)
+                    if (s1.content[i] != Nucleotide.GAP && count.get(pos).getLast() ==Nucleotide.GAP)
                     {
                         //System.out.println("propagation de gap vers le bas");
 
@@ -145,8 +129,8 @@ public class ConsensusAline {
                         //Sinon on peut decaller et puis voter pour deux positions plus loin que la position en cours
                         // de traitement
 
-                        count.get(pos).vote(Sequence.GAP);// voter pour de vrai pour unSequence.GAP ou se contenter de dire que
-                        // à l'étape d'avant on avait considéré un Sequence.GAP ?
+                        count.get(pos).vote(Nucleotide.GAP);// voter pour de vrai pour unNucleotide.GAP ou se contenter de dire que
+                        // à l'étape d'avant on avait considéré un Nucleotide.GAP ?
                         count.get(pos).setMoveRight(1);
 
                         if(count.containsKey(pos+1))
@@ -177,10 +161,10 @@ public class ConsensusAline {
                 }
 
             }
-            if (s1.content[0] !=Sequence.GAP)
+            if (s1.content[0] !=Nucleotide.GAP)
             {
                 int i = 0;
-                while(s2.content[i] ==Sequence.GAP)
+                while(s2.content[i] == Nucleotide.GAP)
                 {
                     offset += 1;
                     i += 1;

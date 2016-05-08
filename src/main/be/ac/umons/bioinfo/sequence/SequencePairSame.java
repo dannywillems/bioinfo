@@ -25,18 +25,18 @@ public class SequencePairSame
 
         while (i < this.initial.getSize())
         {
-            if (this.s.getBaseAsByte(i_s) == Sequence.GAP && this.t.getBaseAsByte(i_t) == Sequence.GAP)
+            if (this.s.getBaseAsByte(i_s) == Nucleotide.GAP && this.t.getBaseAsByte(i_t) == Nucleotide.GAP)
             {
                 i_s++;
                 i_t++;
             }
-            else if (this.s.getBaseAsByte(i_s) == Sequence.GAP)
+            else if (this.s.getBaseAsByte(i_s) == Nucleotide.GAP)
             {
-                if (this.t.getBaseAsByte(i_t) != Sequence.GAP)
+                if (this.t.getBaseAsByte(i_t) != Nucleotide.GAP)
                     gaps_t.add(i_t);
                 i_s++;
             }
-            else if (this.t.getBaseAsByte(i_t) == Sequence.GAP)
+            else if (this.t.getBaseAsByte(i_t) == Nucleotide.GAP)
             {
                 gaps_s.add(i_s);
                 i_t++;

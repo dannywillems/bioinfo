@@ -28,7 +28,7 @@ public class MyCounter
 
         for(Map.Entry<Byte, Integer> entry : counts.entrySet())
         {
-            if(entry.getValue() > max && entry.getKey() != Sequence.GAP)
+            if(entry.getValue() > max && entry.getKey() != Nucleotide.GAP)
             {
                 max = entry.getValue();
                 nucleotide = entry.getKey();

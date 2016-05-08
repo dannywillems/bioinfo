@@ -8,23 +8,27 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.ac.umons.bioinfo.consensus.*;
+import be.ac.umons.bioinfo.greedy.*;
 import be.ac.umons.bioinfo.sequence.*;
+import be.ac.umons.bioinfo.fasta.FastaReader;
+import be.ac.umons.bioinfo.fasta.FastaWriter;
 
 public class Main
 {
     public static void main(String[] args) throws IOException
     {
         //test();
-        //cible(1, false, false, true);
-        //cible(2, false, false, true);
-        //cible(3, false, false, true); // A exécuter en dernier, car long
-
         //test2();
-
-
+        cible(1, true, false, false, true);
+        cible(2, true, false, false, true);
+        //cible(4, true, false, false, true);
+        //cible(5, true, false, false, true);
+        //compute(jar(args));
     }
 
 
+    /*
     public static void test2()
     {
         Sequence s1 = new Sequence("act-gtg-");
@@ -43,8 +47,9 @@ public class Main
         Sequence result = consensus.buildSequence();
 
         System.out.println(result);
-
     }
+    */
+
     public static void test()
     {
         Greedy greed = new Greedy();
@@ -93,10 +98,10 @@ public class Main
 
         /*
         Sequence f = new Sequence("actttacg");
-        Sequence g = new Sequence("ttgcacgat");
-        Sequence h = new Sequence("ttgcg");
         Sequence i = new Sequence("ggaatctgcgagtta");
         Sequence j = new Sequence("tact");
+        Sequence h = new Sequence("ttgcg");
+        Sequence g = new Sequence("ttgcacgat");
         Sequence k = new Sequence("gaccgat");
 
         List<Sequence> list = new ArrayList<Sequence>();
@@ -148,61 +153,64 @@ public class Main
         System.out.println("------->");
         */
 
-        //Consensus c = new Consensus(result);
-        //c.showWithOffset();
-        //c.showWithEndGapAndOffset();
-
-        /*
+        ConsensusAbstract c = new ConsensusAbstract(result);
         c.computeAlignment();
-        Sequence consensus_final = c.build();
 
         System.out.println("Les séquences alignées:\n");
-        ArrayList<Sequence> alignment = c.getAlignment();
+        ArrayList<SequenceAbstract> alignment = c.getAlignment();
         for(int counter = 0;counter < alignment.size();counter++)
             System.out.println(alignment.get(counter));
         System.out.println("#########################################\n");
 
         System.out.println("Le consensus final:\n");
-        System.out.println(consensus_final);
-
-        for(SequenceAlignment s : result)
-        {
-            System.out.println(s.s1);
-            System.out.println(s.s2);
-            System.out.println("#####");
-        }
-        */
+        SequenceAbstract consensus_final = c.build(false);
+        System.out.println(consensus_final.toString());
+        System.out.println("#########################################\n");
     }
 
-    public static void cible(int num, boolean show_consensus, boolean show_alignment, boolean save)
+    public static void cible(int num, boolean show_consensus, boolean show_alignment, boolean show_greedy, boolean save)
     {
         try
         {
-            List<Sequence> list = FastaReader.readFromFile(new File("../../res/collections/Collection" + num + "-Simplifiee.FASTA"));
+            List<Sequence> list = FastaReader.readFromFile(new File("../../res/collections/cible" + num + "/collection" + num + ".fasta"));
 
             System.out.print("Greedy algorithm... ");
             Greedy g = new Greedy();
             List<SequenceAlignment> result = g.greedy(list, 1, -1, -2);
             System.out.println("Done");
 
-            Consensus c = new Consensus(result);
+            ConsensusAbstract c = new ConsensusAbstract(result);
+            c.updateOffset();
+
+            if (show_greedy)
+            {
+                for(int i = 0;i < c.getHamiltonianPath().size();i++)
+                {
+                    System.out.println(c.getHamiltonianPath().get(i).s);
+                    System.out.println(c.getHamiltonianPath().get(i).t);
+                    System.out.println("###");
+                }
+                System.out.println("#########################################\n");
+            }
+
             System.out.print("Alignement... ");
             c.computeAlignment();
-            System.out.println("Done");
-            //c.showWithEndGapAndOffset();
-
-            System.out.print("Construction du consensus... ");
-            Sequence consensus_final = c.build(true);
             System.out.println("Done");
 
             if (show_alignment)
             {
                 System.out.println("Les séquences alignées:\n");
-                ArrayList<Sequence> alignment = c.getAlignment();
+                ArrayList<SequenceAbstract> alignment = c.getAlignment();
                 for(int counter = 0;counter < alignment.size();counter++)
                     System.out.println(alignment.get(counter));
                 System.out.println("#########################################\n");
             }
+
+            System.out.print("Construction du consensus... ");
+            SequenceAbstract consensus_final = c.build(false);
+            //Sequence n_s = new Sequence(consensus_final.toString());
+            //n_s = n_s.complement();
+            System.out.println("Done");
 
             if (show_consensus)
             {
@@ -214,9 +222,9 @@ public class Main
             if (save)
             {
                 String file_name = "Cible_calcul" + num + ".fasta";
-                String directory = "../../res/results/";
+                String directory = "../../res/results/cible" + num + "/";
                 System.out.print("Ecriture du consensus dans le fichier " + file_name + "... ");
-                FastaWriter.write("Cible1", consensus_final, new File(directory + file_name), 80);
+                FastaWriter.write("Cible" + num, consensus_final, new File(directory + file_name), 80);
                 System.out.println("Done");
             }
         }
@@ -224,5 +232,51 @@ public class Main
         {
             System.out.println(e.toString());
         }
+    }
+
+    public static String[] jar(String[] args)
+    {
+        String[] f = new String[3];
+
+        if (args.length == 5)
+        {
+            f[0] = args[0];
+            if (args[1].equals("--out"))
+            {
+                f[1] = args[2];
+                if (args[3].equals("--out-ic"))
+                {
+                    f[2]= args[4];
+                    return (f);
+                }
+            }
+        }
+        showHelp();
+        return (null);
+    }
+
+    public static void compute(String[] f) throws IOException
+    {
+        try
+        {
+            List<Sequence> list = FastaReader.readFromFile(new File(f[0]));
+            Greedy g = new Greedy();
+            List<SequenceAlignment> result = g.greedy(list, 1, -1, -2);
+
+            ConsensusAbstract c = new ConsensusAbstract(result);
+            c.computeAlignment();
+            SequenceAbstract consensus_final = c.build(false);
+            FastaWriter.write("Normal", consensus_final, new File(f[1]), 80);
+            FastaWriter.write("Complementary inverse", consensus_final.complement(), new File(f[2]), 80);
+        }
+        catch (IOException e)
+        {
+            System.out.println(e);
+        }
+    }
+
+    public static void showHelp()
+    {
+        System.out.println("java -jar FragmentAssembler.jar <fichier.fasta> --out <sortie.fasta> --out-ic <sortie-ic.fasta>");
     }
 }
