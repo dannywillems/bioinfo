@@ -71,8 +71,11 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 - [ ] Suppression des commentaires *inutiles*.
 - [ ] Suppression des fonctions *inutiles*.
 - [ ] Fix les FIXME/IMPROVEME.
+  - [ ] Voir SequenceAbstract et ConsensusAbstract
+  - [ ] Méthode *complement* dans *SequenceAbtract* pour être indépendant de *Sequence*
 - [x] Renvoyer le complétaire inversé.
 - [ ] Nom de la séquence dans le fichier fasta output.
+- [ ] Remplir les complexités dans ConsensusAbstract et SequenceAbstract
 
 ## Plus d'informations
 
