@@ -19,9 +19,9 @@ public class ArcComparatorTest
     {
         Sequence s = new Sequence("");
 
-        Arc a1 = new Arc(s, false, s, false, 1, false, 42, 42, 42, false);
-        Arc a2 = new Arc(s, false, s, false, 2, false, 42, 42, 42, false);
-        Arc a3 = new Arc(s, false, s, false, 3, false, 42, 42, 42, false);
+        Arc a1 = new Arc(s, false, s, false, 1, 42, 42, 42, false);
+        Arc a2 = new Arc(s, false, s, false, 2, 42, 42, 42, false);
+        Arc a3 = new Arc(s, false, s, false, 3, 42, 42, 42, false);
 
         ArcComparator comparator = new ArcComparator();
 
@@ -38,11 +38,11 @@ public class ArcComparatorTest
     {
         Sequence s = new Sequence("");
 
-        Arc a1 = new Arc(s, false, s, false, 1, false, 42, 42, 42, false);
-        Arc a2 = new Arc(s, false, s, false, 2, false, 42, 42, 42, false);
-        Arc a3 = new Arc(s, false, s, false, 3, false, 42, 42, 42, false);
-        Arc a4 = new Arc(s, false, s, false, 4, false, 42, 42, 42, false);
-        Arc a5 = new Arc(s, false, s, false, 5, false, 42, 42, 42, false);
+        Arc a1 = new Arc(s, false, s, false, 1, 42, 42, 42, false);
+        Arc a2 = new Arc(s, false, s, false, 2, 42, 42, 42, false);
+        Arc a3 = new Arc(s, false, s, false, 3, 42, 42, 42, false);
+        Arc a4 = new Arc(s, false, s, false, 4, 42, 42, 42, false);
+        Arc a5 = new Arc(s, false, s, false, 5, 42, 42, 42, false);
 
         List<Arc> list = Arrays.asList(a3, a5, a2, a1, a4);
         Collections.sort(list, new ArcComparator());

@@ -15,7 +15,6 @@ public class Arc
     public final boolean endComp;
     /** The alignment score */
     public final int score;
-    private final boolean startBefore;
 
     public final int match;
     public final int mismatch;
@@ -31,14 +30,12 @@ public class Arc
      * @param end          The canonical representation of the sequence at the end of the arc.
      * @param endComp      true if the complement of end is used instead of the sequence itself; false otherwise.
      * @param score        length of the longest suffix-prefix or prefix-suffix.
-     * @param startBefore
      */
     public Arc(Sequence start,
                boolean startComp,
                Sequence end,
                boolean endComp,
                int score,
-               boolean startBefore,
                int match,
                int mismatch,
                int gap,
@@ -49,7 +46,6 @@ public class Arc
         this.end = end;
         this.endComp = endComp;
         this.score = score;
-        this.startBefore = startBefore;
         this.match = match;
         this.mismatch = mismatch;
         this.gap = gap;
@@ -72,14 +68,7 @@ public class Arc
         else b = end;
 
         List<SequenceAlignment> candidates = Sequence.semiGlobalAlignment(a, b, match, mismatch, gap);
-        /*
-        if(startBefore) return candidates.get(0);
-        else return new SequenceAlignment(  candidates.get(1).s2,
-                                            candidates.get(1).s1,
-                                            candidates.get(1).initial_s2,
-                                            candidates.get(1).initial_s1,
-                                            candidates.get(1).score,
-                                            candidates.get(1).longestCommonSubstringLength);*/
+
         return candidates.get(0);
     }
 
@@ -91,7 +80,6 @@ public class Arc
                 startComp + ", " +
                 end + " , " +
                 endComp + ", " +
-                startBefore + ", " +
                 alignment.score + ")";
     }
 }
