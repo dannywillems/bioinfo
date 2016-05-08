@@ -148,8 +148,10 @@ public class ConsensusAbstract
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
             //System.out.println("On doit propager à l'indice " + indice + " dans " + sa.t.toString());
             //pos = sa.t.addGapsAfterIndiceAndReturnPosition(nb, indice);
+            /*
             if (indice == sa.t.nb_gaps[sa.t.nb_gaps.length - 1])
                 System.out.println("On doit insérer à la fin");
+            */
             pos = sa.t.addGapsAfterIndiceEndAndReturnPosition(nb, indice);
             //System.out.println("On doit propager à la position " + pos + " dans " + sa.s.toString());
             indice = sa.s.addGapsAndReturnIndice(nb, pos);
@@ -191,8 +193,10 @@ public class ConsensusAbstract
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
             pos = sa.s.addGapsAfterIndiceEndAndReturnPosition(nb, indice);
+            /*
             if (indice == sa.t.nb_gaps[sa.t.nb_gaps.length - 1])
                 System.out.println("On doit insérer à la fin");
+            */
             indice = sa.t.addGapsAndReturnIndice(nb, pos);
         }
     }
@@ -277,10 +281,10 @@ public class ConsensusAbstract
             }
             */
 
-            this.addEndGaps();
             this.updateAlignment();
-
+            this.addEndGapsAlignment();
             this.checkEqualitySameGapsNumber();
+
         }
         catch (IOException e)
         {
@@ -357,7 +361,7 @@ public class ConsensusAbstract
             // SequenceAbstract object. (*)
             max = Math.max(this.getAlignment().get(i).getSize(), max);
 
-        for(int i = 0;i < this.getHamiltonianPath().size();i++)
+        for(int i = 0;i < this.getAlignment().size();i++)
         {
             SequenceAbstract s = this.getAlignment().get(i);
             // IMPROVEME: compute the size is not in O(1) but in O(m) where m
