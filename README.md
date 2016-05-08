@@ -49,6 +49,7 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 * **ant doc**: construit la documentation grâce à javadoc.
 * **ant clean**: supprime le dossier bin généré lors de la compilation.
 * **ant fclean**: lance la dépendance *clean* et supprime l'archive *zip* si créée.
+* ** ant jar**: crée le fichier jar comme demandé.
 
 ## To-do
 
