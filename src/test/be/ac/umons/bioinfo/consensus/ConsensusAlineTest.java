@@ -1,9 +1,11 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.consensus;
 
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import be.ac.umons.bioinfo.sequence.*;
 
 import static org.junit.Assert.assertEquals;
 

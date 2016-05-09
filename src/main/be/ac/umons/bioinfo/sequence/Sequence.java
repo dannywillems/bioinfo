@@ -28,12 +28,12 @@ public class Sequence
         this.content = letter2Base(seq);
     }
 
-    protected Sequence(byte[] seq)
+    public Sequence(byte[] seq)
     {
         this.content = seq;
     }
 
-    private Sequence(Byte[] seq)
+    public Sequence(Byte[] seq)
     {
         byte[] content = new byte[seq.length];
 

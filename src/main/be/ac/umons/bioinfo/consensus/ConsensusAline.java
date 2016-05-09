@@ -1,6 +1,7 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.consensus;
 
 import java.util.*;
+import be.ac.umons.bioinfo.sequence.*;
 
 /**
  * Created by aline on 5/05/16.

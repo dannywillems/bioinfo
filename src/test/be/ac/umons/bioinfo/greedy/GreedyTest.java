@@ -2,6 +2,7 @@ package be.ac.umons.bioinfo.greedy;
 
 import be.ac.umons.bioinfo.fasta.*;
 import be.ac.umons.bioinfo.sequence.*;
+import be.ac.umons.bioinfo.consensus.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
