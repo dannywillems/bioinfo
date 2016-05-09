@@ -47,6 +47,9 @@ public class SequenceAbstractTest
         SequenceAbstract s2 = new SequenceAbstract(new Sequence("tact-----"));
         SequenceAbstract s3 = new SequenceAbstract(new Sequence("tact"), new Sequence("tact-----"));
 
+        assertEquals(9, s1.getSize());
+        assertEquals(9, s2.getSize());
+        assertEquals(9, s3.getSize());
         assertEquals(s1, s2);
         assertEquals(s1, s3);
         assertEquals(s2, s3);
@@ -59,6 +62,9 @@ public class SequenceAbstractTest
         SequenceAbstract s2 = new SequenceAbstract(new Sequence("actttacg---"));
         SequenceAbstract s3 = new SequenceAbstract(new Sequence("actttacg"), new Sequence("actttacg---"));
 
+        assertEquals(11, s1.getSize());
+        assertEquals(11, s2.getSize());
+        assertEquals(11, s3.getSize());
         assertEquals(s1, s2);
         assertEquals(s1, s3);
         assertEquals(s2, s3);
@@ -71,6 +77,9 @@ public class SequenceAbstractTest
         SequenceAbstract s2 = new SequenceAbstract(new Sequence("------cgcaa"));
         SequenceAbstract s3 = new SequenceAbstract(new Sequence("cgcaa"), new Sequence("------cgcaa"));
 
+        assertEquals(11, s1.getSize());
+        assertEquals(11, s2.getSize());
+        assertEquals(11, s3.getSize());
         assertEquals(s1, s2);
         assertEquals(s1, s3);
         assertEquals(s2, s3);
@@ -161,7 +170,7 @@ public class SequenceAbstractTest
         SequenceAbstract s = new SequenceAbstract(initial, aligned);
 
         int[] gaps = {0, 0, 0, 0};
-        assertArrayEquals(gaps, s.nb_gaps);
+        assertArrayEquals(gaps, s.getNbGaps());
     }
 
     @Test
@@ -172,7 +181,7 @@ public class SequenceAbstractTest
         SequenceAbstract s = new SequenceAbstract(initial, aligned);
 
         int[] gaps = {1, 1, 1, 0};
-        assertArrayEquals(gaps, s.nb_gaps);
+        assertArrayEquals(gaps, s.getNbGaps());
     }
 
     @Test
@@ -183,7 +192,7 @@ public class SequenceAbstractTest
         SequenceAbstract s = new SequenceAbstract(initial, aligned);
 
         int[] gaps = {3, 2, 1, 0};
-        assertArrayEquals(gaps, s.nb_gaps);
+        assertArrayEquals(gaps, s.getNbGaps());
     }
 
     @Test
@@ -194,7 +203,7 @@ public class SequenceAbstractTest
         SequenceAbstract s = new SequenceAbstract(initial, aligned);
 
         int[] gaps = {3, 2, 1, 2};
-        assertArrayEquals(gaps, s.nb_gaps);
+        assertArrayEquals(gaps, s.getNbGaps());
     }
     /* ---------------------------------------------------------------------- */
 

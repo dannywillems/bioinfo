@@ -176,11 +176,11 @@ public class ConsensusAbstract
         SequenceAbstract s = sa_up.t;
         SequenceAbstract t = sa_down.s;
 
-        for (int i = 0;i < t.nb_gaps.length - 1;i++)
+        for (int i = 0;i < t.getNbGapsLength() - 1;i++)
         {
-            if (t.nb_gaps[i] > s.nb_gaps[i])
+            if (t.getNbGaps(i) > s.getNbGaps(i))
             {
-                this.propageGapsUpPosFrom(begin, i, t.nb_gaps[i] - s.nb_gaps[i]);
+                this.propageGapsUpPosFrom(begin, i, t.getNbGaps(i) - s.getNbGaps(i));
                 this.checkEqualitySameGapsNumberDuringPropagation(begin - 1, i);
             }
         }
@@ -222,11 +222,11 @@ public class ConsensusAbstract
         SequenceAbstract s = sa_up.t;
         SequenceAbstract t = sa_down.s;
 
-        for (int i = 0;i < s.nb_gaps.length - 1;i++)
+        for (int i = 0;i < s.getNbGapsLength() - 1;i++)
         {
-            if (s.nb_gaps[i] > t.nb_gaps[i])
+            if (s.getNbGaps(i) > t.getNbGaps(i))
             {
-                this.propageGapsDownPosFrom(begin, i, s.nb_gaps[i] - t.nb_gaps[i]);
+                this.propageGapsDownPosFrom(begin, i, s.getNbGaps(i) - t.getNbGaps(i));
                 this.checkEqualitySameGapsNumberDuringPropagation(begin, i);
             }
         }
@@ -331,8 +331,8 @@ public class ConsensusAbstract
             // IMPROVEME: compute the size is not in O(1) but in O(m) where m
             // is the compressed size. Can be improve by saving the size in the
             // SequenceAbstract object. (*)
-            sa.s.nb_gaps[sa.s.nb_gaps.length - 1] += max - sa.s.getSize();
-            sa.t.nb_gaps[sa.t.nb_gaps.length - 1] += max - sa.t.getSize();
+            sa.s.addNbGaps(sa.s.getNbGapsLength() - 1, max - sa.s.getSize());
+            sa.t.addNbGaps(sa.t.getNbGapsLength() - 1, max - sa.t.getSize());
         }
     }
 
@@ -362,7 +362,7 @@ public class ConsensusAbstract
             // IMPROVEME: compute the size is not in O(1) but in O(m) where m
             // is the compressed size. Can be improve by saving the size in the
             // SequenceAbstract object. (*)
-            s.nb_gaps[s.nb_gaps.length - 1] += max - s.getSize();
+            s.addNbGaps(s.getNbGapsLength() - 1, max - s.getSize());
         }
     }
     /* ---------------------------------------------------------------------- */
@@ -569,7 +569,7 @@ public class ConsensusAbstract
     {
         if (Debug.EQUALITY_SAME_GAPS_NUMBER_DURING_PROPAGATION)
         {
-            if (this.hamiltonian_path.get(begin).t.nb_gaps[pos] == this.hamiltonian_path.get(begin + 1).s.nb_gaps[pos])
+            if (this.hamiltonian_path.get(begin).t.getNbGaps(pos) == this.hamiltonian_path.get(begin + 1).s.getNbGaps(pos))
                 System.out.println("Same gaps number during propagation: OK");
             else
             {
@@ -584,9 +584,9 @@ public class ConsensusAbstract
     {
         if (Debug.PROPAGATION_GAP_DOWN_FROM)
         {
-            for(int i = 0;i < this.getHamiltonianPath().get(begin).t.nb_gaps.length - 1;i++)
+            for(int i = 0;i < this.getHamiltonianPath().get(begin).t.getNbGapsLength() - 1;i++)
             {
-                if (this.getHamiltonianPath().get(begin).t.nb_gaps[i] > this.getHamiltonianPath().get(begin + 1).s.nb_gaps[i])
+                if (this.getHamiltonianPath().get(begin).t.getNbGaps(i) > this.getHamiltonianPath().get(begin + 1).s.getNbGaps(i))
                 {
                     System.out.println("ERROR!!!! Must not have more gaps in the sequence up");
                     System.out.println("Found at: " + begin);

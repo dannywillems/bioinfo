@@ -7,9 +7,9 @@ import java.util.Iterator;
 public class SequenceAbstract implements Iterable<Character>
 {
     public Sequence initial;
-    public int[] nb_gaps;
+    private int[] nb_gaps;
     private int offset;
-
+    private int size;
     /* ---------------------------------------------------------------------- */
     // CONSTRUCTORS
     /**
@@ -26,6 +26,7 @@ public class SequenceAbstract implements Iterable<Character>
         this.initial = initial;
         this.nb_gaps = nb_gaps;
         this.offset = 0;
+        this.updateSize();
     }
 
     /**
@@ -42,6 +43,7 @@ public class SequenceAbstract implements Iterable<Character>
         this.initial = initial;
         this.nb_gaps = nb_gaps;
         this.offset = offset;
+        this.updateSize();
     }
 
     /**
@@ -72,6 +74,7 @@ public class SequenceAbstract implements Iterable<Character>
         }
 
         this.offset = aligned.getPosFirstNucleotide();;
+        this.updateSize();
     }
 
     /**
@@ -106,6 +109,7 @@ public class SequenceAbstract implements Iterable<Character>
             this.nb_gaps[k] = gaps.get(k);
 
         this.initial = new Sequence(str.toString());
+        this.updateSize();
     }
 
     /**
@@ -140,6 +144,7 @@ public class SequenceAbstract implements Iterable<Character>
             this.nb_gaps[k] = gaps.get(k);
 
         this.initial = new Sequence(str.toString());
+        this.updateSize();
     }
     /* ---------------------------------------------------------------------- */
 
@@ -223,6 +228,7 @@ public class SequenceAbstract implements Iterable<Character>
             if (i == this.nb_gaps.length)
                 this.nb_gaps[i - 1] += nb;
         }
+        this.updateSize(nb);
     }
 
     /**
@@ -256,6 +262,7 @@ public class SequenceAbstract implements Iterable<Character>
         // if we need to add gaps before the beginning of the sequence
         if (pos <= real_pos)
         {
+            this.updateSize(nb);
             this.offset += nb;
             return (-1);
         }
@@ -269,6 +276,7 @@ public class SequenceAbstract implements Iterable<Character>
                 if (real_pos == pos)
                 {
                     this.nb_gaps[i - 1] += nb;
+                    this.updateSize(nb);
                     return (i - 1);
                 }
                 // else if the next real position (ie real_pos + nb_gaps[i] + 1)
@@ -282,10 +290,12 @@ public class SequenceAbstract implements Iterable<Character>
                 // else, we add the number of gaps we need.
                 else
                 {
+                    this.updateSize(nb);
                     this.nb_gaps[i] += nb;
                     return (i);
                 }
             }
+            this.updateSize(nb);
             this.nb_gaps[i - 1] += nb;
             return (i - 1);
         }
@@ -321,6 +331,7 @@ public class SequenceAbstract implements Iterable<Character>
             this.nb_gaps[indice] += nb;
         else
             this.nb_gaps[nb_gaps.length - 1] += nb;
+        this.updateSize(nb);
     }
 
     /**
@@ -353,6 +364,7 @@ public class SequenceAbstract implements Iterable<Character>
         int i = 0;
         if (indice < 0)
         {
+            this.updateSize(nb);
             this.offset += nb;
             return (0);
         }
@@ -360,11 +372,13 @@ public class SequenceAbstract implements Iterable<Character>
             real_pos += nb_gaps[i++] + 1;
         if (i == nb_gaps.length)
         {
+            this.updateSize(nb);
             this.nb_gaps[nb_gaps.length - 1] += nb;
             return (real_pos);
         }
         else if (i == indice)
             nb_gaps[i] += nb;
+        this.updateSize(nb);
         return (real_pos + 1);
     }
 
@@ -398,6 +412,7 @@ public class SequenceAbstract implements Iterable<Character>
         int i = 0;
         if (indice < 0)
         {
+            this.updateSize(nb);
             this.offset += nb;
             return (this.offset - nb);
         }
@@ -405,11 +420,13 @@ public class SequenceAbstract implements Iterable<Character>
             real_pos += nb_gaps[i++] + 1;
         if (i == nb_gaps.length)
         {
-            //this.nb_gaps[nb_gaps.length - 1] += nb;
+            this.updateSize(nb);
             return (real_pos + nb);
         }
         else if (i == indice)
             nb_gaps[i] += nb;
+
+        this.updateSize(nb);
         return (real_pos + 1 + nb_gaps[i] - nb);
     }
     /* ---------------------------------------------------------------------- */
@@ -451,10 +468,7 @@ public class SequenceAbstract implements Iterable<Character>
      */
     public int getSize()
     {
-        int size = this.getOffset();
-        for(int i = 0;i < this.nb_gaps.length;i++)
-            size += 1 + this.nb_gaps[i];
-        return (size);
+        return (this.size);
     }
 
     public int getSizeWithoutEndGaps()
@@ -463,6 +477,33 @@ public class SequenceAbstract implements Iterable<Character>
         for(int i = 0;i < this.nb_gaps.length - 1;i++)
             size += 1 + this.nb_gaps[i];
         return (size);
+    }
+
+    public int[] getNbGaps()
+    {
+        return (this.nb_gaps);
+    }
+
+    public int getNbGapsLength()
+    {
+        return (this.nb_gaps.length);
+    }
+
+    public int getNbGaps(int i)
+    {
+        return (this.nb_gaps[i]);
+    }
+
+    private void updateSize()
+    {
+        this.size = this.getOffset();
+        for(int i = 0;i < this.initial.getSize();i++)
+            this.size += 1 + this.nb_gaps[i];
+    }
+
+    private void updateSize(int nb)
+    {
+        this.size += nb;
     }
     /* ---------------------------------------------------------------------- */
 
@@ -476,6 +517,13 @@ public class SequenceAbstract implements Iterable<Character>
     public void setOffset(int offset)
     {
         this.offset = offset;
+        this.updateSize();
+    }
+
+    public void addNbGaps(int i, int nb)
+    {
+        this.nb_gaps[i] += nb;
+        this.updateSize(nb);
     }
     /* ---------------------------------------------------------------------- */
 

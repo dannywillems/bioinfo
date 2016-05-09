@@ -617,6 +617,7 @@ public class ConsensusAbstractTest
         SequenceAbstract s_final = c.build(false);
 
         SequenceAbstract s = new SequenceAbstract("gacatcacgcaagttatcggtc");
+        System.out.println(s_final.getSize());
         assertEquals(s, s_final);
     }
 
