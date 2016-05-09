@@ -46,6 +46,4 @@ public class Nucleotide
             default : return -1;
         }
     }
-
-
 }

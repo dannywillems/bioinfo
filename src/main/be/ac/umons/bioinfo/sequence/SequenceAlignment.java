@@ -12,8 +12,6 @@ public class SequenceAlignment
     public final int score;
 
     /**
-     * FIXME
-     * Deprecated ? Use instead the next one ?
      * @param s1 One of the aligned sequences. May contain gaps.
      * @param s2 The other aligned sequence. May contain gaps.
      * @param score The score associated to this alignment.
