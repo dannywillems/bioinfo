@@ -9,7 +9,6 @@ package be.ac.umons.bioinfo.sequence;
 public class SequenceAlignment
 {
     public final Sequence s1, s2;
-    public final Sequence initial_s1, initial_s2;
     public final int score;
 
     /**
@@ -23,17 +22,6 @@ public class SequenceAlignment
     {
         this.s1 = s1;
         this.s2 = s2;
-        this.initial_s1 = s1; // FIXME: Wrong. Initiate at this value but the constructor will be removed.
-        this.initial_s2 = s2; // FIXME: Wrong. Initiate at this value but the constructor will be removed.
-        this.score = score;
-    }
-
-    public SequenceAlignment(Sequence s1, Sequence s2, Sequence initial_s1, Sequence initial_s2, int score)
-    {
-        this.s1 = s1;
-        this.s2 = s2;
-        this.initial_s1 = initial_s1;
-        this.initial_s2 = initial_s2;
         this.score = score;
     }
 

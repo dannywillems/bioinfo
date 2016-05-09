@@ -16,8 +16,8 @@ public class SequenceAlignmentAbstract
 
     public SequenceAlignmentAbstract(SequenceAlignment sa)
     {
-        this.s = new SequenceAbstract(sa.initial_s1, sa.s1);
-        this.t = new SequenceAbstract(sa.initial_s2, sa.s2);
+        this.s = new SequenceAbstract(sa.s1);
+        this.t = new SequenceAbstract(sa.s2);
     }
 
     public SequenceAlignmentAbstract(Sequence s, Sequence t)
