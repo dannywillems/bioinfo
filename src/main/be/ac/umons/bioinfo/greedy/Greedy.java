@@ -43,7 +43,7 @@ public class Greedy
                                     .flatMap(Collection::stream)
                                     .collect(Collectors.toList());
 
-        Collections.sort(arcs, new ArcComparator());
+        Collections.sort(arcs, new ArcComparatorLength());
 
         List<Arc> path = hamiltonianPath(filterArcs(arcs.stream()
                                                         .filter(a -> true).collect(Collectors.toList())));

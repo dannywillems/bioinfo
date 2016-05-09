@@ -254,7 +254,7 @@ public class Sequence
                 FG.get(0).score,
                 match,
                 mismatch,
-                gap, FG.get(0).inside()));
+                gap, FG.get(0).inside(), FG.get(0).longestCommon));
 
         arcs.add(new Arc(
                 that,
@@ -265,7 +265,7 @@ public class Sequence
                 match,
                 mismatch,
                 gap,
-                FG.get(1).inside()));
+                FG.get(1).inside(), FG.get(1).longestCommon));
 
         arcs.add(new Arc(this,
                 true,
@@ -275,7 +275,7 @@ public class Sequence
                 match,
                 mismatch,
                 gap,
-                CompFG.get(0).inside()));
+                CompFG.get(0).inside(), CompFG.get(0).longestCommon));
 
         arcs.add(new Arc(
                 that,
@@ -286,7 +286,7 @@ public class Sequence
                 match,
                 mismatch,
                 gap,
-                CompFG.get(1).inside()));
+                CompFG.get(1).inside(), CompFG.get(1).longestCommon));
 
         arcs.add(new Arc(
                 this,
@@ -297,7 +297,7 @@ public class Sequence
                 match,
                 mismatch,
                 gap,
-                FCompG.get(0).inside()));
+                FCompG.get(0).inside(), FCompG.get(0).longestCommon));
 
         arcs.add(new Arc(
                 that,
@@ -308,7 +308,7 @@ public class Sequence
                 match,
                 mismatch,
                 gap,
-                FCompG.get(1).inside()));
+                FCompG.get(1).inside(), FCompG.get(1).longestCommon));
 
         arcs.add(new Arc(
                 this,
@@ -319,7 +319,7 @@ public class Sequence
                 match,
                 mismatch,
                 gap,
-                CompFCompG.get(0).inside()));
+                CompFCompG.get(0).inside(), CompFCompG.get(0).longestCommon));
 
         arcs.add(new Arc(
                 that,
@@ -330,7 +330,7 @@ public class Sequence
                 match,
                 mismatch,
                 gap,
-                CompFCompG.get(1).inside()));
+                CompFCompG.get(1).inside(), CompFCompG.get(1).longestCommon));
 
         return arcs;
     }
@@ -406,6 +406,7 @@ public class Sequence
                                                int mismatch,
                                                int gap)
     {
+        int longestCommon = 0;
         int m = a.length - 1;
         int n = a[0].length - 1;
 
@@ -471,6 +472,7 @@ public class Sequence
             {
                 aligned_s.add(s1.content[y - 1]);
                 aligned_t.add(s2.content[x - 1]);
+                longestCommon++;
 
                 x -= 1;
                 y -= 1;
@@ -521,9 +523,9 @@ public class Sequence
 
 
         if(bottom)
-            return new SequenceAlignment(alignedS, alignedT, jMax);
+            return new SequenceAlignment(alignedS, alignedT, jMax, longestCommon);
         else
-             return new SequenceAlignment(alignedT, alignedS, iMax);
+             return new SequenceAlignment(alignedT, alignedS, iMax, longestCommon);
     }
 
     /**

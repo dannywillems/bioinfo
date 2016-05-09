@@ -20,11 +20,11 @@ public class Main
     {
         //test();
         //test2();
-        cible(1, true, false, false, true);
-        cible(2, true, false, false, true);
+        //cible(1, true, false, false, true);
+        //cible(2, true, false, false, true);
         //cible(4, true, false, false, true);
         //cible(5, true, false, false, true);
-        //compute(jar(args));
+        compute(jar(args));
     }
 
 

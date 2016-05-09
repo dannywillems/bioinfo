@@ -16,6 +16,7 @@ public class Arc
     public final boolean endComp;
     /** The alignment score */
     public final int score;
+    public final int longestCommon;
 
     public final int match;
     public final int mismatch;
@@ -40,7 +41,8 @@ public class Arc
                int match,
                int mismatch,
                int gap,
-               boolean inside)
+               boolean inside,
+               int longestCommon)
     {
         this.start = start;
         this.startComp = startComp;
@@ -52,6 +54,7 @@ public class Arc
         this.gap = gap;
 
         this.inside = inside;
+        this.longestCommon = longestCommon;
     }
 
     /**
