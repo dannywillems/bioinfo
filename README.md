@@ -49,7 +49,7 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 * **ant doc**: construit la documentation grâce à javadoc.
 * **ant clean**: supprime le dossier bin généré lors de la compilation.
 * **ant fclean**: lance la dépendance *clean* et supprime l'archive *zip* si créée.
-* ** ant jar**: crée le fichier jar comme demandé.
+* **ant jar**: crée le fichier jar comme demandé.
 
 ## To-do
 
@@ -71,13 +71,13 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 - [x] Suppression des tests *inutiles*.
 - [ ] Suppression des commentaires *inutiles*.
 - [ ] Suppression des fonctions *inutiles*.
-- [ ] Fix les FIXME/IMPROVEME.
-  - [ ] Voir SequenceAbstract et ConsensusAbstract
+- [x] Fix les FIXME/IMPROVEME.
+  - [x] Voir SequenceAbstract et ConsensusAbstract
   - [x] Méthode *complement* dans *SequenceAbtract* pour être indépendant de *Sequence*
   - [x] Suppression de la séquence initiale dans SequenceAlignment
 - [x] Renvoyer le complétaire inversé.
 - [ ] Nom de la séquence dans le fichier fasta output.
-- [ ] Remplir les complexités dans ConsensusAbstract et SequenceAbstract
+- [x] Remplir les complexités dans ConsensusAbstract et SequenceAbstract
 - [x] Iterateur pour build pour SequenceAbstract
 
 ## Plus d'informations
