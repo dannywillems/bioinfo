@@ -447,17 +447,16 @@ public class ConsensusAbstract
     /* ---------------------------------------------------------------------- */
     /** Build the consensus.
      *
-     * FIXME: Convert all sequences in the aligment in strings to be able to use
-     * the old algorithm which works on strings and char. We can think about an
-     * Iterator.
+     * Complexity: O(k * M_f) where k is the number of sequences in the
+     * alignment and M_f and the size of the longest aligned sequence.
      */
     public SequenceAbstract build(boolean remove_if_max_gap)
     {
         StringBuilder consensus = new StringBuilder();
 
-        ArrayList<String> s_list = new ArrayList<String>();
-        for (int i = 0;i < this.alignment.size();i++)
-            s_list.add(this.alignment.get(i).toString());
+        Iterator<Character>[] s_list = new Iterator[this.alignment.size()];
+        for (int i = 0;i < s_list.length;i++)
+            s_list[i] = this.alignment.get(i).iterator();
 
         int size_consensus = this.alignment.get(0).getSize();
         for (int i = 0;i < size_consensus;i++)
@@ -466,7 +465,7 @@ public class ConsensusAbstract
             // We browse all sequences in the alignment at pos i.
             for (int j = 0;j < alignment.size();j++)
             {
-                Character c = new Character(s_list.get(j).charAt(i));
+                Character c = new Character(s_list[j].next());
                 Integer c_occurence = occurences.get(c);
                 if (c_occurence == null)
                     occurences.put(c, 1);
@@ -483,7 +482,7 @@ public class ConsensusAbstract
             }
             // else, we know the max is not a gap because getBase manage this
             // case. So we can add without regarding the type.
-            else
+            else if (base != Nucleotide.base2letter((byte) Nucleotide.GAP))
                 consensus.append(base);
         }
         return (new SequenceAbstract(consensus.toString()));
