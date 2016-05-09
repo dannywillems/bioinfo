@@ -4,7 +4,7 @@ import java.lang.Integer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class SequenceAbstract //implements Iterable<Character>
+public class SequenceAbstract implements Iterable<Character>
 {
     public Sequence initial;
     public int[] nb_gaps;
@@ -525,32 +525,50 @@ public class SequenceAbstract //implements Iterable<Character>
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
-    /*
     @Override
     public Iterator<Character> iterator()
     {
         SequenceAbstract s = this;
         Iterator<Character> it = new Iterator<Character>()
         {
+            private int real_pos = s.getOffset();
             private int size = s.getSize();
             private int index = 0;
-            private int gaps_i = -1;
+            private int gaps_i = 0;
 
             @Override
             public boolean hasNext()
             {
-                return (index < s);
+                return (index < size);
             }
 
             public Character next()
             {
+                Character c;
                 if (index < s.getOffset())
-                    return (Character("-"));
-                else if (index
+                    c = new Character('-');
+                else if (index == s.getOffset())
+                    c = new Character(s.initial.getLetter(gaps_i));
+                else if (gaps_i == s.nb_gaps.length)
+                    c = new Character('-');
+                else if (index == real_pos + s.nb_gaps[gaps_i] + 1)
+                {
+                    real_pos += s.nb_gaps[gaps_i] + 1;
+                    gaps_i++;
+                    c = new Character(s.initial.getLetter(gaps_i));
+                }
+                else
+                    c = new Character('-');
                 index++;
+                return (c);
             }
-        }
+
+            public void remove()
+            {
+                throw new UnsupportedOperationException();
+            }
+        };
+        return (it);
     }
-    */
     /* ---------------------------------------------------------------------- */
 }

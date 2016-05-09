@@ -778,4 +778,48 @@ public class SequenceAbstractTest
         assertEquals(12, s1.getSize());
     }
     /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    @Test
+    public void iteratorTest()
+    {
+        SequenceAbstract s = new SequenceAbstract("--at--g----");
+
+        StringBuilder s_n = new StringBuilder();
+        Iterator<Character> i = s.iterator();
+        while (i.hasNext())
+            s_n.append(i.next().charValue());
+        assertEquals(s.toString(), s_n.toString());
+    }
+
+    @Test
+    public void iteratorNoGapsTest()
+    {
+        SequenceAbstract s = new SequenceAbstract("atg");
+
+        StringBuilder s_n = new StringBuilder();
+        Iterator<Character> i = s.iterator();
+        while (i.hasNext())
+            s_n.append(i.next().charValue());
+        assertEquals(s.toString(), s_n.toString());
+    }
+
+    @Test
+    public void iteratorRandomTest()
+    {
+        StringBuilder str = new StringBuilder();
+        Random rdm = new Random();
+        int size = rdm.nextInt(1500);
+        for(int i = 0;i < size;i++)
+            str.append(Nucleotide.base2letter((byte) rdm.nextInt(5)));
+        SequenceAbstract s = new SequenceAbstract(str.toString());
+
+        StringBuilder s_n = new StringBuilder();
+        Iterator<Character> i = s.iterator();
+        while (i.hasNext())
+            s_n.append(i.next().charValue());
+
+        assertEquals(s.toString(), s_n.toString());
+    }
+    /* ---------------------------------------------------------------------- */
 }
