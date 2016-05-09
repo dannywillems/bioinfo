@@ -18,6 +18,8 @@ public class SequenceAbstract //implements Iterable<Character>
      *
      * Initial sequence is useless, if no mutation, the initial sequence is the
      * aligned sequence where gaps has been removed
+     *
+     * Complexity: O(1)
      */
     public SequenceAbstract(Sequence initial, int[] nb_gaps)
     {
@@ -32,6 +34,8 @@ public class SequenceAbstract //implements Iterable<Character>
      *
      * Initial sequence is useless, if no mutation, the initial sequence is the
      * aligned sequence where gaps has been removed
+     *
+     * Complexity: O(1)
      */
     public SequenceAbstract(Sequence initial, int[] nb_gaps, int offset)
     {
@@ -142,9 +146,11 @@ public class SequenceAbstract //implements Iterable<Character>
 
     /* ---------------------------------------------------------------------- */
     /**
+     * Compute and return the complement inverse of the sequence. Faster than
+     * complement in Sequence if lots of gaps.
      * @return the complement inverse of the sequence.
      *
-     * Complexity:
+     * Complexity: O(2n) = O(n) where n is the length of the initial sequence.
      */
     public SequenceAbstract complement()
     {
@@ -178,6 +184,8 @@ public class SequenceAbstract //implements Iterable<Character>
      * @param nb number of gaps to add
      * @param pos where the gaps must be added. Absolute position eg including
      * the offset.
+     *
+     * Complexity: O(n) where n is the length of the initial sequence.
      */
     public void addGaps(int nb, int pos)
     {
@@ -239,6 +247,8 @@ public class SequenceAbstract //implements Iterable<Character>
      * the offset.
      * @return indice of the nucleotide which gaps has been inserted after. -1
      * if it's in the offset.
+     *
+     * Complexity: O(n) where n is the length of the initial sequence.
      */
     public int addGapsAndReturnIndice(int nb, int pos)
     {
@@ -301,6 +311,8 @@ public class SequenceAbstract //implements Iterable<Character>
      *      at--tgc ==> ---at--tgc
      * @param nb number of gaps to add
      * @param indice which the gaps must be added after.
+     *
+     * Complexity: O(n) where n is the length of the initial sequence.
      */
     public void addGapsAfterIndice(int nb, int indice)
     {
@@ -332,6 +344,8 @@ public class SequenceAbstract //implements Iterable<Character>
      * @param indice which the gaps must be added after.
      * @return absolute position (eg including offset) where the gaps has been
      * added.
+     *
+     * Complexity: O(n) where n is the length of the initial sequence.
      */
     public int addGapsAfterIndiceAndReturnPosition(int nb, int indice)
     {
@@ -374,6 +388,8 @@ public class SequenceAbstract //implements Iterable<Character>
      * @param indice which the gaps must be added after.
      * @return absolute position (eg including offset) where the gaps has been
      * added.
+     *
+     * Complexity: O(n) where n is the length of the initial sequence.
      */
     public int addGapsAfterIndiceEndAndReturnPosition(int nb, int indice)
     {
@@ -395,13 +411,13 @@ public class SequenceAbstract //implements Iterable<Character>
             nb_gaps[i] += nb;
         return (real_pos + 1 + nb_gaps[i] - nb);
     }
-
-
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
     /**
      * @return the string representation of the sequence.
+     *
+     * Complexity: O(m) where m is the length of the aligned sequence.
      */
     public String toString()
     {
@@ -467,6 +483,10 @@ public class SequenceAbstract //implements Iterable<Character>
     /**
      * @return true if the sequences string representation are equals else
      * false.
+     *
+     * Complexity: O(n) where n is the length of the initial sequences. O(1) if
+     * the the sequences doesn't have the same number of nucleotide in their
+     * initial sequences.
      */
     public boolean equals(Object o)
     {
@@ -484,6 +504,14 @@ public class SequenceAbstract //implements Iterable<Character>
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
+    /**
+     * @return true if the sequence has the same number of gaps between its
+     * nucleotides than the [other] sequence abstract passed in parameter.
+     *
+     * Complexity: O(n) where n is the length of the initial sequence. O(1) if
+     * the the sequences doesn't have the same number of nucleotide in their
+     * initial sequences.
+     */
     public boolean hasSameGapsNumber(SequenceAbstract other)
     {
         int i = 0;
@@ -492,8 +520,8 @@ public class SequenceAbstract //implements Iterable<Character>
             equal &= this.nb_gaps[i] == other.nb_gaps[i++];
         return (equal);
     }
-
     /* ---------------------------------------------------------------------- */
+
     /* ---------------------------------------------------------------------- */
     /*
     @Override
