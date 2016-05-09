@@ -1,7 +1,7 @@
 # Projet de bio-informatique
 
 * master: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=master)](https://travis-ci.com/dannywillems/bioinfo)
-* propage_en_deux_fois: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=propage_en_deux_fois)](https://travis-ci.com/dannywillems/bioinfo)
+* arc_comparator_length: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=arc_comparator_longest)](https://travis-ci.com/dannywillems/bioinfo)
 * aline: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=aline)](https://travis-ci.com/dannywillems/bioinfo)
 * Consensusaline: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=consensusaline)](https://travis-ci.com/dannywillems/bioinfo)
 
