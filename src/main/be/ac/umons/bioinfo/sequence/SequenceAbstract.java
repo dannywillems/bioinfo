@@ -312,7 +312,7 @@ public class SequenceAbstract //implements Iterable<Character>
      * @param nb number of gaps to add
      * @param indice which the gaps must be added after.
      *
-     * Complexity: O(n) where n is the length of the initial sequence.
+     * Complexity: O(1)
      */
     public void addGapsAfterIndice(int nb, int indice)
     {
@@ -345,7 +345,8 @@ public class SequenceAbstract //implements Iterable<Character>
      * @return absolute position (eg including offset) where the gaps has been
      * added.
      *
-     * Complexity: O(n) where n is the length of the initial sequence.
+     * Complexity: O(n) where n is the length of the initial sequence. This is
+     * due to the necessity to return the position.
      */
     public int addGapsAfterIndiceAndReturnPosition(int nb, int indice)
     {
@@ -389,7 +390,8 @@ public class SequenceAbstract //implements Iterable<Character>
      * @return absolute position (eg including offset) where the gaps has been
      * added.
      *
-     * Complexity: O(n) where n is the length of the initial sequence.
+     * Complexity: O(n) where n is the length of the initial sequence. This is
+     * due to the necessity to return the position.
      */
     public int addGapsAfterIndiceEndAndReturnPosition(int nb, int indice)
     {

@@ -24,7 +24,13 @@ public class ConsensusAbstract
     /**
      * Create a ConsensusAbstract object from a hamilonian path of
      * SequenceAlignment object.
-     * Complexity: ??? Be careful by using ArrayList.add !
+     *
+     * Complexity: O(k^2 * M_f * M_i^2)
+     * - k  = hamiltonian path size
+     * - M_i = the size of the longest initial sequence.
+     * - M_f = the size of the longest aligned sequence.
+     *
+     * The squares are due to ArrayList.add method.
      */
     public ConsensusAbstract(List<SequenceAlignment> hamiltonian_path)
     {
@@ -45,6 +51,7 @@ public class ConsensusAbstract
     /**
      * Create a ConsensusAbstract object from an ArrayList of
      * SequenceAlignmentAbstract.
+     *
      * Complexity: O(n) where n is the size of the hamiltonian path due to
      * initialisation of the alignment attribute.
      */
@@ -82,6 +89,7 @@ public class ConsensusAbstract
     /* ---------------------------------------------------------------------- */
     /**
      * Update the offset of the sequences in the hamiltonian path.
+     *
      * Complexity: O(n) where n is the size of the hamiltonian path. Using
      * ArrayList.get, SequenceAbstract.getOffset, SequenceAbstract.setOffset is
      * in O(1).
@@ -138,7 +146,10 @@ public class ConsensusAbstract
     /**
      * Propage up [nb] gaps from [begin] to the beginning of the hamiltonian
      * path at the position [pos].
-     * Complexity: ???
+     *
+     * Complexity: O((k - begin) M_i) where
+     * - k the size of the hamiltonian path
+     * - M_i the size of the longest initial sequence.
      */
     public void propageGapsUpPosFrom(int begin, int indice, int nb)
     {
@@ -154,7 +165,10 @@ public class ConsensusAbstract
 
     /**
      * Propage up gaps from [begin] to the beginning of the hamiltonian path.
-     * Complexity: ???
+     *
+     * Complexity: O( (k - begin) M_i^2)
+     * - k the size of the hamiltonian path
+     * - M_i the size of the longest initial sequence.
      */
     public void propageGapsUpFrom(int begin)
     {
@@ -178,7 +192,10 @@ public class ConsensusAbstract
     /**
      * Propage down [nb] gaps from [begin] to the end of the hamiltonian
      * path at the position [pos].
-     * Complexity: ???
+     *
+     * Complexity: O( (k - begin) M_i^2)
+     * - k the size of the hamiltonian path
+     * - M_i the size of the longest initial sequence.
      */
     public void propageGapsDownPosFrom(int begin, int indice, int nb)
     {
@@ -194,7 +211,10 @@ public class ConsensusAbstract
 
     /**
      * Propage down gaps from [begin] to the end of the hamiltonian path.
-     * Complexity: ???
+     *
+     * Complexity: O( (k - begin) M_i^2)
+     * - k the size of the hamiltonian path
+     * - M_i the size of the longest initial sequence.
      */
     public void propageGapsDownFrom(int begin)
     {
@@ -222,7 +242,10 @@ public class ConsensusAbstract
      * - propage up gaps
      * - update the alignment
      * - add ending gaps to the hamiltonian path.
-     * Complexity: ???
+     *
+     * Complexity: O(k + k^2 * M_i^2 + k + M_i) = O(k^2 * M_i^2)
+     * - k the size of the hamiltonian path
+     * - M_i the size of the longest initial sequence.
      */
     public void computeAlignment()
     {
@@ -267,6 +290,7 @@ public class ConsensusAbstract
      * Update the alignment attribute based on the hamiltonian path. It only
      * consists of ranging the hamiltonian path, taking the first sequence for
      * the first alignment and the second for all alignments.
+     *
      * Complexity: O(n) where n is the size of the hamiltonian path due to
      * ArrayList.set method used to update the alignment attribute and to
      * ArrayList.get to get the i-th element of the hamiltonian path.
@@ -285,6 +309,7 @@ public class ConsensusAbstract
 
     /**
      * Add ending gaps to the sequences in the hamiltonian path.
+     *
      * Complexity: O(n + m) where n is the number of sequences in the hamiltonian
      * path and where m is the compressed size (see getSize in SequenceAbstract
      * of the bigger sequence. The m is due to the computation of the size at
@@ -315,6 +340,7 @@ public class ConsensusAbstract
 
     /**
      * Add ending gaps to the sequences in the alignment.
+     *
      * Complexity: O(n + m) where n is the number of sequences in the alignment
      * and where m is the compressed size (see getSize in SequenceAbstract
      * of the bigger sequence. The m is due to the computation of the size at
@@ -400,6 +426,7 @@ public class ConsensusAbstract
     /* ---------------------------------------------------------------------- */
     /**
      * Check if two ConsensusAbstract object have the same hamiltonian paths.
+     *
      * Complexity: O(n + m) where n is the size of the hamiltonian path and m
      * the compressed size of the longer sequence in the hamiltonian path. The m
      * is due to the equals function.
@@ -419,6 +446,7 @@ public class ConsensusAbstract
 
     /* ---------------------------------------------------------------------- */
     /** Build the consensus.
+     *
      * FIXME: Convert all sequences in the aligment in strings to be able to use
      * the old algorithm which works on strings and char. We can think about an
      * Iterator.
