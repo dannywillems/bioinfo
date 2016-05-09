@@ -308,10 +308,9 @@ public class ConsensusAbstract
     /**
      * Add ending gaps to the sequences in the hamiltonian path.
      *
-     * Complexity: O(n + m) where n is the number of sequences in the hamiltonian
-     * path and where m is the compressed size (see getSize in SequenceAbstract
-     * of the bigger sequence. The m is due to the computation of the size at
-     * (*). NB: get on ArrayList is O(1).
+     * Complexity: O(n) where n is the number of sequences in the hamiltonian
+     * path and where m is the compressed size (see getSize in SequenceAbstract)
+     * NB: get on ArrayList is O(1).
      */
     public void addEndGaps()
     {
@@ -319,18 +318,12 @@ public class ConsensusAbstract
         for(int i = 0;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
-            // IMPROVEME: compute the size is not in O(1) but in O(m) where m
-            // is the compressed size. Can be improve by saving the size in the
-            // SequenceAbstract object. (*)
             max = Math.max(sa.s.getSize(), Math.max(sa.t.getSize(), max));
         }
 
         for(int i = 0;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
-            // IMPROVEME: compute the size is not in O(1) but in O(m) where m
-            // is the compressed size. Can be improve by saving the size in the
-            // SequenceAbstract object. (*)
             sa.s.addNbGaps(sa.s.getNbGapsLength() - 1, max - sa.s.getSize());
             sa.t.addNbGaps(sa.t.getNbGapsLength() - 1, max - sa.t.getSize());
         }
@@ -339,10 +332,10 @@ public class ConsensusAbstract
     /**
      * Add ending gaps to the sequences in the alignment.
      *
-     * Complexity: O(n + m) where n is the number of sequences in the alignment
+     * Complexity: O(n) where n is the number of sequences in the alignment
      * and where m is the compressed size (see getSize in SequenceAbstract
-     * of the bigger sequence. The m is due to the computation of the size at
-     * (*). NB: get on ArrayList is O(1).
+     * of the bigger sequence.
+     * NB: get on ArrayList is O(1).
      * @deprecated:
      *  Use addEndGaps following by updateAlignment ==> Same
      *  complexity and update at the same time all sequences
@@ -351,17 +344,11 @@ public class ConsensusAbstract
     {
         int max = 0;
         for(int i = 0;i < this.getAlignment().size();i++)
-            // IMPROVEME: compute the size is not in O(1) but in O(m) where m
-            // is the compressed size. Can be improve by saving the size in the
-            // SequenceAbstract object. (*)
             max = Math.max(this.getAlignment().get(i).getSize(), max);
 
         for(int i = 0;i < this.getAlignment().size();i++)
         {
             SequenceAbstract s = this.getAlignment().get(i);
-            // IMPROVEME: compute the size is not in O(1) but in O(m) where m
-            // is the compressed size. Can be improve by saving the size in the
-            // SequenceAbstract object. (*)
             s.addNbGaps(s.getNbGapsLength() - 1, max - s.getSize());
         }
     }
