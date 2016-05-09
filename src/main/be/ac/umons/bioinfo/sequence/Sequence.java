@@ -122,6 +122,7 @@ public class Sequence
     {
         this.addByteAtPos((byte) Nucleotide.GAP, i);
     }
+
     /**
      * Get the size of the sequence which is the number of bases.
      * @return The number of bases in this DNA sequence.
@@ -373,16 +374,6 @@ public class Sequence
                 a[i][j] = Math.max(Math.max(x, y), z);
             }
         }
-        /*
-        for(int i=1 ; i<= m ; i++)
-        {
-            for(int j=1 ; j<= n ; j++)
-            {
-                System.out.print(" "+ a[i][j] + " ");
-
-            }
-            System.out.println("");
-        }*/
 
         SequenceAlignment sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
         SequenceAlignment tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
@@ -529,7 +520,6 @@ public class Sequence
         Sequence alignedT = new Sequence(tArray);
 
 
-        // TODO: verifier que c est bien le comportement souhaite dans le cas des sequences inclues l une dans l autre
         if(bottom)
             return new SequenceAlignment(alignedS, alignedT, jMax);
         else
