@@ -74,7 +74,7 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 - [ ] Fix les FIXME/IMPROVEME.
   - [ ] Voir SequenceAbstract et ConsensusAbstract
   - [ ] Méthode *complement* dans *SequenceAbtract* pour être indépendant de *Sequence*
-  - [ ] Suppression de la séquence initiale dans SequenceAlignment
+  - [x] Suppression de la séquence initiale dans SequenceAlignment
 - [x] Renvoyer le complétaire inversé.
 - [ ] Nom de la séquence dans le fichier fasta output.
 - [ ] Remplir les complexités dans ConsensusAbstract et SequenceAbstract
