@@ -78,9 +78,8 @@ public class SequenceAbstract implements Iterable<Character>
      * Create a new abstract sequence from an aligned sequence (or not) eg
      * derive the initial sequence and compute the gaps array.
      *
-     * Complexity: O(n * k^2) where n is the size of the aligned sequence and k
-     * the number of nucleotides in the initial sequence. k^2 is due to
-     * ArrayList.add method.
+     * Complexity: O(n) where n is the size of the
+     * aligned sequence and k the number of nucleotides in the initial sequence.
      */
     public SequenceAbstract(Sequence s)
     {
@@ -88,7 +87,7 @@ public class SequenceAbstract implements Iterable<Character>
         while (s.getBaseAsByte(this.offset) == (byte) Nucleotide.GAP)
             this.offset++;
 
-        StringBuilder str = new StringBuilder();
+        StringBuilder str = new StringBuilder(s.getSize());
         int j;
         int i = this.offset;
         ArrayList<Integer> gaps = new ArrayList<Integer>();
@@ -122,10 +121,10 @@ public class SequenceAbstract implements Iterable<Character>
         while (Nucleotide.letter2Base(s.charAt(this.offset)) == (byte) Nucleotide.GAP)
             this.offset++;
 
-        StringBuilder str = new StringBuilder();
+        StringBuilder str = new StringBuilder(s.length());
         int j;
         int i = this.offset;
-        ArrayList<Integer> gaps = new ArrayList<Integer>();
+        ArrayList<Integer> gaps = new ArrayList<Integer>(s.length());
         while (i < s.length())
         {
             str.append(s.charAt(i));

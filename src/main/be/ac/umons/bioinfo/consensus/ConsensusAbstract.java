@@ -25,20 +25,18 @@ public class ConsensusAbstract
      * Create a ConsensusAbstract object from a hamilonian path of
      * SequenceAlignment object.
      *
-     * Complexity: O(k^2 * M_f * M_i^2)
+     * Complexity: O(k * M_f * M_i)
      * - k  = hamiltonian path size
      * - M_i = the size of the longest initial sequence.
      * - M_f = the size of the longest aligned sequence.
-     *
-     * The squares are due to ArrayList.add method.
      */
     public ConsensusAbstract(List<SequenceAlignment> hamiltonian_path)
     {
-        this.hamiltonian_path = new ArrayList<SequenceAlignmentAbstract>();
+        this.hamiltonian_path = new ArrayList<SequenceAlignmentAbstract>(hamiltonian_path.size());
         for(int i = 0;i < hamiltonian_path.size();i++)
             this.hamiltonian_path.add(new SequenceAlignmentAbstract(hamiltonian_path.get(i)));
 
-        this.alignment = new ArrayList<SequenceAbstract>();
+        this.alignment = new ArrayList<SequenceAbstract>(hamiltonian_path.size() + 1);
         for(int i = 0;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
@@ -64,7 +62,7 @@ public class ConsensusAbstract
         // initialize a Consensus but the updateAlignment method is in O(n)
         // where n is the hamiltonian path size, not in O(n^2) (due to insertion
         // in O(n)).
-        this.alignment = new ArrayList<SequenceAbstract>();
+        this.alignment = new ArrayList<SequenceAbstract>(this.getHamiltonianPath().size() + 1);
         for(int i = 0;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
