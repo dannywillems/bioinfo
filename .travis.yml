@@ -4,8 +4,5 @@ jdk:
     - oraclejdk8
 
 script:
-    - ant run
-    - ant fclean && ant run_test
-    - ant fclean && ant jar
-    - ant fclean && ant zip
+    - ant compile
 
