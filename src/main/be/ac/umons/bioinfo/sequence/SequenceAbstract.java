@@ -12,7 +12,11 @@ public class SequenceAbstract //implements Iterable<Character>
 
     /* ---------------------------------------------------------------------- */
     // CONSTRUCTORS
-    /* initial sequence is useless, if no mutation, the initial sequence is the
+    /**
+     * Build a SequenceAbstract object from an initial sequence and the array of
+     * gaps.
+     *
+     * Initial sequence is useless, if no mutation, the initial sequence is the
      * aligned sequence where gaps has been removed
      */
     public SequenceAbstract(Sequence initial, int[] nb_gaps)
@@ -22,9 +26,29 @@ public class SequenceAbstract //implements Iterable<Character>
         this.offset = 0;
     }
 
-    /* initial sequence is useless, if no mutation, the initial sequence is the
+    /**
+     * Build a SequenceAbstract object from an initial sequence, the array of
+     * gaps and the offset.
+     *
+     * Initial sequence is useless, if no mutation, the initial sequence is the
+     * aligned sequence where gaps has been removed
+     */
+    public SequenceAbstract(Sequence initial, int[] nb_gaps, int offset)
+    {
+        this.initial = initial;
+        this.nb_gaps = nb_gaps;
+        this.offset = offset;
+    }
+
+    /**
+     * Build SequenceAbtract object from an aligned sequence and his initial
+     * sequence.
+     *
+     * Initial sequence is useless, if no mutation, the initial sequence is the
      * aligned sequence where gaps has been removed. Only used to defined the
      * size of the gaps array but can be replaced by an arraylist.
+     *
+     * Complexity: O(n) where n is the size of the aligned sequence.
      */
     public SequenceAbstract(Sequence initial, Sequence aligned)
     {
@@ -49,6 +73,10 @@ public class SequenceAbstract //implements Iterable<Character>
     /**
      * Create a new abstract sequence from an aligned sequence (or not) eg
      * derive the initial sequence and compute the gaps array.
+     *
+     * Complexity: O(n * k^2) where n is the size of the aligned sequence and k
+     * the number of nucleotides in the initial sequence. k^2 is due to
+     * ArrayList.add method.
      */
     public SequenceAbstract(Sequence s)
     {
@@ -79,23 +107,56 @@ public class SequenceAbstract //implements Iterable<Character>
 
     /**
      * Create a new abstract sequence from a string.
-     * FIXME: lazy to reimplement an independent method from Sequence class.
-     * Must be independent!
+     *
+     * Complexity: O(n * k^2) where n is the size of the aligned sequence and k
+     * the number of nucleotides in the initial sequence. k^2 is due to
+     * ArrayList.add method. charAt is in contant time.
      */
     public SequenceAbstract(String s)
     {
-        this(new Sequence(s));
+        this.offset = 0;
+        while (Nucleotide.letter2Base(s.charAt(this.offset)) == (byte) Nucleotide.GAP)
+            this.offset++;
+
+        StringBuilder str = new StringBuilder();
+        int j;
+        int i = this.offset;
+        ArrayList<Integer> gaps = new ArrayList<Integer>();
+        while (i < s.length())
+        {
+            str.append(s.charAt(i));
+            j = 0;
+            while (i + j + 1 < s.length() && Nucleotide.letter2Base(s.charAt(i + j + 1)) == (byte) Nucleotide.GAP)
+                j++;
+            gaps.add(j);
+            i = i + j + 1;
+        }
+
+        this.nb_gaps = new int[gaps.size()];
+        for(int k = 0;k < gaps.size();k++)
+            this.nb_gaps[k] = gaps.get(k);
+
+        this.initial = new Sequence(str.toString());
     }
     /* ---------------------------------------------------------------------- */
 
     /* ---------------------------------------------------------------------- */
     /**
-     * TODO
+     * @return the complement inverse of the sequence.
+     *
+     * Complexity:
      */
     public SequenceAbstract complement()
     {
-        Sequence s = new Sequence(this.toString());
-        return (new SequenceAbstract(s.complement()));
+        Sequence init = this.initial.complement();
+        int[] gaps = new int[this.nb_gaps.length];
+
+        gaps[this.nb_gaps.length - 1] = this.getOffset();
+
+        for(int i = 0;i < this.nb_gaps.length - 2;i++)
+            gaps[i] = this.nb_gaps[this.nb_gaps.length - i - 2];
+
+        return (new SequenceAbstract(init, gaps, this.nb_gaps[this.nb_gaps.length - 1]));
     }
     /* ---------------------------------------------------------------------- */
 

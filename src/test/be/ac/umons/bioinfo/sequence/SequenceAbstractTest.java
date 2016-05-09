@@ -103,6 +103,57 @@ public class SequenceAbstractTest
 
     /* ---------------------------------------------------------------------- */
     @Test
+    public void complementTest()
+    {
+        SequenceAbstract t = new SequenceAbstract("cagcgtgg");
+        SequenceAbstract res = t.complement();
+        SequenceAbstract wanted = new SequenceAbstract("ccacgctg");
+
+        assertEquals(wanted, res);
+    }
+    @Test
+    public void complementOfComplementMustBeIdentity()
+    {
+        List<SequenceAbstract> sequences = new ArrayList<SequenceAbstract>();
+        sequences.add(new SequenceAbstract("GATTACA"));
+        sequences.add(new SequenceAbstract("ATCATTAGTGG"));
+        sequences.add(new SequenceAbstract("A"));
+        sequences.add(new SequenceAbstract("G"));
+        sequences.add(new SequenceAbstract("T"));
+        sequences.add(new SequenceAbstract("C"));
+
+        for(SequenceAbstract s : sequences)
+            assertEquals(s, s.complement().complement());
+    }
+
+    @Test
+    public void complementWithGaps()
+    {
+        SequenceAbstract t = new SequenceAbstract("--ca--gc--gtgg---");
+        SequenceAbstract res = t.complement();
+        SequenceAbstract wanted = new SequenceAbstract("---ccac--gc--tg--");
+
+        assertEquals(wanted, res);
+    }
+
+    @Test
+    public void complementWithGapsComplementOfComplementMustBeIdentidyTest()
+    {
+        List<SequenceAbstract> sequences = new ArrayList<SequenceAbstract>();
+        sequences.add(new SequenceAbstract("GA--TT--A-CA---"));
+        sequences.add(new SequenceAbstract("-----ATCA--TTA--GTGG--"));
+        sequences.add(new SequenceAbstract("A----"));
+        sequences.add(new SequenceAbstract("---G---"));
+        sequences.add(new SequenceAbstract("---T--"));
+        sequences.add(new SequenceAbstract("----C----"));
+
+        for(SequenceAbstract s : sequences)
+            assertEquals(s, s.complement().complement());
+    }
+    /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    @Test
     public void arrayGapsNoGapsTest()
     {
         Sequence initial = new Sequence("actg");
