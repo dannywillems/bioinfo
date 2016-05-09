@@ -146,14 +146,8 @@ public class ConsensusAbstract
         for (int i = begin - 1;i >= 0;i--)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
-            //System.out.println("On doit propager à l'indice " + indice + " dans " + sa.t.toString());
-            //pos = sa.t.addGapsAfterIndiceAndReturnPosition(nb, indice);
-            /*
-            if (indice == sa.t.nb_gaps[sa.t.nb_gaps.length - 1])
-                System.out.println("On doit insérer à la fin");
-            */
-            pos = sa.t.addGapsAfterIndiceEndAndReturnPosition(nb, indice);
-            //System.out.println("On doit propager à la position " + pos + " dans " + sa.s.toString());
+            pos = sa.t.addGapsAfterIndiceAndReturnPosition(nb, indice);
+            //pos = sa.t.addGapsAfterIndiceEndAndReturnPosition(nb, indice);
             indice = sa.s.addGapsAndReturnIndice(nb, pos);
         }
     }
@@ -192,11 +186,8 @@ public class ConsensusAbstract
         for (int i = begin + 1;i < this.getHamiltonianPath().size();i++)
         {
             SequenceAlignmentAbstract sa = this.getHamiltonianPath().get(i);
-            pos = sa.s.addGapsAfterIndiceEndAndReturnPosition(nb, indice);
-            /*
-            if (indice == sa.t.nb_gaps[sa.t.nb_gaps.length - 1])
-                System.out.println("On doit insérer à la fin");
-            */
+            //pos = sa.s.addGapsAfterIndiceEndAndReturnPosition(nb, indice);
+            pos = sa.s.addGapsAfterIndiceAndReturnPosition(nb, indice);
             indice = sa.t.addGapsAndReturnIndice(nb, pos);
         }
     }
@@ -235,60 +226,41 @@ public class ConsensusAbstract
      */
     public void computeAlignment()
     {
-        try
-        {
-            this.updateOffset();
+        this.updateOffset();
 
-            //System.out.println("On propage vers le bas...");
-            for (int i = 0;i < this.getHamiltonianPath().size() - 1;i++)
-            {
-                this.checkOffsetSame("Offset avant propagation bas: ", i);
+        for (int i = 0;i < this.getHamiltonianPath().size() - 1;i++)
+        {
+            this.checkOffsetSame("Offset avant propagation bas: ", i);
+            this.propageGapsDownFrom(i);
+            this.checkOffsetSame("Offset après propagation bas: ", i);
+        }
+
+        for (int i = this.getHamiltonianPath().size() - 1;i >= 1;i--)
+        {
+            this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
+            this.propageGapsUpFrom(i);
+            this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
+        }
+
+        /* To propage up and down at the same time. NOT WORKING. FIXME -->
+         * ArrayOutOfBounds.
+        for (int i = 0;i < this.getHamiltonianPath().size();i++)
+        {
+            if (i == 0)
                 this.propageGapsDownFrom(i);
-                this.checkOffsetSame("Offset après propagation bas: ", i);
-            }
-            FastaWriter.writeAlignment(this.getHamiltonianPath(), new File("../../hp_after_down_" + Debug.count_writer + ".fasta"), 80);
-
-            //System.out.println("Résultat après propagation vers le bas:");
-            //this.showHamiltonianPath();
-            //System.out.println("########################################");
-
-            //System.out.println("On propage vers le haut...");
-            for (int i = this.getHamiltonianPath().size() - 1;i >= 1;i--)
-            {
-                this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
+            else if (i == this.getHamiltonianPath().size())
                 this.propageGapsUpFrom(i);
-                this.checkOffsetSame("Offset avant propagation haut: ", i - 1);
-            }
-            FastaWriter.writeAlignment(this.getHamiltonianPath(), new File("../../hp_after_up_" + Debug.count_writer + ".fasta"), 80);
-            Debug.count_writer++;
-
-            //System.out.println("Résultat après propagation vers le haut:");
-            //this.showHamiltonianPath();
-            //System.out.println("########################################");
-            /* To propage up and down at the same time. NOT WORKING. FIXME -->
-             * ArrayOutOfBounds.
-            for (int i = 0;i < this.getHamiltonianPath().size();i++)
+            else
             {
-                if (i == 0)
-                    this.propageGapsDownFrom(i);
-                else if (i == this.getHamiltonianPath().size())
-                    this.propageGapsUpFrom(i);
-                else
-                {
-                    this.propageGapsDownFrom(i);
-                    this.propageGapsUpFrom(i);
-                }
+                this.propageGapsDownFrom(i);
+                this.propageGapsUpFrom(i);
             }
-            */
+        }
+        */
 
-            this.addEndGaps();
-            this.updateAlignment();
-            this.checkEqualitySameGapsNumber();
-        }
-        catch (IOException e)
-        {
-            System.out.println(e);
-        }
+        this.addEndGaps();
+        this.updateAlignment();
+        this.checkEqualitySameGapsNumber();
     }
 
     /**
@@ -483,7 +455,7 @@ public class ConsensusAbstract
             }
             // else, we know the max is not a gap because getBase manage this
             // case. So we can add without regarding the type.
-            else if (base != Nucleotide.base2letter((byte) Nucleotide.GAP))
+            else
                 consensus.append(base);
         }
         return (new SequenceAbstract(consensus.toString()));
