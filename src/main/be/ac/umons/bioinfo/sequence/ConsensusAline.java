@@ -44,6 +44,62 @@ public class ConsensusAline {
     }
 
 
+    public HashMap<Integer, Counter> computeAlignementDebug(List<SequenceAlignment> path) {
+
+        HashMap<Integer, Counter> count = new HashMap<Integer, Counter>();
+        int posMin = Integer.MAX_VALUE; // the minimum position in the map count
+        int posMax = Integer.MIN_VALUE; // the maximum position in the map count
+        // these two variables allows to know if a counter already exists for a specific offset
+        int offset = 0;
+
+        for (SequenceAlignment alignment : path) {
+
+
+            Sequence s1 = alignment.s1;
+            Sequence s2 = alignment.s2;
+            int dec = 0;
+            if (s1.content[0] == Sequence.GAP) {
+                while (s1.content[dec] == Sequence.GAP) {
+                    offset -= 1;
+                    dec += 1;
+                }
+            }
+
+            //On est mis à la position la plus à gauche possible, on peut commencer à compter
+            int pos = offset;
+
+            for (int i = 0; i <= s1.content.length - 1; i++)
+            {
+
+                if (!count.containsKey(pos))
+                {
+                    Counter c = new Counter();
+                    c.vote(s1.content[i]);
+                    count.put(pos, c);
+
+                    posMin = Math.min(posMin, pos);
+                    posMax = Math.max(posMax, pos);
+
+                } else {
+                    count.get(pos).vote(s2.content[i]);
+                    pos += 1;
+
+                }
+
+            }
+            if (s1.content[0] !=Sequence.GAP)
+            {
+                int j = 0;
+                while(s2.content[j] ==Sequence.GAP)
+                {
+                    offset += 1;
+                    j += 1;
+                }
+            }
+        }
+        return count;
+
+    }
 
 
 
@@ -58,8 +114,7 @@ public class ConsensusAline {
 
 
 
-
-    public ConsensusResult computeConsensus(){
+    public HashMap<Integer,Counter> computeConsensus(){
 
         //stock the counter for all column of the alignement
 
@@ -97,7 +152,8 @@ public class ConsensusAline {
             for(int i = 0 ; i < s1.getSize(); i++)
             {
                 //System.out.println("je suis en train de traiter la position "+pos);
-                if( !(posMin <= pos && pos <= posMax)) //count.containsKey(offset) ?
+                //if( !(posMin <= pos && pos <= posMax))
+                if(!count.containsKey(pos)) //count.containsKey(pos) ?
                 {
                     //System.out.println("Pas encore de vote pour cette position");
                     //There is no counter yet for this offset
@@ -111,7 +167,6 @@ public class ConsensusAline {
                     posMax = Math.max(posMax, pos);
                 }
 
-                System.out.println(count.get(pos));
 
                 if(s1.content[i] == Sequence.GAP && count.get(pos).getLast() != Sequence.GAP)
                 {
@@ -149,6 +204,7 @@ public class ConsensusAline {
                         // à l'étape d'avant on avait considéré un Sequence.GAP ?
                         count.get(pos).setMoveRight(1);
 
+                        assert(count.containsKey(pos+1)==true);
                         if(count.containsKey(pos+1))
                             count.get(pos + 1).vote(s2.content[i]);
                         else
@@ -156,8 +212,9 @@ public class ConsensusAline {
                             Counter c = new Counter();
                             c.vote(s2.content[i]);
                             count.put(pos +1,c);
-                        }
+                            posMax += 1;
 
+                        }
                         pos += 2;
 
                     }
@@ -168,7 +225,14 @@ public class ConsensusAline {
                         //mais peut etre qu'on a une propagation induite avant
 
                         int moveRight = count.get(pos).getMoveRight();
-                        count.get(pos + moveRight).vote(s2.content[i]);
+                        if(count.containsKey(pos+moveRight))
+                            count.get(pos + moveRight).vote(s2.content[i]);
+                        else
+                        {
+                            Counter c = new Counter();
+                            c.vote(s2.content[i]);
+                            count.put(pos+moveRight,c);
+                        }
 
                         //System.out.println("actualisiation du vote");
                         //System.out.println(count.get(pos + moveRight));
@@ -189,25 +253,28 @@ public class ConsensusAline {
             //System.out.println("offset en fin de traitement "+offset);
 
         }
-        return new ConsensusResult(count,posMin,posMax);
+        return count;
 
 
     }
 
     public Sequence buildSequence()
     {
-        ConsensusResult consensus = this.computeConsensus();
-        HashMap<Integer,Counter> map = consensus.map;
+        HashMap<Integer,Counter> map = this.computeConsensus();
 
-        byte[] result = new byte[consensus.posMax - consensus.posMin +1];
+        int min = map.keySet().stream().mapToInt(Integer::intValue).min().getAsInt();
+        int max = map.keySet().stream().mapToInt(Integer::intValue).max().getAsInt();
 
-        int i = consensus.posMin;
+        byte[] result = new byte[max - min +1];
+
+        int i = min;
         int index_tab = 0;
-        while(i <= consensus.posMax)
+        while(i <= max)
         {
             //System.out.println("position "+ i);
             //System.out.println("maximum "+map.get(i).getMaximum());
-            result[index_tab] = map.get(i).getMaximum();
+            if(map.get(i).getMaximum() != Sequence.GAP)
+                result[index_tab] = map.get(i).getMaximum();
             i += 1;
             index_tab += 1;
         }

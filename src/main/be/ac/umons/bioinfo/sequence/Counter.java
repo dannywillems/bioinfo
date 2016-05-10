@@ -60,7 +60,7 @@ public class Counter {
 
         //pour le moment je ne considère pas qu'on puisse avoir un gap comme max
 
-        for(int i = 1; i <= 4 ;i++)
+        for(int i = 0; i <= 4 ;i++)
         {
             if(tab[i] >= max_value)
             {

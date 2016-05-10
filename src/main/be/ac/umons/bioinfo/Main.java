@@ -14,7 +14,7 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
-        //test();
+        test();
         //cible(1, false, false, true);
         //cible(2, false, false, true);
         //cible(3, false, false, true); // A exécuter en dernier, car long
@@ -49,7 +49,7 @@ public class Main
     {
         Greedy greed = new Greedy();
 
-
+        /*
         Sequence s = new Sequence("attagaccatgcggc");
         Sequence t = new Sequence("atcggcattcagt");
         Sequence u = new Sequence("cgtaccgtttacgttt");
@@ -59,9 +59,9 @@ public class Main
         list.add(s);
         list.add(t);
         list.add(u);
-        list.add(v);
-
+        list.add(v);*/
         /*
+
         Sequence f = new Sequence("catagtc");
         Sequence g = new Sequence("taactat");
         Sequence h = new Sequence("agactatcc");
@@ -88,10 +88,8 @@ public class Main
         list.add(h);
         list.add(i);
         list.add(j);
-        list.add(k);
-        */
+        list.add(k);*/
 
-        /*
         Sequence f = new Sequence("actttacg");
         Sequence g = new Sequence("ttgcacgat");
         Sequence h = new Sequence("ttgcg");
@@ -106,7 +104,7 @@ public class Main
         list.add(k);
         list.add(h);
         list.add(g);
-        list.add(i);*/
+        list.add(i);
 
         /*
         Sequence f = new Sequence("catagtc");
@@ -118,8 +116,8 @@ public class Main
         List<Sequence> list = new ArrayList<>();
         list.add(f);
         list.add(_h);
-        list.add(_g);
-        */
+        list.add(_g);*/
+
 
         List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
         System.out.println(result.size());

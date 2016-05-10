@@ -20,6 +20,75 @@ public class GreedyTest {
     public void greedyCollection1Test() {
 
         Greedy greed = new Greedy();
+        String path2 = "src/test/be/ac/umons/bioinfo/sequence/Collections/test1/collection1.fasta";
+        File file = new File(path2);
+
+        FastaReader fasta = new FastaReader();
+
+        try
+        {
+            List<Sequence> list = fasta.readFromFile(file);
+            List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
+            Iterator<SequenceAlignment> iterator = result.iterator();
+            /*
+            while (iterator.hasNext()) {
+                SequenceAlignment alignment = iterator.next();
+                System.out.println(alignment.s1);
+                System.out.println(alignment.s2);
+
+                System.out.println("****************");
+            }
+            */
+
+            ConsensusAline consensus = new ConsensusAline(result);
+            Sequence seq = consensus.buildSequence();
+            FastaWriter.write("cible1", seq,new File("./output1HautBas.fasta"),80);
+            System.out.println(seq);
+        } catch (IOException e) {
+            System.out.println("ça ne fonctionne pas ");
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    @Ignore
+    public void greedyCollection2Test() {
+
+        Greedy greed = new Greedy();
+        String path2 = "src/test/be/ac/umons/bioinfo/sequence/Collections/test2/collection2.fasta";
+        File file = new File(path2);
+
+        FastaReader fasta = new FastaReader();
+
+        try
+        {
+            List<Sequence> list = fasta.readFromFile(file);
+            List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
+            Iterator<SequenceAlignment> iterator = result.iterator();
+            /*
+            while (iterator.hasNext()) {
+                SequenceAlignment alignment = iterator.next();
+                System.out.println(alignment.s1);
+                System.out.println(alignment.s2);
+
+                System.out.println("****************");
+            }
+            */
+
+            ConsensusAline consensus = new ConsensusAline(result);
+            Sequence seq = consensus.buildSequence();
+            FastaWriter.write("cible2", seq,new File("./output2HautBas.fasta"),80);
+            System.out.println(seq);
+        } catch (IOException e) {
+            System.out.println("ça ne fonctionne pas ");
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void greedyCollection4Test() {
+
+        Greedy greed = new Greedy();
         String path2 = "src/test/be/ac/umons/bioinfo/sequence/Collections/test4/collection4.fasta";
         File file = new File(path2);
 
@@ -42,7 +111,41 @@ public class GreedyTest {
 
             ConsensusAline consensus = new ConsensusAline(result);
             Sequence seq = consensus.buildSequence();
-            FastaWriter.write("helloworld", seq,new File("./output4.fasta"),80);
+            FastaWriter.write("cible4", seq,new File("./output4HautBas.fasta"),80);
+            System.out.println(seq);
+        } catch (IOException e) {
+            System.out.println("ça ne fonctionne pas ");
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void greedyCollection5Test() {
+
+        Greedy greed = new Greedy();
+        String path2 = "src/test/be/ac/umons/bioinfo/sequence/Collections/test5/collection5.fasta";
+        File file = new File(path2);
+
+        FastaReader fasta = new FastaReader();
+
+        try
+        {
+            List<Sequence> list = fasta.readFromFile(file);
+            List<SequenceAlignment> result = greed.greedy(list, 1, -1, -2);
+            Iterator<SequenceAlignment> iterator = result.iterator();
+            /*
+            while (iterator.hasNext()) {
+                SequenceAlignment alignment = iterator.next();
+                System.out.println(alignment.s1);
+                System.out.println(alignment.s2);
+
+                System.out.println("****************");
+            }
+            */
+
+            ConsensusAline consensus = new ConsensusAline(result);
+            Sequence seq = consensus.buildSequence();
+            FastaWriter.write("cible5", seq,new File("./output5HautBas.fasta"),80);
             System.out.println(seq);
         } catch (IOException e) {
             System.out.println("ça ne fonctionne pas ");
