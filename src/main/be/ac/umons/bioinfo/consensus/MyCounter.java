@@ -1,7 +1,8 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.consensus;
 
 import java.util.HashMap;
 import java.util.Map;
+import be.ac.umons.bioinfo.sequence.*;
 
 /**
  * Created by aline on 6/05/16.
@@ -28,7 +29,7 @@ public class MyCounter
 
         for(Map.Entry<Byte, Integer> entry : counts.entrySet())
         {
-            if(entry.getValue() > max && entry.getKey() != Sequence.GAP)
+            if(entry.getValue() > max && entry.getKey() != Nucleotide.GAP)
             {
                 max = entry.getValue();
                 nucleotide = entry.getKey();

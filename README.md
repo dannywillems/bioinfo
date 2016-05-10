@@ -1,7 +1,7 @@
 # Projet de bio-informatique
 
 * master: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=master)](https://travis-ci.com/dannywillems/bioinfo)
-* propage_en_deux_fois: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=propage_en_deux_fois)](https://travis-ci.com/dannywillems/bioinfo)
+* arc_comparator_length: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=arc_comparator_longest)](https://travis-ci.com/dannywillems/bioinfo)
 * aline: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=aline)](https://travis-ci.com/dannywillems/bioinfo)
 * Consensusaline: [![Build Status](https://travis-ci.com/dannywillems/bioinfo.svg?token=VX8gT1NE5x87pjz7pBvN&branch=consensusaline)](https://travis-ci.com/dannywillems/bioinfo)
 
@@ -49,11 +49,12 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 * **ant doc**: construit la documentation grâce à javadoc.
 * **ant clean**: supprime le dossier bin généré lors de la compilation.
 * **ant fclean**: lance la dépendance *clean* et supprime l'archive *zip* si créée.
+* **ant jar**: crée le fichier jar comme demandé.
 
 ## To-do
 
 #### Fichiers fasta
-- [ ] Tests unitaires sur lecture/écriture de fichier fasta.
+- [x] Tests unitaires sur lecture/écriture de fichier fasta. **Pas utile**
 - [x] Lectures et écritures de fichier fasta.
 
 #### Alignement
@@ -62,16 +63,22 @@ Le nom de package du fichier *src/test/be/ac/umons/bioinfo/PACKAGE/ATest.java* e
 
 #### Algorithme greedy
 - [x] Implémenter l'algorithme.
-- [ ] Multi threader l'algorithme.
+- [x] Multi threader l'algorithme.
 - [ ] Fonctionne quand on a une séquence qui est dans l'autre ?
 - [x] Unit test pour l'algorithme greedy.
 
 #### MISC
-- [ ] Suppression des tests *inutiles*.
+- [x] Suppression des tests *inutiles*.
 - [ ] Suppression des commentaires *inutiles*.
 - [ ] Suppression des fonctions *inutiles*.
-  - [x] Récupérer positions gaps finaux et du début.
-- [ ] Fix les FIXME/IMPROVEME.
+- [x] Fix les FIXME/IMPROVEME.
+  - [x] Voir SequenceAbstract et ConsensusAbstract
+  - [x] Méthode *complement* dans *SequenceAbtract* pour être indépendant de *Sequence*
+  - [x] Suppression de la séquence initiale dans SequenceAlignment
+- [x] Renvoyer le complétaire inversé.
+- [ ] Nom de la séquence dans le fichier fasta output.
+- [x] Remplir les complexités dans ConsensusAbstract et SequenceAbstract
+- [x] Iterateur pour build pour SequenceAbstract
 
 ## Plus d'informations
 

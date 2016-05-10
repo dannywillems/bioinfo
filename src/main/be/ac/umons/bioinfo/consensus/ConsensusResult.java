@@ -1,7 +1,8 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.consensus;
 
 import java.util.HashMap;
 import java.util.Map;
+import be.ac.umons.bioinfo.sequence.*;
 
 /**
  * Created by aline on 5/05/16.

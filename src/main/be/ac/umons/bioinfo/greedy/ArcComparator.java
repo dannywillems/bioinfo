@@ -1,4 +1,4 @@
-package be.ac.umons.bioinfo.sequence;
+package be.ac.umons.bioinfo.greedy;
 
 import java.util.Comparator;
 
