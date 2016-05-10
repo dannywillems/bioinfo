@@ -59,9 +59,9 @@ public class Counter {
 
         int[] tab = new int[]{this.nbrGAP, this.nbrC,this.nbrG, this.nbrT, this.nbrA};
 
-        //pour le moment je ne considère pas qu'on puisse avoir un gap comme max
+        //If the max is a gap, we consider the second max
 
-        for(int i = 0; i <= 4 ;i++)
+        for(int i = 1; i <= 4 ;i++)
         {
             if(tab[i] >= max_value)
             {

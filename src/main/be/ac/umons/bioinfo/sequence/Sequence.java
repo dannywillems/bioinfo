@@ -592,7 +592,8 @@ public class Sequence
      *
      * @return true if there is no gap at the two extremities of the sequence; false otherwise
      */
-    public boolean noExternalGap(){return this.content[0] != Nucleotide.GAP && this.content[this.content.length-1] != Nucleotide.GAP;}
+    public boolean noExternalGap(){return this.content[0] != Nucleotide.GAP &&
+            this.content[this.content.length-1] != Nucleotide.GAP;}
 
     public Sequence rebuildAddingGaps(int[] gaps)
     {

@@ -14,10 +14,6 @@ public class ConsensusAline {
         this.path = path;
     }
 
-    public static Sequence consensus(List<SequenceAlignment> path)
-    {
-        return produceConsensusSequence(buildConsensus(path));
-    }
 
     /**
      *
@@ -37,14 +33,64 @@ public class ConsensusAline {
         return new Sequence(result);
     }
 
-    public static Map<Integer, MyCounter> buildConsensus(List<SequenceAlignment> path)
-    {
-        Map<Integer, MyCounter> votes = new HashMap<Integer, MyCounter>();
+    public HashMap<Integer, Counter> computeAlignementWithoutGapPropagation(List<SequenceAlignment> path) {
 
-        return votes;
+        HashMap<Integer, Counter> count = new HashMap<Integer, Counter>();
+        int posMin = Integer.MAX_VALUE; // the minimum position in the map count
+        int posMax = Integer.MIN_VALUE; // the maximum position in the map count
+        // these two variables allows to know if a counter already exists for a specific offset
+        int offset = 0;
+
+        for (SequenceAlignment alignment : path) {
+
+
+            Sequence s1 = alignment.s1;
+            Sequence s2 = alignment.s2;
+            int dec = 0;
+            if (s1.content[0] == Nucleotide.GAP) {
+                while (s1.content[dec] == Nucleotide.GAP) {
+                    offset -= 1;
+                    dec += 1;
+                }
+            }
+
+            int pos = offset;
+
+            for (int i = 0; i <= s1.content.length - 1; i++)
+            {
+
+                if (!count.containsKey(pos))
+                {
+                    Counter c = new Counter();
+                    c.vote(s1.content[i]);
+                    count.put(pos, c);
+
+                    posMin = Math.min(posMin, pos);
+                    posMax = Math.max(posMax, pos);
+
+                } else {
+                    count.get(pos).vote(s2.content[i]);
+                    pos += 1;
+
+                }
+
+            }
+            if (s1.content[0] != Nucleotide.GAP)
+            {
+                int j = 0;
+                while(s2.content[j] == Nucleotide.GAP)
+                {
+                    offset += 1;
+                    j += 1;
+                }
+            }
+        }
+        return count;
+
     }
 
-    public ConsensusResult computeConsensus(){
+
+    public HashMap<Integer,Counter> computeConsensus(){
 
         //stock the counter for all column of the alignement
 
@@ -75,39 +121,30 @@ public class ConsensusAline {
             }
 
             int pos = offset;
-            //System.out.print("offset "+offset);
-            //System.out.println(" pos "+pos);
 
 
             for(int i = 0 ; i < s1.getSize(); i++)
             {
-                //System.out.println("je suis en train de traiter la position "+pos);
-                if( !(posMin <= pos && pos <= posMax)) //count.containsKey(offset) ?
+                if( ! count.containsKey(pos))
                 {
-                    //System.out.println("Pas encore de vote pour cette position");
                     //There is no counter yet for this offset
                     Counter c = new Counter();
                     c.vote(s1.content[i]);
-                    //System.out.println("vote a cette etape");
-                    //System.out.println(c);
                     count.put(pos,c);
 
                     posMin = Math.min(posMin, pos);
                     posMax = Math.max(posMax, pos);
                 }
 
-                System.out.println(count.get(pos));
 
                 if(s1.content[i] == Nucleotide.GAP && count.get(pos).getLast() != Nucleotide.GAP)
                 {
-                    //System.out.println("propagation de gap vers le haut");
 
-                    // Alors nous sommes dans le cas où nous voulons propager un gap vers le haut
-                    //Tous les compteurs enregistrés à une position supérieure doivent donc etre decalés vers la droite
+                    //There is a gap we have to propagate upward
+                    //All counter after this position are shift to the right
 
                     Counter c = new Counter();
                     c.vote(s2.content[i]);
-                    // il faut décaler toutes les clefs plus grandes que pos d'une unité
                     count.put(posMax+1,count.get(posMax));
                     for(int j = posMax; j > pos ; j--)
                         count.put(j+1,count.get(j));
@@ -118,21 +155,15 @@ public class ConsensusAline {
                 }
                 else
                 {
-                    if (s1.content[i] != Nucleotide.GAP && count.get(pos).getLast() ==Nucleotide.GAP)
+                    if (s1.content[i] != Nucleotide.GAP && count.get(pos).getLast() == Nucleotide.GAP)
                     {
-                        //System.out.println("propagation de gap vers le bas");
+
+                        //There is a gap in the down alignement at the precedent step we have to propagate
 
 
-                        //Alors cela signifie qu'il y avait un gap dans la sequence inferieure de l etape precedente
-                        // à propager vers le bas.
-                        //Il faut donc une nouvelle fois décaler les compteurs vers la droite
-                        //Avant cela on va voter puis seulement decaller
-                        //Sinon on peut decaller et puis voter pour deux positions plus loin que la position en cours
-                        // de traitement
-
-                        count.get(pos).vote(Nucleotide.GAP);// voter pour de vrai pour unNucleotide.GAP ou se contenter de dire que
-                        // à l'étape d'avant on avait considéré un Nucleotide.GAP ?
-                        count.get(pos).setMoveRight(1);
+                        count.get(pos).vote(Nucleotide.GAP);
+                        count.get(pos).setMoveRight(1); // stock into the counter the shift to do in this position
+                        //due to a down propagation
 
                         if(count.containsKey(pos+1))
                             count.get(pos + 1).vote(s2.content[i]);
@@ -141,6 +172,8 @@ public class ConsensusAline {
                             Counter c = new Counter();
                             c.vote(s2.content[i]);
                             count.put(pos +1,c);
+                            posMax += 1;
+
                         }
 
                         pos += 2;
@@ -148,15 +181,11 @@ public class ConsensusAline {
                     }
                     else
                     {
-                        //System.out.println("pas de propagation");
 
-                        //mais peut etre qu'on a une propagation induite avant
+                        //There exists maybe a propagation induces by a gap propopagation (downward)
 
                         int moveRight = count.get(pos).getMoveRight();
                         count.get(pos + moveRight).vote(s2.content[i]);
-
-                        //System.out.println("actualisiation du vote");
-                        //System.out.println(count.get(pos + moveRight));
                         pos += 1 + moveRight;
                     }
                 }
@@ -171,28 +200,30 @@ public class ConsensusAline {
                     i += 1;
                 }
             }
-            //System.out.println("offset en fin de traitement "+offset);
 
         }
-        return new ConsensusResult(count,posMin,posMax);
+        return count;
 
 
     }
 
     public Sequence buildSequence()
     {
-        ConsensusResult consensus = this.computeConsensus();
-        HashMap<Integer,Counter> map = consensus.map;
+        HashMap<Integer,Counter> votes = this.computeConsensus();
 
-        byte[] result = new byte[consensus.posMax - consensus.posMin +1];
+        int min = votes.keySet().stream().mapToInt(Integer::intValue).min().getAsInt();
+        int max = votes.keySet().stream().mapToInt(Integer::intValue).max().getAsInt();
 
-        int i = consensus.posMin;
+
+        byte[] result = new byte[max - min +1];
+
+        int i = min;
         int index_tab = 0;
-        while(i <= consensus.posMax)
+        while(i <= max)
         {
-            //System.out.println("position "+ i);
-            //System.out.println("maximum "+map.get(i).getMaximum());
-            result[index_tab] = map.get(i).getMaximum();
+
+            if( votes.get(i).getMaximum() == Nucleotide.GAP)
+                result[index_tab] = votes.get(i).getMaximum();
             i += 1;
             index_tab += 1;
         }
