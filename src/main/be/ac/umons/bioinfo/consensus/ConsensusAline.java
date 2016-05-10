@@ -222,7 +222,7 @@ public class ConsensusAline {
         while(i <= max)
         {
 
-            if( votes.get(i).getMaximum() == Nucleotide.GAP)
+            if( votes.get(i).getMaximum() != Nucleotide.GAP)
                 result[index_tab] = votes.get(i).getMaximum();
             i += 1;
             index_tab += 1;
