@@ -82,7 +82,7 @@ public class SequenceAbstract implements Iterable<Character>
      * derive the initial sequence and compute the gaps array.
      *
      * Complexity: O(n) where n is the size of the
-     * aligned sequence and k the number of nucleotides in the initial sequence.
+     * aligned sequence.
      */
     public SequenceAbstract(Sequence s)
     {
