@@ -2,11 +2,11 @@ package be.ac.umons.bioinfo.sequence;
 
 public class Nucleotide
 {
-    public static final int GAP = 4;
-    public static final int C = 0;
-    public static final int G = 1;
-    public static final int T = 2;
-    public static final int A = 3;
+    public static final byte GAP = 4;
+    public static final byte C = 0;
+    public static final byte G = 1;
+    public static final byte T = 2;
+    public static final byte A = 3;
 
     public static byte letter2Base(char c)
     {
