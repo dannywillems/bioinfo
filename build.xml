@@ -130,7 +130,7 @@
   <!-- ################################################################### -->
 
   <!-- ################################################################### -->
-  <target name="zip" depends="fclean">
+  <target name="zip" depends="fclean,jar">
     <zip destfile="${zip_name}"
       excludes="${zip_name},
         .git/,
@@ -141,7 +141,8 @@
         .travis.yml,
         bioinfo.iml,
         .idea/,
-        .settings/"
+        .settings/,
+        README.md"
         basedir="."
       />
   </target>
@@ -151,8 +152,6 @@
   <target name="jar" depends="compile">
     <jar  destfile = "${jar_name}">
       <fileset dir="${bin_src}" />
-      <fileset dir="src" />
-      <fileset dir="lib" />
       <manifest>
         <attribute name="Main-Class" value="${exe}" />
       </manifest>
