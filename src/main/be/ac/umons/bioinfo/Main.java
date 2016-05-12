@@ -21,8 +21,6 @@ public class Main
         compute(jar(args));
     }
 
-
-
     public static String[] jar(String[] args)
     {
         String[] f = new String[3];
@@ -54,8 +52,8 @@ public class Main
             ConsensusAbstract c = new ConsensusAbstract(result);
             c.computeAlignment();
             SequenceAbstract consensus_final = c.build(false);
-            FastaWriter.write("Groupe 9 Longueur "+ consensus_final.getSize(), consensus_final, new File(f[1]), 80);
-            FastaWriter.write("Groupe 9 Longueur "+ consensus_final.getSize(), consensus_final.complement(), new File(f[2]), 80);
+            FastaWriter.write(" Groupe 9 Longueur " + consensus_final.getSize(), consensus_final, new File(f[1]), 80);
+            FastaWriter.write(" Groupe 9 Longueur " + consensus_final.getSize(), consensus_final.complement(), new File(f[2]), 80);
         }
         catch (IOException e)
         {
