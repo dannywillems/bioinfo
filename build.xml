@@ -142,6 +142,7 @@
         bioinfo.iml,
         .idea/,
         .settings/,
+        res/collections/,
         README.md"
         basedir="."
       />
