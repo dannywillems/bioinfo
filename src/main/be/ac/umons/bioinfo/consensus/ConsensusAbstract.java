@@ -465,8 +465,6 @@ public class ConsensusAbstract
                 if (base != Nucleotide.base2letter((byte) Nucleotide.GAP))
                     consensus.append(base);
             }
-            // else, we know the max is not a gap because getBase manage this
-            // case. So we can add without regarding the type.
             else if (base != Nucleotide.base2letter((byte) Nucleotide.GAP))
                 consensus.append(base);
         }
