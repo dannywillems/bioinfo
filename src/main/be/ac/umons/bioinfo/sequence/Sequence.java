@@ -403,35 +403,6 @@ public class Sequence
         return ret;
     }
 
-    public static List<SequenceAlignment> realSemiGlobalAlignment(Sequence s1,
-                                                                  Sequence s2,
-                                                                  int match,
-                                                                  int mismatch,
-                                                                  int gap)
-    {
-        int a[][] = computeSimMat(s1,s2,match, mismatch,gap);
-        SequenceAlignment sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
-        SequenceAlignment tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
-        List<SequenceAlignment> ret = new ArrayList<>();
-
-
-        if(sBefore.score >= tBefore.score)
-        {
-            SequenceAlignment sBeforeInversed = new SequenceAlignment(sBefore.s2, sBefore.s1, sBefore.score);
-            ret.add(sBefore);
-            ret.add(sBeforeInversed);
-        }
-        else
-        {
-            SequenceAlignment tBeforeInversed = new SequenceAlignment(tBefore.s2 , tBefore.s2, tBefore.score);
-            ret.add(tBeforeInversed);
-            ret.add(tBefore);
-        }
-
-        return ret;
-
-
-    }
 
 
     /**
