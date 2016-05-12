@@ -336,18 +336,18 @@ public class Sequence
     }
 
     /**
-     * Computes the semi-global aligment of this sequence and an other one, considering
-     * specific costs for a match, a mismatch, and a gap.
+     * Given two sequences s1 and s2, cost of match, mismatch and gap,
+     * computes the matrix of similarities  between s1 and s2
      * @param s1 a sequence
      * @param s2 an other sequence
      * @param match the cost of a match
      * @param mismatch the cost of a mismatch
      * @param gap the cost of a gap
-     * @return the result of the alignment of this sequence with the other one.
+     * @return the matrix of simiraties between s1 and s2
      */
-    public static List<SequenceAlignment> semiGlobalAlignment(Sequence s1, Sequence s2, int match, int mismatch, int gap)
-    {
 
+    public static int[][] computeSimMat(Sequence s1, Sequence s2, int match, int mismatch, int gap)
+    {
         final int m = s1.getSize();
         final int n = s2.getSize();
 
@@ -374,6 +374,23 @@ public class Sequence
                 a[i][j] = Math.max(Math.max(x, y), z);
             }
         }
+        return a;
+    }
+
+    /**
+     * Computes the semi-global aligment of this sequence and an other one, considering
+     * specific costs for a match, a mismatch, and a gap.
+     * @param s1 a sequence
+     * @param s2 an other sequence
+     * @param match the cost of a match
+     * @param mismatch the cost of a mismatch
+     * @param gap the cost of a gap
+     * @return the result of the alignment of this sequence with the other one.
+     */
+    public static List<SequenceAlignment> semiGlobalAlignment(Sequence s1, Sequence s2, int match, int mismatch, int gap)
+    {
+
+        int a[][] = computeSimMat(s1,s2, match, mismatch, gap);
 
         SequenceAlignment sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
         SequenceAlignment tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
@@ -385,6 +402,37 @@ public class Sequence
 
         return ret;
     }
+
+    public static List<SequenceAlignment> realSemiGlobalAlignment(Sequence s1,
+                                                                  Sequence s2,
+                                                                  int match,
+                                                                  int mismatch,
+                                                                  int gap)
+    {
+        int a[][] = computeSimMat(s1,s2,match, mismatch,gap);
+        SequenceAlignment sBefore = backtrack(a, s1, s2, true, match, mismatch, gap);
+        SequenceAlignment tBefore = backtrack(a, s1, s2, false, match, mismatch, gap);
+        List<SequenceAlignment> ret = new ArrayList<>();
+
+
+        if(sBefore.score >= tBefore.score)
+        {
+            SequenceAlignment sBeforeInversed = new SequenceAlignment(sBefore.s2, sBefore.s1, sBefore.score);
+            ret.add(sBefore);
+            ret.add(sBeforeInversed);
+        }
+        else
+        {
+            SequenceAlignment tBeforeInversed = new SequenceAlignment(tBefore.s2 , tBefore.s2, tBefore.score);
+            ret.add(tBeforeInversed);
+            ret.add(tBefore);
+        }
+
+        return ret;
+
+
+    }
+
 
     /**
      * Creates a sequence alignment by bactracking the similarity matrix from its bottom.
